@@ -30,7 +30,9 @@
     "restangular": "~1.5.1",
     "angular-facebook": "~0.2.3",
     "angular-emoji-popup": "~1.1.0",
-    "ng-img-crop": "ngImgCrop#~0.3.2"
+    "ng-img-crop": "ngImgCrop#~0.3.2",
+    "angular-sanitize": "~1.4.8",
+    "animate.css": "~3.5.1"
   },
   "resolutions": {
     "angular": "^1.4.8",

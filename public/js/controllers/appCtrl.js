@@ -67,16 +67,16 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia, $lo
         condition: 'user.authenticated',
         click: ''
     }, {
-        link: 'showListBottomSheet($event)',
+        link: '',
         state: 'web.app.dashboard.user.favorites({hash_id: tokHashId})',
         title: 'Favourites',
         icon: 'star',
         condition: 'user.authenticated',
         action: null
     }, {
-        link: 'showListBottomSheet($event)',
-        state: 'web.app.dashboard.settings',
-        title: 'Settings',
+        link: '',
+        state: 'web.app.dashboard.user.edit({hash_id: tokHashId})',
+        title: 'Preferences',
         icon: 'settings',
         condition: 'user.authenticated',
         action: null

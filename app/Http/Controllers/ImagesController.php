@@ -13,18 +13,11 @@ class ImagesController extends Controller
 
     /* DIR PARAMETER IS THE AMAZON BUCKET */
     public static function saveImage($image, $user, $dir){
-      function from_base64($base64) {
-          $data = explode(',', $base64);
-          $decoded = base64_decode($data[1]);
-          return $decoded;
-      };
 
-      try{
+
         if(!$image->isValid())
           return false;
-      }catch(\Exception $e){
-        $image = from_base64($image);
-      }
+    
 
 
       $key = $user->id . time() . $image->getClientOriginalName();
