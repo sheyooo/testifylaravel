@@ -1,0 +1,124 @@
+<div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
+    <form novalidate>
+        <md-card style="overflow: visible">
+            <md-toolbar layout="row" class="md-hue-2">
+                <div class="md-toolbar-tools" layout="row">
+                    <div flex="90" flex-xs="80" layout="row">
+                        <div class="square-img-container mr10" style="width: 40px; height: 40px;">
+                            <img class="img-circle" ng-src="{{ user.avatar || 'img/guest.png'}}">
+                        </div>
+                        <h2>{{ user.name }}</h2>
+                    </div>
+                    <md-button class="md-primary md-hue-2 md-fab md-mini" ng-click="toggleCatPopup()">
+                        <my-icon icon="tag-multiple"></my-icon>
+                        <md-tooltip md-delay="400" md-direction="top" md-autohide="true">
+                            Select categories
+                        </md-tooltip>
+                    </md-button>
+                    <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
+                        <md-card-content class="p5" layout="column">
+                            <div layout="row" layout-align="end center">
+                                <md-button aria-label="close categories dialog" class="md-icon-button" ng-click="toggleCatPopup()">
+                                    <my-icon class="text-muted" icon="close">
+                                    </my-icon>
+                                </md-button>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="column" style="height: 250px; width: 200px; overflow-y: auto">
+                                <div>
+                                    <md-checkbox md-no-ink ng-repeat="c in categories" ng-click="catsClick(c)" ng-checked="catsExists(c)" class="md-secondary">
+                                        <span class="md-body-1">{{::c.name}}</span>
+                                    </md-checkbox>
+                                </div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="center center" class="pt5">
+                                <md-button aria-label="Done" class="md-fab md-mini md-accent md-hue-1" ng-click="toggleCatPopup()">
+                                    <my-icon icon="check"></my-icon>
+                                </md-button>
+                            </div>
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </md-toolbar>
+            <md-card-content layout="column" class="pb0">
+                <style type="text/css">
+                .emoji-wysiwyg-editor {
+                    font-size: 14px;
+                    overflow: hidden;
+                    height: auto;
+                }
+                
+                .emoji-menu {
+                    margin-top: 0px;
+                    margin-left: -200px;
+                }
+                </style>
+                <div emoji-form emoji-message="emojiMessage" layout="row">
+                    <textarea placeholder="share your testimony..." id="messageInput" ng-model="post"></textarea>
+                    <button id="emojibtn" style="height: 36px; border: none">
+                        <i class="icon icon-emoji"></i>
+                    </button>
+                </div>
+                <!-- <md-divider></md-divider> -->
+            </md-card-content>
+            <div ng-show="!composingPost">
+                <div class="pl10 pr10" layout="row" layout-wrap>
+                    <span class="label label-primary mr5 mt5" ng-repeat="c in selectedCategories">
+                        {{::c.name}}
+                    </span>
+                    <span class="label label-default mt5" style=" cursor: pointer" ng-click="toggleCatPopup()">
+                    <md-tooltip md-delay="400" md-direction="top" md-autohide="true">
+                      Select categories
+                    </md-tooltip>
+                        <span style="font-weight: bolder">+</span>
+                    </span>
+                </div>
+                <div class="images-box" layout="row" layout-wrap>
+                    <div flex="33" flex-xs="50" layout="column" ng-repeat="img in files track by $index">
+                        <md-card flex class="bg-light-gray" style="position: relative" layout="row" layout-align="center center">
+                            <md-button class="md-icon-button" md-no-ink aria-label="Remove picture" style="color: white; text-shadow: 0px 1px 1px #000; position: absolute; top: 0px; left: 0px; z-index: 10;" ng-click="removePicture($index)">
+                                <my-icon icon="close"></my-icon>
+                            </md-button>
+                            <div flex class="square-img-container">
+                                <img ngf-src="img || 'img/testify.png'" ngf-no-oject-url="true" />
+                            </div>
+                            <md-progress-circular class="md-primary md-hue-3 composer-img-upload-progress" md-mode="determinate" md-diameter="50px" ng-hide="img.complete" value="{{img.progress}}"></md-progress-circular>
+                        </md-card>
+                    </div>
+                </div>
+                <md-button class="md-primary md-mini" accept="image/*" ngf-keep="'distinct'" ngf-select ngf-max-size="'2MB'" ng-model="files" multiple="multiple">
+                    <my-icon icon="camera"></my-icon>
+                    Add Image
+                    <md-tooltip md-delay="400" md-direction="down" md-autohide="true">
+                        2MB max image size
+                    </md-tooltip>
+                </md-button>
+                <md-divider></md-divider>
+                <div class="" layout="row">
+                    <span flex></span>
+                    <md-switch name="anonymous" aria-label="Post anonymously" class="text-muted md-caption" ng-model="anonymous">
+                        Post anonymously
+                        <md-tooltip md-delay="400" md-direction="left" md-autohide="true">
+                            Make this post anonymous
+                        </md-tooltip>
+                    </md-switch>
+                    <div layout="row" layout-padding>
+                        <md-button style="color: white;" class="no-text-transform no-shadow md-primary md-hue-2 md-raised" layout="row" ng-click="composePost($event)">
+                            <span ng-hide="newPost.creating">
+                                        <my-icon icon="send" style="line-height: 0px;
+                                        position: relative;
+                                        top: -2px;"></my-icon>
+                                        <span>Post</span>
+                            </span>
+                            <span ng-show="newPost.creating">
+                                            <md-progress-circular class="md-primary md-hue-3" md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                                            
+                                        </span>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </md-card>
+    </form>
+</div>

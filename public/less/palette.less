@@ -1,0 +1,297 @@
+@import "variables";
+@import "mixins.less";
+// Load color variables here
+@import "color-variables/palette.1.less";
+
+/* Selected text */
+
+::-moz-selection {
+    background: transparent;
+    color: @selection-color;
+    text-shadow: none;
+}
+
+::selection {
+    background: @selection-bg;
+    color: @selection-color;
+    text-shadow: none;
+}
+
+
+/*********************/
+
+
+/* Spinnner */
+
+.loader:after {
+    border: solid 1px transparent;
+    border-top-color: @spinner-color;
+    border-left-color: @spinner-color;
+}
+
+
+/*********************/
+
+
+/* Link hover */
+
+a {
+    &:active,
+    &:focus,
+    &:hover {
+        color: @link-hover;
+    }
+}
+
+
+/*********************/
+
+
+/* Layout top header */
+
+.app > .header {
+    background-color: @header-bg;
+    .brand {
+        background-color: @brand-bg;
+        a,
+        a:hover {
+            color: fade(@brand-color, 90%);
+        }
+    }
+    .navbar-toggle,
+    .nav > li > a,
+    .bg-none {
+        color: @header-color;
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .header {
+        .nav > li > a:hover,
+        .nav > li > a:focus,
+        .nav .open > a,
+        .nav .open > a:hover,
+        .nav .open > a:focus {
+            background-color: @header-nav-link-hover-focus;
+        }
+    }
+}
+
+.header .open a.toggle-search,
+.header a.toggle-search:hover {
+    background-color: @header-nav-link-hover-focus;
+}
+
+
+/*********************/
+
+
+/* Layout Sidebar */
+
+.sidebar {
+    background-color: @sidebar-bg;
+    color: @sidebar-color;
+    a,
+    .nav-title {
+        color: @sidebar-color;
+    }
+}
+
+.compact-menu .main-navigation >ul>li {
+    border-bottom: 1px solid darken(@sidebar-bg, 2%);
+    border-top: 1px solid fade(#fff, 5%);
+}
+
+.app:not(.small-menu) .main-navigation>ul>li>ul>li.active a,
+.app:not(.small-menu) .main-navigation>ul>li>ul>li a:hover {
+    color: @sidebar-submenu-hover-active;
+}
+
+.main-navigation > ul {
+    & > li:hover > a {
+        color: @sidebar-submenu-hover-active
+    }
+    & > li .sub-menu {
+        background-color: @sidebar-hover-hover-open;
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .small-menu .main-navigation > ul > li.open {
+        background-color: darken(@sidebar-bg, 2%);
+    }
+    .small-menu .main-navigation .nav > li > .sub-menu .sub-menu {
+        background-color: @sidebar-bg;
+    }
+}
+
+
+/*********************/
+
+
+/* Gallery hover overlay */
+
+.gallery {
+    .overlay {
+        background-color: @gallery-overlay-hover;
+        background-color: fade(@gallery-overlay-hover, 90%);
+    }
+}
+
+
+/*********************/
+
+
+/* Skin button style */
+
+.btn-color {
+    .button-variant(@button-color;
+    @button-bg;
+    @button-border);
+}
+
+
+/*********************/
+
+
+/* Skin text color style */
+
+.color {
+    color: @palette-color;
+}
+
+
+/*********************/
+
+
+/* Skin nestable style */
+
+#nestable2 .dd-handle {
+    color: @sortable-handle-color;
+    border: 1px solid @sortable-handle-border;
+    background-color: @sortable-handle-bg;
+}
+
+#nestable2 .dd-handle:hover {
+    background-color: lighten(@sortable-handle-bg, 5%);
+}
+
+
+/*********************/
+
+
+/* Skin slider style */
+
+.slider-color {
+    .slider-selection {
+        background-color: @slider-selection-bg;
+    }
+    .slider-handle {
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px, @slider-selection-bg 0px 0px 0px 1px;
+    }
+}
+
+
+/*********************/
+
+
+/* Skin panel style */
+
+.panel-color {
+    .panel-variant(@panel-border;
+    @panel-heading-text-color;
+    @panel-heading-bg;
+    @panel-heading-border);
+}
+
+
+/*********************/
+
+
+/* Skin label style */
+
+.label-color {
+    .label-variant(@label-bg);
+}
+
+
+/*********************/
+
+
+/* Skin background color */
+
+.bg-color {
+    .bg-variant(@bg-text-color;
+    @bg-color);
+}
+
+
+/*********************/
+
+
+/* Skin pagination style */
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    border-color: @pagination-border;
+    background-color: @pagination-bg;
+    color: @pagination-color;
+}
+
+
+/*********************/
+
+
+/* Skin progress bar style */
+
+.progress-bar-color {
+    background-color: @progress-bg;
+}
+
+
+/*********************/
+
+
+/* Skin chart elements */
+
+.morris-hover.morris-default-style {
+    border-color: @chart-border;
+    background-color: @chart-bg;
+    background-color: fade(@chart-bg, 90%);
+    a {
+        color: @chart-color;
+    }
+}
+
+#jqstooltip {
+    background-color: @chart-bg;
+    border-color: @chart-bg;
+}
+
+#tooltip {
+    background-color: @chart-bg;
+    color: @chart-color;
+}
+
+#tooltip:before {
+    border-color: transparent @chart-bg transparent transparent;
+}
+
+
+/*********************/
+
+.jvectormap-label {
+    border: solid 1px @jvector-bg;
+    background-color: @jvector-bg;
+    color: white;
+}
+
+.jvectormap-zoomin,
+.jvectormap-zoomout {
+    background-color: @jvector-bg;
+    color: white;
+}

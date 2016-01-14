@@ -1,0 +1,20 @@
+<div ng-cloak layout="row" layout-padding>
+    <div layout="row" layout-align="end center" flex>
+        <md-autocomplete placeholder="Search" flex style="color: #000;" md-min-length="2" md-delay="1000" md-selected-item="selectedItem" md-search-text="query" md-items="item in searchRepo(query)" md-item-text="item.item">
+            <md-item-template>
+                <div>
+                    <i class="mdi mdi-{{searchIcons[item.type]}} text-muted mr10"></i>
+                    <span ng-cloak>
+                                {{item.item}}
+                                </span>
+                </div>
+            </md-item-template>
+            <md-not-found>
+                No matches found.
+            </md-not-found>
+        </md-autocomplete>
+        <!-- <md-button class="md-icon-button no-m" ng-click="ui.toggleSearchBox()">
+            <my-icon icon="add"> </my-icon>
+        </md-button> -->
+    </div>
+</div>

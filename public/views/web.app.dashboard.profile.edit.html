@@ -1,0 +1,92 @@
+<div layout-fill layout="column" layout-lg="row" ng-controller="ProfileEditCtrl">
+    <div flex-lg="50">
+        <div>
+            <md-card>
+                <div layout-fill layout="column" style="position: relative">
+                    <md-card-content>
+                        <div layout="row" layout-align="center center">
+                            <div flex="50" flex-xs="80" class="img-circle img-thumbnail square-img-container">
+                                <img ng-src="{{picFile ? croppedDataUrl : false || user.avatar || 'img/guest.png' }} " />
+                            </div>
+                        </div>
+                    </md-card-content>
+                    <div ng-show="picFile" style="height: 300px; " ng-model="picFile " ngf-pattern="image/* " class="cropArea ">
+                        <img-crop image="picFile | ngfDataUrl " result-image="croppedDataUrl " ng-init="croppedDataUrl='' ">
+                        </img-crop>
+                    </div>
+                    <md-card-actions layout="row" layout-align="center center">
+                        <md-button class="md-raised md-primary no-text-transform no-shadow" ngf-select ng-model="picFile " accept="image/* ">
+                            <my-icon icon="file-image"></my-icon>
+                            Upload profile picture
+                        </md-button>
+                        <md-button ng-show="picFile" class="md-raised md-accent md-hue-1 no-shadow no-text-transform" ng-click="uploadAvatar(croppedDataUrl) " ng-disabled="uploading">
+                            <span ng-hide="uploading">
+                        <my-icon icon="check"></my-icon>
+                        	<span>Save</span>
+                            </span>
+                            <span ng-show="uploading">
+	                        <md-progress-circular class="md-primary md-hue-1" md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+	                        
+	                    </span>
+                        </md-button>
+                        <md-button ng-show="picFile" class="md-raised md-accent no-shadow no-text-transform" ng-click="picFile = '' ">
+                            <my-icon icon="close"></my-icon>
+                            Cancel
+                        </md-button>
+                    </md-card-actions>
+                </div>
+            </md-card>
+        </div>
+        <div>
+            <md-card>
+                <md-card-content>
+                    <div ng-hide="true">
+                        <h3>About Me</h3>
+                        <label>Location</label>
+                        <input class="form-control " type="text " name=" " id=" ">
+                        <label>Favourite Book</label>
+                        <input class="form-control " type="text " name=" " id=" ">
+                        <label>Favourite Verse</label>
+                        <input class="form-control " type="text " name=" " id=" ">
+                        <label>Favourite Parable</label>
+                        <input class="form-control " type="text " name=" " id=" ">
+                        <label>Denomination</label>
+                        <input class="form-control " type="text " name=" " id=" ">
+                    </div>
+                    <div ng-show="true" layout="row">
+                        <h4 flex="90" class="mt15">Update About me</h4>
+                        <md-button>
+                            <my-icon icon="pencil"></my-icon>
+                        </md-button>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+    </div>
+    <div flex-lg="50 ">
+        <md-card>
+            <md-card-content>
+                <h3>Account</h3>
+                <label>First Name</label>
+                <input class="form-control " type="text " name=" " id=" ">
+                <label>Last Name</label>
+                <input class="form-control " type="text " name=" " id=" ">
+                <label>Username</label>
+                <input class="form-control " type="text " name=" " id=" ">
+            </md-card-content>
+        </md-card>
+        <md-card>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h3>Preferences</h3>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <label>Messaging:</label>
+                <md-switch ng-model="messaging" aria-label="Toggle messaging">
+                    Turn on messaging
+                </md-switch>
+            </md-card-content>
+        </md-card>
+    </div>
+</div>

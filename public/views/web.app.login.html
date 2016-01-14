@@ -1,0 +1,43 @@
+<md-content class="login-bg" layout-fill flex ng-controller="LoginCtrl">
+    <div app-toolbar-no-login></div>
+    <div flex layout-fill layout="row" layout-align="center center" style="height: auto; padding-top: 64px;">
+        <md-card flex="30" flex-xs="95" flex-sm="60" style="overflow: hidden">
+            <md-toolbar class="md-hue-2" layout="row" layout-align="center center">
+                <h3>LOGIN TO TESTIFY</h3>
+            </md-toolbar>
+            <md-card-content>
+                <div layout="column">
+                    <form novalidate name="loginForm" ng-submit="loginForm.$valid && submitLogin()">
+                        <div class="input-group mb20">
+                            <div class="input-group-addon">
+                                <my-icon class="text-muted" style="line-height: 0px" icon="account-outline"></my-icon>
+                            </div>
+                            <input placeholder="Email or username" class="form-control input-lg" type="text" ng-model="loginDetails.user" />
+                        </div>
+                        <div class="input-group mb20">
+                            <div class="input-group-addon">
+                                <my-icon class="text-muted" style="line-height: 0px" icon="lock-outline"></my-icon>
+                            </div>
+                            <input placeholder="Password" class="form-control input-lg" type="password" ng-model="loginDetails.password">
+                        </div>
+                        <div layout="row" layout-wrap layout-align="center center">
+                            <md-button flex="100" flex-md="100" flex-sm="100" class="md-raised md-accent md-hue-1" type="submit">
+                                <my-icon icon="login"></my-icon> Login
+                            </md-button>
+                            <md-button class="md-raised md-primary md-hue-2" flex="100" ui-sref="web.app.signup">
+                                <my-icon icon="account-plus"></my-icon>
+                                Sign up
+                            </md-button>
+                            <md-button class="md-raised" flex="100" flex-sm="100" flex-md="100" ng-click="loginFB()" style="color: white; background: #4E69A2">
+                                <my-icon icon="facebook" class="mr10"></my-icon> {{fb_button || 'Login with Facebook'}}
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="center center">
+                            <a ui-sref="web.app.forgot" class="text-muted md-body-1">Forgot password?</a>
+                        </div>
+                    </form>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+</md-content>

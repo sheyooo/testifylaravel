@@ -1,0 +1,11 @@
+/bower_components
+/node_modules
+/.idea
+/.phpintel
+prepros.cfg
+testify.sublime-project
+testify.sublime-workspace
+npm-debug.log
+/server/lib/vendor
+/img/profiles
+/vendor/

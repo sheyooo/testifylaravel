@@ -1,0 +1,84 @@
+/*
+ *  Color Scheme
+ *
+ */
+
+@base: @brand-dark;
+
+@complement1: lighten(spin(@base, 180),15%);
+@complement2: lighten(spin(@base, 180),10%);
+@lighten1: lighten(@base, 15%);
+@lighten2: lighten(@base, 25%);
+
+// Global skin color
+@palette-color: lighten(@base, 3%);
+
+// Selection colors
+@selection-bg: @palette-color;
+@selection-color: #fff;
+
+//spinner Color
+@spinner-color: @brand-dark;
+
+// Link hover
+@link-hover: darken(@brand-dark, 10%);
+
+// Header colors
+@header-bg: lighten(@brand-dark, 3%);
+@header-color: lighten(@header-bg, 45%);
+@header-nav-link-hover-focus: darken(@header-bg, 4%);
+
+// Brand colors
+@brand-bg: @header-bg;
+@brand-color: @header-color;
+
+// Sidebar
+@sidebar-bg: @palette-color;
+@sidebar-color: #A0A9B4;//lighten(@sidebar-bg, 48%);
+@sidebar-hover-hover-open: lighten(@sidebar-bg, 1.5%);
+@sidebar-submenu-hover-active: lighten(@sidebar-color, 20%);
+
+// Gallery
+@gallery-overlay-hover: @palette-color;
+
+// Palette button style
+@button-bg: @palette-color;
+@button-border: @palette-color;
+@button-color: lighten(@palette-color, 90%);
+
+// Sortable Lists
+@sortable-handle-color: mix(@palette-color, #fff, 30%);
+@sortable-handle-border: @palette-color;
+@sortable-handle-bg: @palette-color;
+
+// Palette Slider style
+@slider-selection-bg: @palette-color;
+
+// Palette Bootstrap panel style
+@panel-border: @palette-color;
+@panel-heading-text-color: mix(@palette-color, #fff, 30%);
+@panel-heading-bg: @palette-color;
+@panel-heading-border: @palette-color;
+
+// Palette label
+@label-bg: @palette-color;
+
+// Palette Background color
+@bg-text-color: mix(@palette-color, #fff, 30%);
+@bg-color: @palette-color;
+
+// Pagination
+@pagination-border: @palette-color;
+@pagination-bg: @palette-color;
+@pagination-color: #fff;
+
+// Bootstrap progress bar
+@progress-bg: @palette-color;
+
+// Charts
+@chart-bg: @palette-color;
+@chart-border: @palette-color;
+@chart-color: #fff;
+
+// Jvectormap
+@jvector-bg: @palette-color;

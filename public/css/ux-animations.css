@@ -1,0 +1,29 @@
+.ng-hide-remove {
+    animation: fadeIn 0.2s;
+}
+
+.ng-hide-add {
+    position: absolute;
+    animation: fadeOut 0.3s;
+}
+
+.category-modal-anim.ng-hide-remove {
+    animation: fadeInUp 0.2s;
+}
+
+.category-modal-anim.ng-hide-add {
+    animation: fadeOutDown 0.4s;
+}
+
+.form-repeat-pass-anim.ng-hide-remove {
+    position: relative;
+    animation: bounceInDown 0.5s;
+}
+
+.ng-enter[ui-view] {
+    animation: fadeIn 0.3s;
+}
+
+.ng-leave[ui-view] {
+    position: absolute;
+}

@@ -1,0 +1,47 @@
+<md-toolbar class="app-header md-primary no-bg md-whiteframe-z1" layout="row">
+    <div class="md-toolbar-tools" layout="row">
+        <div layout="row" flex="40">
+            <div flex layout="row" layout-align="start center">
+                <md-button class="md-icon-button no-m" aria-label="Menu" ng-click="ui.toggleNav('left')" hide>
+                    <my-icon icon="menu" style="line-height: 0px">
+                    </my-icon>
+                </md-button>
+                <div style="height: 35px; width: 30px" layout="column" class="mr10">
+                    <a ui-sref="web.app.dashboard.home"><img class="" layout-fill src="img/small-logo.png" alt=""></a>
+                </div>
+                <div layout="column">
+                    <a ui-sref="web.app.dashboard.home"><h2 style="text-shadow: 0px 0px 1px #000, 0px 0px 2px #000">Testify</h2></a>
+                    <span hide show-gt-md class="md-subhead" style="text-shadow: 0px 0px 1px #000, 0px 0px 2px #000">sharing God's goodness</span>
+                </div>
+            </div>
+        </div>
+        <div layout="row" flex="60">
+            <div layout="row" flex="50">
+                <div layout="row" flex>
+                    <div flex layout="row" layout-align="center center" style="position: relative;">
+                        <md-button class="md-icon-button" aria-label="More " ng-click="redirect('web.app.dashboard.home')">
+                            <my-icon style="line-height: 0px; text-shadow: 0px 0px 1px #000, 0px 0px 2px #000" icon="home">
+                            </my-icon>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+            <div layout="row" flex="50" layout-align="end center">
+                <md-menu class="no-p">
+                    <md-button class="md-icon-button" aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)">
+                        <my-icon style="line-height: 0px;text-shadow: 0px 0px 1px #000, 0px 0px 2px #000" md-menu-origin icon="dots-vertical"></my-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="redirect('web.app.login')">
+                                <my-icon class="text-muted" icon="login"></my-icon>
+                                Login
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+    </div>
+    </div>
+</md-toolbar>

@@ -1,0 +1,24 @@
+<md-card ng-repeat="post in posts">
+    <md-card-content>
+        <div layout="row" layout-align="start top">
+            <img flex="10" ng-src="{{post.testifier_avatar}}">
+            <p class="md-title" flex>{{post.testifier}}</p>
+            <p class="md-body-1">{{ post.timestamp}}</p>
+        </div>
+        <p class="md-body-1">{{post.testimony}}</p>
+    </md-card-content>
+    <div class="md-actions" layout="row" layout-align="end center">
+        <md-button class="my-icon-button">
+            <my-icon> thumb_up </my-icon>
+        </md-button>
+        <md-button class="my-icon-button">
+            <my-icon> comment </my-icon>
+        </md-button>
+        <md-button class="my-icon-button">
+            <my-icon> share </my-icon>
+        </md-button>
+        <md-button class="my-icon-button">
+            <my-icon> add_outline </my-icon>
+        </md-button>
+    </div>
+</md-card>

@@ -1,0 +1,10 @@
+{
+    "name": "user/testify",
+    "authors": [
+        {
+            "name": "sheyooo",
+            "email": "sheyoootech@gmail.com"
+        }
+    ],
+    "require": {}
+}

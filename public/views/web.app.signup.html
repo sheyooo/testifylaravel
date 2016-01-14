@@ -1,0 +1,69 @@
+<md-content class="entrance-bg" layout-fill flex ng-controller="SignupCtrl">
+    <div app-toolbar-no-login></div>
+    <div flex layout-fill layout="row" layout-align="center center" style="height: auto; padding-top: 64px;">
+        <md-card flex="30" flex-md="60" flex-xs="95" flex-sm="70" style="overflow: hidden">
+            <md-toolbar class="md-hue-2" layout="row" layout-align="center center">
+                <h3>JOIN TESTIFY</h3>
+            </md-toolbar>
+            <md-card-content class="pt25">
+                <div layout="column">
+                    <form novalidate name="signupForm" ng-submit="signupForm.$valid && submitForm()" layout="column">
+                        <div layout="row">
+                            <md-input-container flex>
+                                <label>First Name</label>
+                                <input type="text" name="first_name" ng-model="newUser.first_name" required/>
+                                <div ng-messages="signupForm.first_name.$error">
+                                    <div ng-message-exp="['required']">First name is required.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label> Last Name</label>
+                                <input type="text" name="last_name" ng-model="newUser.last_name" required />
+                                <div ng-messages="signupForm.last_name.$error">
+                                    <div ng-message-exp="['required']">Last name is required.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <md-input-container>
+                            <label>Email</label>
+                            <input type="email" name="email" ng-model="newUser.email" ng-pattern="/^.+@.+\..+$/" required/>
+                            <div ng-messages="signupForm.email.$error">
+                                <div ng-message-exp="['required', 'pattern']">Email is invalid e.g. testify@gmail.com</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Password</label>
+                            <input type="password" name="password" minlength="6" maxlength="30" ng-model="newUser.password" ng-focus="formRepeatPass = true" required/>
+                            <div ng-messages="signupForm.password.$error">
+                                <div ng-message-exp="['required', 'minlength', 'maxlength']">Your password must be between 6 and 30 characters.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="form-repeat-pass-anim" ng-show="formRepeatPass">
+                            <label>Repeat Password</label>
+                            <input type="password" name="password1" ng-model="newUser.password1" ng-pattern="newUser.password" required/>
+                            <div ng-messages="signupForm.password1.$error">
+                                <div ng-message-exp="['pattern', 'required']">Your passwords don't match.</div>
+                            </div>
+                        </md-input-container>
+                        <md-checkbox class="md-hue-1" name="terms" required ng-model="newUser.terms">
+                            I agree to Terms
+                        </md-checkbox>
+                        <div layout="row" layout-align="center center">
+                            <md-button flex="60" flex-sm="75" flex-xs="100" class="md-raised md-accent md-hue-1" ng-disabled="signupForm.$invalid" type="submit">
+                                <my-icon icon="login"></my-icon> Join
+                            </md-button>
+                        </div>
+                        <div layout="row" layout-align="center center">
+                            <md-button flex="60" flex-sm="75" flex-xs="100" class="md-raised" flex ng-click="signupFb()" style="color: white; background: #4E69A2">
+                                <my-icon icon="facebook"></my-icon> Connect with facebook
+                            </md-button>
+                        </div>
+                        <div class="mt10" layout="column" layout-align="center center">
+                            <a ui-sref="web.app.forgot" class="text-muted md-body-1">Forgot password?</a>
+                        </div>
+                    </form>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+</md-content>

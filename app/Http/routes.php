@@ -11,7 +11,7 @@
 |
 */
 Route::get('/', function(){
-  return 'Home html and all angular html';
+  return File::get(public_path() . '/index.html');
 });
 
 Route::group(['prefix' => 'api/v1'], function(){
@@ -36,5 +36,10 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::resource('posts', 'PostsController', ['only' => ['index', 'show', 'store', 'destroy']]);
   Route::resource('comments', 'CommentsController', ['only' => ['store', 'destroy']]);
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
-
 });
+
+Route::any('{path?}', function()
+{
+  return File::get(public_path() . '/index.html');
+
+})->where("path", ".+");
