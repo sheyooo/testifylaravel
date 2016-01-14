@@ -35,7 +35,6 @@ var bower_js_files = ["bower_components/jquery/dist/jquery.min.js",
 var bower_css_files = [];
 
 var sass_files = [
-
     'plugins/override/angular-loading-bar/loading-bar.css',
     'css/scss/app.scss',
     'css/main.css',
