@@ -38,7 +38,7 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
 });
 
-Route::any('{path?}', function()
+Route::get('{path?}', function()
 {
   return File::get(public_path() . '/index.html');
 

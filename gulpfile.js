@@ -25,12 +25,10 @@ var bower_js_files = [
     "public/bower_components/moment/min/moment.min.js",
     "public/bower_components/angular-moment/angular-moment.min.js",
     "public/plugins/ng-text-truncate/ng-text-truncate.js",
-    "public/bower_components/ngEmbed/dist/ng-embed.min.js",
     "public/bower_components/ng-file-upload/ng-file-upload.min.js",
     "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
     "public/bower_components/angular-emoji-popup/dist/js/config.js",
-    "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
-    "public/bower_components/angular-elastic/elastic.js"
+    "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js"
 ];
 
 var bower_css_files = [];
@@ -84,8 +82,8 @@ gulp.task('img_asset', function() {
 gulp.task('js_libs', function() {
     return gulp.src(bower_js_files)
         .pipe(sourcemaps.init())
-        .pipe(uglify())
         .pipe(concat('libs.js'))
+        //.pipe(uglify())
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest('public/dist/js/'));
 });
