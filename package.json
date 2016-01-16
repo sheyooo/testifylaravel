@@ -18,7 +18,6 @@
         "main-bower-files": "^2.11.0"
     },
     "scripts": {
-        "start": "npm install",
-        "postinstall": "bower install && gulp build"
+        "postinstall": "bower install && npm install && gulp build"
     }
 }
