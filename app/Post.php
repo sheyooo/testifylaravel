@@ -9,6 +9,8 @@ class Post extends Model
     //
     protected $hidden = ['user_id'];
 
+    protected $casts = ['anonymous' => 'boolean'];
+
     protected $appends = ['favorited', 'tapped_into', 'amen', 'prayer', 'amens_count', 'favorites_count', 'taps_count', 'comments_count'];
 
     public function getFavoritedAttribute(){

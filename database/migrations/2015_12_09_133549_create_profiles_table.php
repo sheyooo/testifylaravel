@@ -17,13 +17,14 @@ class CreateProfilesTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('username');
+            $table->string('username')->nullable();
             $table->string('state');
             $table->string('country');
             $table->string('favorite_book');
             $table->string('favorite_verse');
             $table->string('favorite_parable');
             $table->string('denomination');
+            $table->integer('preference_messaging');
 
             $table->foreign('user_id')
               ->references('id')->on('users')

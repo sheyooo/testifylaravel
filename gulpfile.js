@@ -68,7 +68,7 @@ gulp.task('css', function() {
         .pipe(sass({
             outputStyle: 'compressed'
         }))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(concat('all.css'))
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest('public/dist/css/'));
@@ -82,8 +82,9 @@ gulp.task('img_asset', function() {
 gulp.task('js_libs', function() {
     return gulp.src(bower_js_files)
         .pipe(sourcemaps.init())
+        .pipe(ngAnnotate())
+        .pipe(uglify())
         .pipe(concat('libs.js'))
-        //.pipe(uglify())
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest('public/dist/js/'));
 });

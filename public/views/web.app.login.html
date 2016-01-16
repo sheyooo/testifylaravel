@@ -1,7 +1,7 @@
 <md-content class="login-bg" layout-fill flex ng-controller="LoginCtrl">
     <div app-toolbar-no-login></div>
     <div flex layout-fill layout="row" layout-align="center center" style="height: auto; padding-top: 64px;">
-        <md-card flex="30" flex-xs="95" flex-sm="60" style="overflow: hidden">
+        <md-card flex="30" flex-xs="95" flex-sm="60" flex-md="50" style="overflow: hidden">
             <md-toolbar class="md-hue-2" layout="row" layout-align="center center">
                 <h3>LOGIN TO TESTIFY</h3>
             </md-toolbar>
@@ -20,15 +20,15 @@
                             </div>
                             <input placeholder="Password" class="form-control input-lg" type="password" ng-model="loginDetails.password">
                         </div>
-                        <div layout="row" layout-wrap layout-align="center center">
-                            <md-button flex="100" flex-md="100" flex-sm="100" class="md-raised md-accent md-hue-1" type="submit">
+                        <div layout="column">
+                            <md-button class="md-raised md-accent no-shadow md-hue-1" type="submit">
                                 <my-icon icon="login"></my-icon> Login
                             </md-button>
-                            <md-button class="md-raised md-primary md-hue-2" flex="100" ui-sref="web.app.signup">
+                            <md-button class="md-raised md-primary no-shadow md-hue-2" ui-sref="web.app.signup">
                                 <my-icon icon="account-plus"></my-icon>
                                 Sign up
                             </md-button>
-                            <md-button class="md-raised" flex="100" flex-sm="100" flex-md="100" ng-click="loginFB()" style="color: white; background: #4E69A2">
+                            <md-button class="md-raised no-shadow" ng-click="loginFB()" style="color: white; background: #4E69A2">
                                 <my-icon icon="facebook" class="mr10"></my-icon> {{fb_button || 'Login with Facebook'}}
                             </md-button>
                         </div>

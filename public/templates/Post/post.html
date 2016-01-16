@@ -4,7 +4,7 @@
             <span class="layout-padding"><a class="pr0" ui-sref="web.app.dashboard.user({hash_id: post.user_ref.hash_id})">{{::post.user_ref.name}}</a>{{::interpretation}}</span>
             <md-divider class="mb10"></md-divider>
         </div>
-        <div layout="row" flex layout-fill class="pt10">
+        <div layout="row" flex layout-fill class="pl10 pt10">
             <div flex="10" flex-sm="15" flex-xs="15" class="square-img-container">
                 <img class="img-circle square2" ng-src="{{::post.user.avatar || 'img/favicon.png'}}">
             </div>
@@ -125,10 +125,10 @@
                 <div flex layout="column" class="ml15">
                     <div layout="row">
                         <span flex="90" class="" layout="column">
-                            <a class="caption" 
+                            <a class="caption"
                             ui-sref="user({hash_id: comment.user.hash_id})">{{::comment.user.name}}</a>
                             <span class="md-caption">
-                                <time am-time-ago="::comment.created_at"></time> 
+                                <time am-time-ago="::comment.created_at"></time>
                             </span>
                         </span>
                         <div flex="10" layout="row" layout-align="end start">
@@ -167,7 +167,7 @@
             <md-divider></md-divider>
         </div>
         <div class="pt10" ng-show="CommentsUI.loading" layout="row" layout-align="center center" style="height: 40px;">
-            <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+            <md-progress-circular md-mode="indeterminate" md-diameter="50px"></md-progress-circular>
         </div>
         <a href="" class="mt5 mb5">Show more comments</a>
     </md-content>

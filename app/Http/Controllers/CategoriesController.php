@@ -14,10 +14,19 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        return \App\Category::all();
+        $cats = \App\Category::all();
+        if($request->count){
+          $cats = $cats->each(function($item, $key) {
+            dd($item); //$item;
+          });
+
+          return $cats;
+        }else{
+          return $cats;
+        }
     }
 
     /**

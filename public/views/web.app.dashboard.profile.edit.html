@@ -6,12 +6,12 @@
                     <md-card-content>
                         <div layout="row" layout-align="center center">
                             <div flex="50" flex-xs="80" class="img-circle img-thumbnail square-img-container">
-                                <img ng-src="{{picFile ? croppedDataUrl : false || user.avatar || 'img/guest.png' }} " />
+                                <img class="img-circle" ng-src="{{picFile ? croppedDataUrl : false || user.avatar || 'img/guest.png' }} " />
                             </div>
                         </div>
                     </md-card-content>
                     <div ng-show="picFile" style="height: 300px; " ng-model="picFile " ngf-pattern="image/* " class="cropArea ">
-                        <img-crop image="picFile | ngfDataUrl " result-image="croppedDataUrl " ng-init="croppedDataUrl='' ">
+                        <img-crop image="picFile | ngfDataUrl " result-image="croppedDataUrl " result-image-quality="1" ng-init="croppedDataUrl='' ">
                         </img-crop>
                     </div>
                     <md-card-actions layout="row" layout-align="center center">
@@ -26,7 +26,7 @@
                             </span>
                             <span ng-show="uploading">
 	                        <md-progress-circular class="md-primary md-hue-1" md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
-	                        
+
 	                    </span>
                         </md-button>
                         <md-button ng-show="picFile" class="md-raised md-accent no-shadow no-text-transform" ng-click="picFile = '' ">
@@ -40,7 +40,7 @@
         <div>
             <md-card>
                 <md-card-content>
-                    <div ng-hide="true">
+                    <div ng-show="section_about_me">
                         <h3>About Me</h3>
                         <label>Location</label>
                         <input class="form-control " type="text " name=" " id=" ">
@@ -53,9 +53,9 @@
                         <label>Denomination</label>
                         <input class="form-control " type="text " name=" " id=" ">
                     </div>
-                    <div ng-show="true" layout="row">
+                    <div ng-hide="section_about_me" layout="row">
                         <h4 flex="90" class="mt15">Update About me</h4>
-                        <md-button>
+                        <md-button ng-click="section_about_me = true">
                             <my-icon icon="pencil"></my-icon>
                         </md-button>
                     </div>
@@ -66,6 +66,7 @@
     <div flex-lg="50 ">
         <md-card>
             <md-card-content>
+              <div ng-show="section_account">
                 <h3>Account</h3>
                 <label>First Name</label>
                 <input class="form-control " type="text " name=" " id=" ">
@@ -73,6 +74,13 @@
                 <input class="form-control " type="text " name=" " id=" ">
                 <label>Username</label>
                 <input class="form-control " type="text " name=" " id=" ">
+              </div>
+               <div ng-hide="section_account" layout="row">
+                <h4 flex="90" class="mt15">Edit Account</h4>
+                <md-button ng-click="section_account = true">
+                    <my-icon icon="pencil"></my-icon>
+                </md-button>
+                </div>
             </md-card-content>
         </md-card>
         <md-card>

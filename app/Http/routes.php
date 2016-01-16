@@ -38,8 +38,13 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
 });
 
-Route::get('{path?}', function()
+Route::get('{first?}/{second?}/{third?}', function($first = 1, $second = 2, $third = 3)
 {
-  return File::get(public_path() . '/index.html');
+  if(preg_match("/api/", $first) ){
+    return abort(404);
+  }else{
+    //dd($first);
+    return File::get(public_path() . '/index.html');
+  }
 
-})->where("path", ".+");
+});//->where("path", ".+");

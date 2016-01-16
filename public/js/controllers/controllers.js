@@ -61,7 +61,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state', 
             });
             //console.log(r);
         } else {
-            //console.log("false;");                
+            //console.log("false;");
             $scope.fb_logged_in = false;
             $scope.fb_name = "null";
             $scope.fb_button = "Login with Facebook";
@@ -105,8 +105,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state', 
             //Me.callInit();
             //Success Login
         }, function(err) {
-            console.log(err);
-            //console.log($scope.loginDetails);
+          UXService.toast('Wrong username or password');
         });
     };
 
