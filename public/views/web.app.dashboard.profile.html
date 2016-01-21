@@ -1,6 +1,5 @@
-<md-content flex class="main bg-light-gray" layout-sm="column" layout-gt-md="column" layout-fill ng-cloak>
-    <div layout-gt-sm="row" layout-xs="column" layout-fill>
-        <div flex-xs flex-gt-sm="40" layout="column" style="">
+<md-content class="main bg-light-gray" layout="row" layout-wrap layout-fill ng-cloak>
+        <div flex-xs="100" flex-gt-xs="40" layout="column" style="">
             <md-card ng-cloak>
                 <md-toolbar class="md-primary">
                     <div class="md-toolbar-tools" layout="row">
@@ -29,25 +28,29 @@
                 <md-card-content>
                     <div layout="row" layout-align="center center ">
                         <div flex="75" class="square-img-container img-circle img-thumbnail ">
-                            <img class="img-circle" ng-src="{{::user.profile.avatar}} " />
+                            <img class="img-circle" ng-src="{{::user_profile.avatar}} " />
                         </div>
                     </div>
                     <div class="text-muted ">
                         <p class="md-title ">
-                            <my-icon icon="account" class="md-primary md-hue-1 mr25 "></my-icon>{{::user.profile.name}} </p>
-                        <p>
-                            <my-icon icon="map-marker" class="md-primary md-hue-1 mr25 "></my-icon>Lives in {{user.profile.location}}</p>
-                        <p>
-                            <my-icon icon="book" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Book of the bible: <b>Genesis</b></p>
-                        <p>
-                            <my-icon icon="bookmark" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Verse of the bible: <b>John 3:16</b></p>
-                        <p>
-                            <my-icon icon="bookmark-outline" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Parable: <b>The Prodigal Son</b></p>
+                            <my-icon icon="account" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.name}} </p>
+                        <p ng-if="user_profile.email">
+                            <my-icon icon="email-outline" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.email}} </p>
+                        <p ng-if="user_profile.location">
+                            <my-icon icon="map-marker" class="md-primary md-hue-1 mr25 "></my-icon>Location - <b> {{ user_profile.location }}</b></p>
+                        <p ng-if="user_profile.profile.favorite_book">
+                            <my-icon icon="book" class="md-primary md-hue-1 mr25 "></my-icon>Favorite book - <b> {{ user_profile.profile.favorite_book }}</b></p>
+                        <p ng-if="user_profile.profile.favorite_verse">
+                            <my-icon icon="bookmark" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Verse - <b>{{ user_profile.profile.favorite_verse }}</b></p>
+                        <p ng-if="user_profile.profile.favorite_parable">
+                            <my-icon icon="bookmark-outline" class="md-primary md-hue-1 mr25 "></my-icon>Favorite parable - <b>{{ user_profile.profile.favorite_parable }}</b></p>
+                        <p ng-if="user_profile.profile.denomination">
+                            <my-icon icon="church" class="md-primary md-hue-1 mr25 "></my-icon>Denomination - <b>{{ user_profile.profile.denomination }}</b></p>
                     </div>
                 </md-card-content>
             </md-card>
         </div>
-        <div flex-xs flex-gt-sm="60" layout="column" style="overflow: auto" layout-fill>
+        <div flex-xs="100" flex-gt-xs="60" layout="column" style="overflow: auto;">
             <div layout="column" style="overflow: auto;">
                 <md-card layout="row" layout-xs="column">
                     <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised" ui-sref=".activities">Activity</md-button>
@@ -58,5 +61,4 @@
                 </md-content>
             </div>
         </div>
-    </div>
 </md-content>

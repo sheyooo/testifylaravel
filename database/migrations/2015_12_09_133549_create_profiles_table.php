@@ -17,9 +17,6 @@ class CreateProfilesTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('username')->nullable();
-            $table->string('state');
-            $table->string('country');
             $table->string('favorite_book');
             $table->string('favorite_verse');
             $table->string('favorite_parable');

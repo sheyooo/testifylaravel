@@ -19,10 +19,9 @@ class CategoriesController extends Controller
         //
         $cats = \App\Category::all();
         if($request->count){
-          $cats = $cats->each(function($item, $key) {
-            dd($item); //$item;
+          $cats = $cats->each(function($cat, $key) {
+            ($cat['count'] = $cat->posts()->count());
           });
-
           return $cats;
         }else{
           return $cats;

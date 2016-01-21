@@ -1,14 +1,14 @@
 <md-sidenav layout="column" flex-lg="20" layout-fill class="md-sidenav-right md-whiteframe-z1" md-component-id="right" md-is-locked-open="$mdMedia('gt-md')">
     <md-content class="pt10">
         <div layout="column">
-            <div class="right-sn-categories" ng-repeat="cat in categories" layout="row">
+            <div class="right-sn-categories" ng-repeat="cat in categories" layout="row" style="border-radius: 100px; padding: 1px; overflow: hidden">
                 <div flex="30" class="cat-edge" layout="row">
                     <md-button aria-label="{{::cat.count}}">
                         {{ ::cat.count | socialCounter}}
                     </md-button>
                 </div>
                 <div flex="70" class="cat-middle" layout="row">
-                    <md-button md-no-ink ng-click="ui.toggleNav('right')" aria-label="Filter {{::cat.name}}" ui-sref="web.app.dashboard.posts({cat: cat.name})">
+                    <md-button class="no-text-transform" md-no-ink ng-click="ui.toggleNav('right')" aria-label="Filter {{::cat.name}}" ui-sref="web.app.dashboard.posts({cat: cat.name})" ui-sref-active="cat-active">
                         {{ ::cat.name }}
                     </md-button>
                 </div>

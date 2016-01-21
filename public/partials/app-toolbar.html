@@ -21,7 +21,7 @@
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="center center" style="position: relative;">
                         <div class="btn-parent flat">
-                            <md-button class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.home')">
+                            <md-button class="no-m" aria-label="Home" ui-sref="web.app.dashboard.home" ng-clihck="redirect('web.app.dashboard.home')">
                                 <my-icon icon="home">
                                 </my-icon>
                             </md-button>
@@ -70,8 +70,8 @@
                                         </md-button>
                                     </md-menu-item>
                                     <md-menu-item ng-hide="user.authenticated">
-                                        <md-button ng-click="redirect('web.app.login')">
-                                            <my-icon class="text-muted" icon="login"></my-icon>
+                                        <md-button ui-sref="web.app.dashboard.user.edit({id: user.username || user.hash_id})">
+                                            <my-icon class="text-muted" icon="login"></my-icon>{{user}}
                                             Login
                                         </md-button>
                                     </md-menu-item>

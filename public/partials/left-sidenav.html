@@ -1,28 +1,29 @@
 <md-sidenav layout="column" flex-lg="20" flex-md="25" layout-fill class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
     <md-content layout="column" layout-fill>
         <md-toolbar class="md-tall" style="overflow: hidden; background: #fafafa">
-            <div flex layout="column " style="z-index: 10" layout-padding>
-                <div style="position: relative; height: 90px">
-                    <a ui-sref="web.app.dashboard.user({hash_id: tokHashId})" class="no-p">
-                        <div class="img-circle square-img-container absolute-center-horizontal" style="width: 70px">
+            <div flex layout="column" style="z-index: 10" layout-padding>
+                <div style="position: relative; height: 85px">
+                    <a ui-sref="web.app.dashboard.user({id: user.username || tokHashId})" class="no-p">
+                        <div class="img-circle square-img-container absolute-center-horizontal" style="width: 60px">
                             <img class="img-circle img-thumbnail" style="width: 100%" ng-src="{{ user.avatar || 'img/guest.png'}} ">
                         </div>
                     </a>
                 </div>
-                <div class="md-body-1 text-muted text-center  no-p" style="font-weight: bolder">{{ user.name }}</div>
+                <div class="md-body-1 text-muted text-center no-p" style="font-weight: bolder">{{ user.name }}</div>
+                <div class="md-body-1 text-muted text-center no-p" ng-if="user.username">@{{ user.username }}</div>
             </div>
         </md-toolbar>
         <md-divider class="no-m"></md-divider>
         <div layout=" column " class="md-primary md-hue-2 ">
             <ul class="sidenav-items ">
                 <li ng-repeat="item in menu " class="sidenav-item " layout="row ">
-                    <md-button md-no-ink ng-click="ui.toggleNav( 'left') " ui-sref="{{::item.state}} ">
+                    <md-button md-no-ink ng-click="ui.toggleNav( 'left') " ui-sref="{{::item.state}} "  ui-sref-active-eq="sidenav-menu-active">
                         <my-icon icon="{{::item.icon}} "></my-icon>
                         <span>{{::item.title}}</span>
                     </md-button>
                 </li>
                 <li ng-repeat="item in menuAuth " class="sidenav-item " layout="row " ng-if="user.authenticated ">
-                    <md-button md-no-ink ng-click="ui.toggleNav( 'left') " flex style="text-align: left " ui-sref="{{::item.state}} ">
+                    <md-button md-no-ink ng-click="ui.toggleNav( 'left') " flex style="text-align: left " ui-sref="{{item.state}} " ui-sref-active-eq="sidenav-menu-active">
                         <my-icon icon="{{::item.icon}} "></my-icon>
                         <span>{{::item.title}}</span>
                     </md-button>

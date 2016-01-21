@@ -17,15 +17,24 @@ class AppController extends Controller
     }
 
     public static function Login($u, $p){
+      $user = null;
         try{
           $user = \App\User::where('email', $u)->firstOrFail();
-          //dd($user->password);
+        }catch(\Exception $e){
+          try{
+            $user = \App\User::where('username', $u)->firstOrFail();
+          }catch(\Exception $e){
+
+          }
+        }
+        
+        if($user){
           if(Hash::check($p, $user->password)){
             return $user;
           }else{
             return false;
           }
-        }catch(Exception $e){
+        } else{
           return false;
         }
 

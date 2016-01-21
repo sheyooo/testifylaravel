@@ -32,6 +32,8 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::get('users/{id}/taps', 'UsersController@getTaps');
   Route::get('users/{id}/profile', 'UsersController@getProfile');
   Route::post('users/{id}/profile/avatar', 'UsersController@setAvatar');
+  Route::post('users/{id}/password', 'UsersController@changePassword');
+  Route::post('users/{id}/profile', 'UsersController@updateProfile');
   Route::resource('users', 'UsersController');
   Route::resource('posts', 'PostsController', ['only' => ['index', 'show', 'store', 'destroy']]);
   Route::resource('comments', 'CommentsController', ['only' => ['store', 'destroy']]);
@@ -43,8 +45,6 @@ Route::get('{first?}/{second?}/{third?}', function($first = 1, $second = 2, $thi
   if(preg_match("/api/", $first) ){
     return abort(404);
   }else{
-    //dd($first);
     return File::get(public_path() . '/index.html');
   }
-
-});//->where("path", ".+");
+});

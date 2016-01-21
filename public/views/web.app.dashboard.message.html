@@ -1,10 +1,18 @@
-<div layout="row" class="pt10" flex layout="row" layout-fill layout-wrap layout-align="center start" ng-controller="PostsCtrl">
+<div layout="row" class="pt10" flex layout="row" layout-fill layout-wrap layout-align="center start" ng-controller="MessagesCtrl">
     <span flex="20" flex-md="10" flex-sm="0"></span>
     <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
         <div style="height: auto">
-            <div testify-composer></div>
-            <div testify-posts="app.posts" post-status="post_status">
-            </div>
+          <md-card>
+            <md-card-header>
+              <md-card-avatar>
+                  <img ng-src="{{user.avatar}}" alt="">
+              </md-card-avatar>
+              <md-card-header-text>
+                <span class="md-title">Placeholder</span>
+                <span class="md-subhead">Placeholder</span>
+              </md-card-header-text>
+            </md-card-header>
+          </md-card>
         </div>
     </div>
     <span flex="20" flex-md="10" flex-sm="0"></span>

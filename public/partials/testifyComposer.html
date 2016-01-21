@@ -1,15 +1,14 @@
 <div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
     <form novalidate>
         <md-card style="overflow: visible">
-            <md-toolbar layout="row" class="md-hue-2">
-                <div class="md-toolbar-tools" layout="row">
+                <div class="pt5 pl10" layout="row">
                     <div flex="90" flex-xs="80" layout="row">
                         <div class="square-img-container mr10" style="width: 40px; height: 40px;">
                             <img class="img-circle" ng-src="{{ user.avatar || 'img/guest.png'}}">
                         </div>
-                        <h2>{{ user.name }}</h2>
+                        <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{ user.name }}</span>
                     </div>
-                    <md-button class="md-primary md-hue-2 md-fab md-mini" ng-click="toggleCatPopup()">
+                    <md-button class="md-primary md-hue-2 md-fab md-mini btn-outline" ng-click="toggleCatPopup()">
                         <my-icon icon="tag-multiple"></my-icon>
                         <md-tooltip md-delay="400" md-direction="top" md-autohide="true">
                             Select categories
@@ -40,7 +39,7 @@
                         </md-card-content>
                     </md-card>
                 </div>
-            </md-toolbar>
+            <md-divider></md-divider>
             <md-card-content layout="column" class="pb0">
                 <style type="text/css">
                 .emoji-wysiwyg-editor {
@@ -48,7 +47,7 @@
                     overflow: hidden;
                     height: auto;
                 }
-                
+
                 .emoji-menu {
                     margin-top: 0px;
                     margin-left: -200px;
@@ -62,7 +61,7 @@
                 </div>
                 <!-- <md-divider></md-divider> -->
             </md-card-content>
-            <div ng-show="!composingPost">
+            <div ng-show="composingPost">
                 <div class="pl10 pr10" layout="row" layout-wrap>
                     <span class="label label-primary mr5 mt5" ng-repeat="c in selectedCategories">
                         {{::c.name}}
@@ -87,9 +86,9 @@
                         </md-card>
                     </div>
                 </div>
-                <md-button class="md-primary md-mini" accept="image/*" ngf-keep="'distinct'" ngf-select ngf-max-size="'2MB'" ng-model="files" multiple="multiple">
+                <md-button class="md-primary md-hue-2 md-raised no-shadow no-text-transform" accept="image/*" ngf-keep="'distinct'" ngf-select ngf-max-size="'2MB'" ng-model="files" multiple="multiple">
                     <my-icon icon="camera"></my-icon>
-                    Add Image
+
                     <md-tooltip md-delay="400" md-direction="down" md-autohide="true">
                         2MB max image size
                     </md-tooltip>
@@ -113,7 +112,7 @@
                             </span>
                             <span ng-show="newPost.creating">
                                             <md-progress-circular class="md-primary md-hue-3" md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
-                                            
+
                                         </span>
                         </md-button>
                     </div>

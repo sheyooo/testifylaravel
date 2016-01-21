@@ -21,7 +21,7 @@
 }
 
 .ng-enter[ui-view] {
-    animation: fadeIn 0.3s;
+    animation: fadeIn 0.4s;
 }
 
 .ng-leave[ui-view] {
