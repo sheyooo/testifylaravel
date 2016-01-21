@@ -1,5 +1,5 @@
-<md-content class="main bg-light-gray" layout="row" layout-wrap layout-fill ng-cloak>
-        <div flex-xs="100" flex-gt-xs="40" layout="column" style="">
+<md-content class="main bg-light-gray" layout="row" layout-wrap ng-cloak>
+        <div flex-xs="100" flex-gt-xs="40" layout="column">
             <md-card ng-cloak>
                 <md-toolbar class="md-primary">
                     <div class="md-toolbar-tools" layout="row">
@@ -25,13 +25,13 @@
                         </div>
                     </div>
                 </md-toolbar>
-                <md-card-content>
+                <md-card-content class="p5">
                     <div layout="row" layout-align="center center ">
                         <div flex="75" class="square-img-container img-circle img-thumbnail ">
                             <img class="img-circle" ng-src="{{::user_profile.avatar}} " />
                         </div>
                     </div>
-                    <div class="text-muted ">
+                    <div class="text-muted pt10">
                         <p class="md-title ">
                             <my-icon icon="account" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.name}} </p>
                         <p ng-if="user_profile.email">
@@ -50,7 +50,7 @@
                 </md-card-content>
             </md-card>
         </div>
-        <div flex-xs="100" flex-gt-xs="60" layout="column" style="overflow: auto;">
+        <div flex-xs="100" flex-gt-xs="60" layout="column" style="position: relative; overflow: auto;">
             <div layout="column" style="overflow: auto;">
                 <md-card layout="row" layout-xs="column">
                     <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised" ui-sref=".activities">Activity</md-button>
