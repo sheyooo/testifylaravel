@@ -165,21 +165,17 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
     }).state('web.app.signup', {
       url: 'signup',
       controller: 'LoginCtrl',
-      templateUrl: 'views/web.app.signup.html',
-      data: {
-        showSideNav: false
-      }
+      templateUrl: 'views/web.app.signup.html'
     }).state('web.app.logout', {
       url: 'logout',
-
       controller: 'LogoutCtrl',
-      template: " ",
-      data: {
-        showSideNav: false
-      }
+      template: " "
     }).state('web.app.landing', {
       url: '',
       templateUrl: 'views/web.app.landing.html',
+    }).state('web.app.forgot', {
+      url: 'forgot',
+      templateUrl: 'views/web.app.forgot-password.html',
     }).state('web.app.dashboard', {
       abstract: true,
       url: '',
@@ -187,9 +183,9 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
     }).state('web.app.dashboard.home', {
       url: 'home',
       templateUrl: 'views/web.app.dashboard.home.html'
-    }).state('web.app.dashboard.message', {
+    }).state('web.app.dashboard.messages', {
       url: 'messages',
-      templateUrl: 'views/web.app.dashboard.message.html'
+      templateUrl: 'views/web.app.dashboard.messages.html'
     }).state('web.app.dashboard.post', {
       url: 'post/:hash_id',
       templateUrl: 'views/web.app.dashboard.post.html'

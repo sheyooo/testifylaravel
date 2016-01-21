@@ -62,7 +62,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     action: null
   }, {
     link: '',
-    state: 'web.app.dashboard.message',
+    state: 'web.app.dashboard.messages',
     title: 'Messages',
     icon: 'message-text-outline',
     condition: 'user.authenticated',

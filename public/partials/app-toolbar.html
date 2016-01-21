@@ -29,7 +29,7 @@
                     </div>
                     <div flex layout="row" ng-if="user.authenticated" layout-align="center center" style="position: relative;">
                         <div class="btn-parent flat">
-                            <md-button class="no-m" aria-label="More " ng-click="redirect('web.app.login')">
+                            <md-button class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.messages')">
                                 <my-icon icon="email-outline">
                                 </my-icon>
                             </md-button>
@@ -64,20 +64,17 @@
                                 </md-button>
                                 <md-menu-content width="4">
                                     <md-menu-item ng-show="user.authenticated">
-                                        <md-button ng-click="">
-                                            <my-icon class="text-muted" icon="settings"></my-icon>
+                                        <md-button ui-sref="web.app.dashboard.user.edit({id: user.username || user.hash_id})">
                                             Preferences
                                         </md-button>
                                     </md-menu-item>
                                     <md-menu-item ng-hide="user.authenticated">
-                                        <md-button ui-sref="web.app.dashboard.user.edit({id: user.username || user.hash_id})">
-                                            <my-icon class="text-muted" icon="login"></my-icon>{{user}}
+                                        <md-button ui-sref="web.app.login">
                                             Login
                                         </md-button>
                                     </md-menu-item>
                                     <md-menu-item ng-show="user.authenticated">
                                         <md-button ng-click="logout()">
-                                            <my-icon class="text-muted" icon="logout"></my-icon>
                                             Logout
                                         </md-button>
                                     </md-menu-item>

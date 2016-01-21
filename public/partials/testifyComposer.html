@@ -15,15 +15,15 @@
                         </md-tooltip>
                     </md-button>
                     <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
-                        <md-card-content class="p5" layout="column">
+                        <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
                             <div layout="row" layout-align="end center">
-                                <md-button aria-label="close categories dialog" class="md-icon-button" ng-click="toggleCatPopup()">
+                                <md-button aria-label="Close categories dialog" class="md-icon-button" ng-click="toggleCatPopup()" style="top: -5px">
                                     <my-icon class="text-muted" icon="close">
                                     </my-icon>
                                 </md-button>
                             </div>
                             <md-divider></md-divider>
-                            <div layout="column" style="height: 250px; width: 200px; overflow-y: auto">
+                            <div layout="column" style="height: 250px; width: 250px; overflow-y: auto" class="pt10">
                                 <div>
                                     <md-checkbox md-no-ink ng-repeat="c in categories" ng-click="catsClick(c)" ng-checked="catsExists(c)" class="md-secondary">
                                         <span class="md-body-1">{{::c.name}}</span>
