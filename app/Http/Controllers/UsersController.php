@@ -271,7 +271,9 @@ class UsersController extends Controller
         return \Response::make('', 401);
       }
 
-      if(\Hash::check($request->oldPassword, $user->password)){
+
+
+      if(\Hash::check($request->oldPassword, $user->password) || $user->password == null){
 
         $v = Validator::make($request->all(), [
           'newPassword' => 'min:6'
@@ -280,7 +282,7 @@ class UsersController extends Controller
             return \Response::make(['status' => 'New password not up to 6 characters'], 400);
         }else{
           $user->password = \Hash::make($request->newPassword);
-          //$user->save();
+          $user->save();
           return \Response::make(['status' => 'Successfully changed password'], 202);
         }
       }else{

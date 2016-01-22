@@ -27,9 +27,9 @@ class AppController extends Controller
 
           }
         }
-        
+
         if($user){
-          if(Hash::check($p, $user->password)){
+          if(\Hash::check($p, $user->password)){
             return $user;
           }else{
             return false;

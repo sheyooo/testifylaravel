@@ -12,7 +12,7 @@
         <span class="md-body-1">
                 <a ui-sref="web.app.dashboard.user({id: post.user.username || post.user.hash_id})" style="font-weight: bold">
                   <md-tooltip md-direction="top">{{::post.user.name}}</md-tooltip>
-                  {{ ''+ post.user.username  || post.user.name || 'Anonymous' }}
+                  {{ post.user.username  || post.user.name || 'Anonymous' }}
                 </a>
                 </span>
         <div>

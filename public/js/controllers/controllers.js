@@ -267,6 +267,9 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
       Restangular.one('users', $scope.user.hash_id).one('profile').post(
         '', obj);
       Auth.userProfile.location = obj.location;
+      if(Auth.userProfile.profile === null){
+        Auth.userProfile.profile = {};
+      }
       Auth.userProfile.profile.favorite_book = obj.favorite_book;
       Auth.userProfile.profile.favorite_verse = obj.favorite_verse;
       Auth.userProfile.profile.favorite_parable = obj.favorite_parable;
@@ -319,8 +322,8 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
     };
 
     $scope.changePassword = function() {
-      if ($scope.password.oldPassword && $scope.password.newPassword &&
-        $scope.password.newPassword1) {
+      if ($scope.password.newPassword &&
+        $scope.password.newPassword1 && $scope.password.newPassword === $scope.password.newPassword1) {
         Restangular.one('users', $scope.user.hash_id).post('password',
           $scope.password).then(function(resp) {
           if (resp.status == 202) {
@@ -330,7 +333,7 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
           UXService.toast('Something\'s wrong');
         });
       } else {
-        UXService.toast('Fill all the boxes');
+        UXService.toast('Please repeat the password');
       }
     };
 

@@ -41,9 +41,27 @@ class Tools extends Controller
       return $data;
     }
 
-    public static function paginateByCreatedAt(){
+    public static function paginateByTimestamp(Request $request, $data){
 
+      if($request->after){
+        $data = $data->where('created_at' , '>' , $request->after);
+      }elseif($request->before){
+        $data = $data->where('created_at' , '<' , $request->before);
+      }
+
+      if($request->limit){
+        if($request->limit <= 15 && $request->limit >= 0){
+          $data = $data->take($request->limit);
+        }else{
+          $data = $data->take(15);
+        }
+      }else{
+        $data = $data->take(15);
+      }
+
+      return $data;
     }
+
 
     public static function uploadToAmazon($file, $key, $folder){
       if(!$folder){
