@@ -5,7 +5,8 @@ var gulp = require('gulp'),
   concat = require('gulp-concat'),
   ngAnnotate = require('gulp-ng-annotate'),
   mainBowerFiles = require('main-bower-files'),
-  sass = require('gulp-sass');
+  sass = require('gulp-sass'),
+  htmlReplace = require('gulp-html-replace');
 
 var bower_js_files = [
   "public/bower_components/jquery/dist/jquery.min.js",
@@ -32,6 +33,19 @@ var bower_js_files = [
 ];
 
 var bower_css_files = [];
+
+var cordova_www = [
+  'public/bower_components/angular-material/angular-material.min.css',
+  'public/bower_components/mdi/**/**',
+  'public/bower_components/angular-emoji-popup/**/**',
+  'public/dist/**/**',
+  'public/partials/**/**',
+  'public/templates/**/**',
+  'public/views/**/**',
+  'public/plugins/**/**',
+  'public/img/**/**',
+  'public/index.html'
+];
 
 var sass_files = [
   'public/plugins/override/angular-loading-bar/loading-bar.css',
@@ -63,7 +77,7 @@ gulp.task('js', function() {
 });
 
 gulp.task('css', function() {
-  gulp.src(sass_files)
+  return gulp.src(sass_files)
     .pipe(sourcemaps.init())
     .pipe(sass({
       outputStyle: 'compressed'
@@ -74,7 +88,7 @@ gulp.task('css', function() {
 });
 
 gulp.task('img_asset', function() {
-  gulp.src(img_asset_files)
+  return gulp.src(img_asset_files)
     .pipe(gulp.dest('public/dist/img/'));
 });
 
@@ -95,3 +109,8 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build', ['js', 'css', 'js_libs', 'img_asset']);
+
+gulp.task('cordova_sync', function(){
+  return gulp.src(cordova_www, {base: 'public/'})
+  .pipe(gulp.dest('cordova/www/'));
+});

@@ -15,10 +15,18 @@ var app = angular.module('testify', ['ngMaterial',
   'emojiApp'
 ]);
 
+var cordova = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+if ( cordova ) {
+  app.constant('apiBase', "https://testify-staging.herokuapp.com/api/v1");
+
+} else {
+
+  app.constant('appUrl', "https://testify-staging.herokuapp.com");
+  app.constant('appBase', "/");
+  app.constant('apiBase', "api/v1");
+}
+
 //app.constant('apiBase', "http://localhost/testify/api");
-app.constant('appUrl', "https://testify-staging.herokuapp.com");
-app.constant('appBase', "/");
-app.constant('apiBase', "https://testify-staging.herokuapp.com/api/v1");
 //app.constant('apiBase', "https://testify-for-testimonies.herokuapp.com/api");
 
 app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
@@ -229,7 +237,6 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
 
   $urlRouterProvider.otherwise(appBase + "home");
 
-  var cordova = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
   if ( cordova ) {
 
   } else {
