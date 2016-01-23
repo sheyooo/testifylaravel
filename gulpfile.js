@@ -29,7 +29,8 @@ var bower_js_files = [
   "public/bower_components/ng-file-upload/ng-file-upload.min.js",
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
   "public/bower_components/angular-emoji-popup/dist/js/config.js",
-  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js"
+  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
+  "public/bower_components/fastclick/lib/fastclick.js"
 ];
 
 var bower_css_files = [];
@@ -112,5 +113,15 @@ gulp.task('build', ['js', 'css', 'js_libs', 'img_asset']);
 
 gulp.task('cordova_sync', function(){
   return gulp.src(cordova_www, {base: 'public/'})
+  .pipe(gulp.dest('cordova/www/'));
+});
+
+gulp.task('cordovalize_index', function(){
+  return gulp.src('public/index.html')
+  .pipe(htmlReplace({
+    'cordova': "<script src=\'cordova.js\'></script>\n<meta http-equiv=\"Content-Security-Policy\" content=\"default-src *; style-src 'self' 'unsafe-inline' http: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; font-src http: file: ;\">",
+    'url-base': '',
+    'font-url': '<link href=\'http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic\' rel=\'stylesheet\'>'
+  }))
   .pipe(gulp.dest('cordova/www/'));
 });
