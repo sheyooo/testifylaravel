@@ -4,7 +4,7 @@ app.directive('leftSidenav', [function() {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'partials/left-sidenav.html'
+        templateUrl: 'partials/app/left-sidenav.html'
     };
 }]);
 
@@ -13,7 +13,7 @@ app.directive('rightSidenav', [function() {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'partials/right-sidenav.html'
+        templateUrl: 'partials/app/right-sidenav.html'
     };
 }]);
 
@@ -22,7 +22,7 @@ app.directive('searchbox', [function() {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'partials/searchbox.html'
+        templateUrl: 'partials/app/searchbox.html'
     };
 }]);
 
@@ -31,7 +31,7 @@ app.directive('appToolbar', [function() {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'partials/app-toolbar.html'
+        templateUrl: 'partials/app/app-toolbar.html'
     };
 }]);
 
@@ -40,7 +40,7 @@ app.directive('appToolbarNoLogin', [function() {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'partials/app-toolbar-no-login.html'
+        templateUrl: 'partials/app/app-toolbar-no-login.html'
     };
 }]);
 
@@ -49,7 +49,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
         restrict: 'A',
         transclude: true,
         replace: true,
-        templateUrl: 'templates/Post/posts.html',
+        templateUrl: 'partials/templates/Post/posts.html',
         scope: {
             posts: '=testifyPosts',
             post_status: '=postStatus'
@@ -84,7 +84,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
         scope: {
             post: '=testifyPost'
         },
-        templateUrl: 'templates/Post/post.html',
+        templateUrl: 'partials/templates/Post/post.html',
         link: function(scope, element, attrs, SuperTPostsCtrl) {
             scope.user = Auth.userProfile;
             scope.CommentsUI = {
@@ -338,7 +338,7 @@ app.directive('myIcon', ['$timeout', function($timeout) {
 app.directive('testifyComposer', [function() {
     return {
         restrict: 'A',
-        templateUrl: 'partials/testifyComposer.html',
+        templateUrl: 'partials/app/testifyComposer.html',
         //controller: 'TComposerCtrl'
     };
 }]);

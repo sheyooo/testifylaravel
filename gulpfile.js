@@ -6,9 +6,11 @@ var gulp = require('gulp'),
   ngAnnotate = require('gulp-ng-annotate'),
   mainBowerFiles = require('main-bower-files'),
   sass = require('gulp-sass'),
-  htmlReplace = require('gulp-html-replace');
+  htmlReplace = require('gulp-html-replace'),
+  tCache = require('gulp-angular-templatecache');
 
 var bower_js_files = [
+  "public/bower_components/fastclick/lib/fastclick.js",
   "public/bower_components/jquery/dist/jquery.min.js",
   "public/bower_components/angular/angular.min.js",
   "public/bower_components/angular-sanitize/angular-sanitize.min.js",
@@ -29,8 +31,13 @@ var bower_js_files = [
   "public/bower_components/ng-file-upload/ng-file-upload.min.js",
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
   "public/bower_components/angular-emoji-popup/dist/js/config.js",
-  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
-  "public/bower_components/fastclick/lib/fastclick.js"
+  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js"
+];
+
+var template_files = [
+  'public/**/*.html',
+  '!public/bower_components/**',
+  '!public/index.html',
 ];
 
 var bower_css_files = [];
@@ -103,13 +110,22 @@ gulp.task('js_libs', function() {
     .pipe(gulp.dest('public/dist/js/'));
 });
 
+gulp.task('tCache', function(){
+  return gulp.src(template_files)
+  .pipe(tCache({
+    module: 'testify'
+  }))
+  .pipe(gulp.dest('public/dist/js/'));
+});
+
 gulp.task('watch', function() {
   gulp.watch(['public/js/**/*.js'], ['js']);
   gulp.watch(sass_files, ['css']);
+  gulp.watch(template_files, ['tCache']);
 
 });
 
-gulp.task('build', ['js', 'css', 'js_libs', 'img_asset']);
+gulp.task('build', ['js', 'css', 'js_libs', 'tCache', 'img_asset']);
 
 gulp.task('cordova_sync', function(){
   return gulp.src(cordova_www, {base: 'public/'})

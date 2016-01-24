@@ -8,16 +8,16 @@
 }
 
 .category-modal-anim.ng-hide-remove {
-    animation: fadeInUp 0.2s;
+    animation: flipInX 0.5s;
 }
 
 .category-modal-anim.ng-hide-add {
-    animation: fadeOutDown 0.4s;
+    animation: fadeOut 0.3s;
 }
 
 .form-repeat-pass-anim.ng-hide-remove {
     position: relative;
-    animation: bounceInDown 0.5s;
+    animation: fadeIn 0.5s;
 }
 
 .ng-enter[ui-view] {
