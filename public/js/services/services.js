@@ -315,7 +315,7 @@ app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
       var d = $q.defer();
       $mdDialog.show({
           controller: 'UXModalLoginCtrl',
-          templateUrl: 'partials/ux.signin.modal.html',
+          templateUrl: 'partials/app/ux.signin.modal.html',
           parent: document.getElementsByClassName("dialog-holder"),
           targetEvent: ev,
           clickOutsideToClose: true
