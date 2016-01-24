@@ -331,7 +331,7 @@ app.directive('myIcon', ['$timeout', function($timeout) {
         link: function(scope, e, attrs) {
             //scope.icon = scope.icon;
         },
-        template: "<i class='mdi mdi-{{icon}}'></i>"
+        template: "<i class='mdi mdi-{{::icon}}'></i>"
     };
 }]);
 
