@@ -30,7 +30,9 @@ if ( cordova ) {
 
 //app.constant('apiBase', "http://localhost/testify/api");
 //app.constant('apiBase', "https://testify-for-testimonies.herokuapp.com/api");
-
+app.config(['$compileProvider', function ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}]);
 app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   apiBase) {
   FacebookProvider.setAppId(180042792329807);

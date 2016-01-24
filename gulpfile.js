@@ -10,8 +10,8 @@ var gulp = require('gulp'),
   tCache = require('gulp-angular-templatecache');
 
 var bower_js_files = [
-  "public/bower_components/fastclick/lib/fastclick.js",
   "public/bower_components/jquery/dist/jquery.min.js",
+  "public/bower_components/fastclick/lib/fastclick.js",
   "public/bower_components/angular/angular.min.js",
   "public/bower_components/angular-sanitize/angular-sanitize.min.js",
   "public/bower_components/angular-ui-router/release/angular-ui-router.min.js",
@@ -48,7 +48,6 @@ var cordova_www = [
   'public/bower_components/angular-emoji-popup/**/**',
   'public/dist/**/**',
   'public/partials/**/**',
-  'public/templates/**/**',
   'public/views/**/**',
   'public/plugins/**/**',
   'public/img/**/**',
