@@ -7,6 +7,11 @@
     animation: fadeOut 0.3s;
 }
 
+.ng-hide-add.searchbar-anim{
+    position: absolute;
+    animation: fadeOut 0.3s;
+}
+
 .category-modal-anim.ng-hide-remove {
     animation: flipInX 0.5s;
 }

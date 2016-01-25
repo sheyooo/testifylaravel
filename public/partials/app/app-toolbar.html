@@ -1,5 +1,5 @@
 <md-toolbar class="app-header md-primary md-whiteframe-z1" layout="row">
-    <div ng-hide="ui.showSearch" class="md-toolbar-tools" layout="row">
+     <div ng-hide="ui.showSearch" class="md-toolbar-tools searchbar-anim" layout="row">
         <div layout="row" flex="30" flex-sm="40" flex-xs="15">
             <div flex layout="row" layout-align="start center">
                 <md-button class="md-icon-button no-m" aria-label="Settings" ng-click="ui.toggleNav('left')" hide-gt-sm>
@@ -86,7 +86,7 @@
             </div>
         </div>
     </div>
-    <div ng-show="ui.showSearch" class="md-toolbar-tools" layout="row" layout-align="center center">
+    <div ng-show="ui.showSearch" class="md-toolbar-tools searchbar-anim" layout="row" layout-align="center center">
         <div style="height: 100%" layout="row" flex="60" flex-sm="70" flex-xs="100">
             <div layout="row" flex="90" flex-xs="85">
                 <div flex searchbox></div>

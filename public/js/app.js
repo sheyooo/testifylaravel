@@ -94,11 +94,9 @@ app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
 });
 
 app.run(function() {
-    if ('addEventListener' in document) {
-      document.addEventListener('DOMContentLoaded', function() {
-          FastClick.attach(document.body);
-      }, false);
-  }
+  window.addEventListener('load', function() {
+    new FastClick(document.body);
+  }, false);
 });
 
 app.config(function($mdThemingProvider) {

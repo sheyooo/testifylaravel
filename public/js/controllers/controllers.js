@@ -8,7 +8,6 @@ app.controller('LandingCtrl', ['Auth', '$state', function(Auth, $state) {
 
 }]);
 
-
 app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
   '$stateParams', 'Restangular', 'UXService', '$document',
   function(AppService, Me, $scope, $state, $stateParams, Restangular,
@@ -51,9 +50,6 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
     };
 
     loadPosts();
-
-
-
   }
 ]);
 
@@ -207,6 +203,10 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
       taps: []
     };
 
+    $scope.post_status = {
+      loading: true
+    };
+
 
     var loadUserProfile = function() {
       Restangular.one('users', $stateParams.id).one('profile').get().then(function(r){
@@ -217,6 +217,7 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
     var loadUserPosts = function() {
       user_profile.all('activities').getList().then(function(r) {
         $scope.user.activities = r.data;
+        $scope.post_status.loading = false;
       });
     };
 

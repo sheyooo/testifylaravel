@@ -8,7 +8,9 @@ var gulp = require('gulp'),
   sass = require('gulp-sass'),
   htmlReplace = require('gulp-html-replace'),
   tCache = require('gulp-angular-templatecache'),
-  imagemin = require('gulp-imagemin');
+  imagemin = require('gulp-imagemin'),
+  pngquant = require('imagemin-pngquant'),
+  jpegtran = require('imagemin-jpegtran');
 
 var bower_js_files = [
   "public/bower_components/jquery/dist/jquery.min.js",
@@ -100,11 +102,13 @@ gulp.task('css', function() {
     .pipe(gulp.dest('public/dist/css/'));
 });
 
-gulp.task('img_asset', function() {
+gulp.task('img_assets', function() {
   return gulp.src(img_asset_files)
     .pipe(imagemin({
-      progressive: true
+      progressive: true,
+      use: [pngquant(), jpegtran()]
     }))
+    .pipe(gulp.dest('public/img/'))
     .pipe(gulp.dest('public/dist/img/'));
 });
 
@@ -123,6 +127,7 @@ gulp.task('tCache', function(){
   .pipe(tCache({
     module: 'testify'
   }))
+  .pipe(uglify())
   .pipe(gulp.dest('public/dist/js/'));
 });
 

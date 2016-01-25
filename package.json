@@ -18,6 +18,8 @@
     "gulp-templatecache": "0.0.4",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
+    "imagemin-jpegtran": "^4.3.2",
+    "imagemin-pngquant": "^4.2.0",
     "jshint": "^2.8.0",
     "main-bower-files": "^2.11.0"
   },
