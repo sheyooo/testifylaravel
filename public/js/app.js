@@ -30,8 +30,10 @@ if ( cordova ) {
 
 //app.constant('apiBase', "http://localhost/testify/api");
 //app.constant('apiBase', "https://testify-for-testimonies.herokuapp.com/api");
-app.config(['$compileProvider', function ($compileProvider) {
+app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($compileProvider, $logProvider, $animateProvider) {
+  $logProvider.debugEnabled(false);
   $compileProvider.debugInfoEnabled(false);
+  $animateProvider.classNameFilter( /\banimated\b/ );
 }]);
 app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   apiBase) {
