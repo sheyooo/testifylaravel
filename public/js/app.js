@@ -92,8 +92,10 @@ app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
 });
 
 app.run(function() {
-  if (cordova){
-    FastClick.attach(document.body);
+    if ('addEventListener' in document) {
+      document.addEventListener('DOMContentLoaded', function() {
+          FastClick.attach(document.body);
+      }, false);
   }
 });
 
