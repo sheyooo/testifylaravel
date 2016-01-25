@@ -33,7 +33,7 @@ if ( cordova ) {
 app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($compileProvider, $logProvider, $animateProvider) {
   $logProvider.debugEnabled(false);
   $compileProvider.debugInfoEnabled(false);
-  $animateProvider.classNameFilter( /\banimated\b/ );
+  //$animateProvider.classNameFilter( /\banimated\b/ );
 }]);
 app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   apiBase) {
