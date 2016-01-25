@@ -192,6 +192,9 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
     }).state('web.app.dashboard.messages', {
       url: 'messages',
       templateUrl: 'views/web.app.dashboard.messages.html'
+    }).state('web.app.dashboard.message', {
+      url: 'messages/:user_id',
+      templateUrl: 'views/web.app.dashboard.message.html'
     }).state('web.app.dashboard.post', {
       url: 'post/:hash_id',
       templateUrl: 'views/web.app.dashboard.post.html'

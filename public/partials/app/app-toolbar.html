@@ -21,7 +21,7 @@
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="center center" style="position: relative;">
                         <div class="btn-parent flat">
-                            <md-button class="no-m" aria-label="Home" ng-click="redirect('web.app.dashboard.home')">
+                            <md-button md-no-ink class="no-m" aria-label="Home" ng-click="redirect('web.app.dashboard.home')">
                                 <my-icon icon="home">
                                 </my-icon>
                             </md-button>
@@ -29,7 +29,7 @@
                     </div>
                     <div flex layout="row" ng-if="user.authenticated" layout-align="center center" style="position: relative;">
                         <div class="btn-parent flat">
-                            <md-button class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.messages')">
+                            <md-button md-no-ink class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.messages')">
                                 <my-icon icon="email-outline">
                                 </my-icon>
                             </md-button>
@@ -50,7 +50,7 @@
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="end center" style="position: relative;">
                         <div hide-gt-md class="btn-parent flat">
-                            <md-button class="no-m" aria-label="Right Sidenav" ng-click="ui.toggleNav('right')">
+                            <md-button md-no-ink class="no-m" aria-label="Right Sidenav" ng-click="ui.toggleNav('right')">
                                 <my-icon icon="sort-variant">
                                 </my-icon>
                             </md-button>
@@ -59,7 +59,7 @@
                     <div flex layout="row" layout-align="end center" style="position: relative;">
                         <div class="btn-parent flat">
                             <md-menu class="no-p">
-                                <md-button aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)">
+                                <md-button md-no-ink aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)">
                                     <my-icon md-menu-origin icon="dots-vertical"></my-icon>
                                 </md-button>
                                 <md-menu-content width="4">

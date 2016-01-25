@@ -88,7 +88,8 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
         link: function(scope, element, attrs, SuperTPostsCtrl) {
             scope.user = Auth.userProfile;
             scope.CommentsUI = {
-                loading: false
+                loading: false,
+                retryButton: false
             };
 
             var actions = {
@@ -154,16 +155,17 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             scope.showCommentBox = false;
             scope.openCommentBox = function() {
                 //console.log(scope.post.post_id);
-                if (scope.showCommentBox === false) {
-                    scope.CommentsUI.loading = true;
-                    PostService.post(scope.post.id).getList('comments').then(function(r) {
-                        //console.log(r);
-                        scope.post.comments = r.data;
-                        scope.CommentsUI.loading = false;
-                    }, function(r) {
-                        scope.CommentsUI.loading = false;
-                    });
-                }
+                scope.CommentsUI.loading = true;
+                scope.CommentsUI.retryButton = false;
+                PostService.post(scope.post.id).getList('comments').then(function(r) {
+                    //console.log(r);
+                    scope.post.comments = r.data;
+                    scope.CommentsUI.loading = false;
+                }, function(r) {
+                    scope.CommentsUI.retryButton = true;
+                    scope.CommentsUI.loading = false;
+                });
+
                 scope.showCommentBox = true;
             };
 
@@ -174,13 +176,11 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                         PostService.post(scope.post.id).post('comments', {
                             text: scope.commentBox
                         }).then(function(r) {
-                            //console.log(r);
-
-                            //console.log(comment.text);
                             scope.post.comments_count++;
                             scope.post.comments.unshift(r.data);
                             scope.commentBox = "";
-
+                        }, function(r){
+                            UXService.toast('Sorry, couldn\'t post your comment check your network and try again ');
                         });
                     }
                 };
@@ -190,7 +190,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     UXService.signinModal(ev).then(function() {
                         doCommentPost();
                     }, function() {
-                        v = "Unsuccessful login";
+                        UXService.toast('Sorry, we couldn\'t sign you check your network and try again');
                     });
                 }
             };
@@ -303,9 +303,8 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             scope.shareToFb = function() {
                 Facebook.ui({
                     method: 'feed',
-                    //link: 'https://testify-for-testimonies.herokuapp.com/api/fb-share/56',
                     link: appUrl,
-                    picture: appUrl + '/img/testify-fb-share-pic.png',
+                    picture: appUrl + '/dist/img/testify-fb-share-pic.png',
                     name: 'Testify',
                     caption: 'Sharing God\'s goodness',
                     description: scope.post.text + ' (Tesfify is a community for sharing your testimonies and engaging with other people\'s testimonies)'

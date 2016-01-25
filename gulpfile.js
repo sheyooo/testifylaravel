@@ -71,6 +71,7 @@ var img_asset_files = [
   'public/img/small-logo.png',
   'public/img/testify.png',
   'public/img/testify_motto.png',
+  'public/img/**'
 ];
 
 

@@ -3,15 +3,17 @@
     <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
         <div style="height: auto">
           <md-card>
-            <md-card-header>
-              <md-card-avatar>
-                  <img ng-src="{{user.avatar}}" alt="">
-              </md-card-avatar>
-              <md-card-header-text>
-                <span class="md-title">Placeholder</span>
-                <span class="md-subhead">Placeholder</span>
-              </md-card-header-text>
-            </md-card-header>
+            <a ui-sref="web.app.dashboard.message({user_id: '@sheyooo'})">            
+              <md-card-header>
+                <md-card-avatar>
+                    <img ng-src="{{user.avatar}}" alt="">
+                </md-card-avatar>
+                <md-card-header-text>
+                  <span class="md-title">Placeholder</span>
+                  <span class="md-subhead">Placeholder</span>
+                </md-card-header-text>
+              </md-card-header>
+            </a>
           </md-card>
         </div>
     </div>

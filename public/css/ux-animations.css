@@ -3,7 +3,7 @@
 }
 
 .ng-hide-add {
-    position: absolute;
+    /*position: absolute;*/
     animation: fadeOut 0.3s;
 }
 

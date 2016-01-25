@@ -1,3 +1,14 @@
+app.controller('LandingCtrl', ['Auth', '$state', function(Auth, $state) {
+  Auth.refreshProfile().then(function(){
+    if (Auth.userProfile.authenticated === true) {
+      $state.go('web.app.dashboard.home');
+    }
+  });
+
+
+}]);
+
+
 app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
   '$stateParams', 'Restangular', 'UXService', '$document',
   function(AppService, Me, $scope, $state, $stateParams, Restangular,

@@ -88,7 +88,7 @@
       <md-divider></md-divider>
       <md-divider></md-divider>
     </div>
-    <div layout="row" class="pt10">
+    <div layout="row" class="pt5 pb5">
       <md-button ng-if="post.prayer" ng-disabled="post.amen" class="no-m" layout="row" layout-align="start center" ng-click="sayAmen($event)" ng-class="{'md-accent md-hue-2' : !post.amen,'md-primary md-hue-2' : post.amen}">
         <my-icon icon="telegram"></my-icon>
         <span hide show-gt-xs class="text-muted">Amen</span>
@@ -109,7 +109,7 @@
         <span hide show-gt-md>share</span>
       </md-button>
     </div>
-    <div ng-show="showCommentBox ">
+    <div ng-show="showCommentBox">
       <md-divider></md-divider>
       <div layout="column" class="pl10 pt10">
         <div layout="row" class="pb5">
@@ -165,6 +165,12 @@
         </div>
         <div class="pt10" ng-show="CommentsUI.loading" layout="row" layout-align="center center" style="height: 40px;">
           <md-progress-circular md-mode="indeterminate" md-diameter="50px"></md-progress-circular>
+        </div>
+        <div class="pt10" ng-show="CommentsUI.retryButton" layout="row" layout-align="center center" style="height: 40px;">
+          <md-button class="md-raised no-shadow no-text-transform md-primary md-hue-2" ng-click="openCommentBox()">
+            <my-icon icon="refresh"></my-icon>
+            Retry
+          </md-button>
         </div>
         <a href="" class="mt5 mb5">Show more comments</a>
       </div>

@@ -1,0 +1,43 @@
+<div layout="row" flex layout="row" layout-fill layout-wrap layout-align="center start" ng-controller="MessagesCtrl">
+    <span flex="20" flex-md="10" flex-sm="0"></span>
+    <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
+      <md-card style="height: 100%; max-height: 100%; position: relative; overflow: auto">
+        <md-card-header>
+          <md-card-avatar>
+            <img class="md-user-avatar" ng-src="{{::user.avatar}}"/>
+          </md-card-avatar>
+          <md-card-header-text>
+            <span class="md-title">Seyi</span>
+            <span class="md-subhead">You are messaging Seyi</span>
+          </md-card-header-text>
+        </md-card-header>
+        <md-content class="p5">
+          <div ng-repeat="comment in [1,2,3,4,5,6,7,8,9,10,12]">
+            <div layout="row" flex layout-fill class="">
+              <div flex="10" flex-sm="10">
+                <div class="square-img-container">
+                  <img class="" ng-src="{{::user.avatar}}">
+                </div>
+              </div>
+              <div flex layout="column" class="ml5">
+                <div>
+                  <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({hash_id: user.hash_id})">{{::user.name}}</a>
+                </div>
+                <span class="md-body-1">
+                  {{::user.name}}
+                </span>
+                <span class="md-caption">
+                    <time am-time-ago="::user.created_at"></time>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </md-content>
+        <md-card-footer>
+          <input type="text" name="name" value="">
+        </md-card-footer>
+      </md-card>
+    </div>
+    <span flex="20" flex-md="10" flex-sm="0"></span>
+</div>
