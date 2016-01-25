@@ -7,7 +7,8 @@ var gulp = require('gulp'),
   mainBowerFiles = require('main-bower-files'),
   sass = require('gulp-sass'),
   htmlReplace = require('gulp-html-replace'),
-  tCache = require('gulp-angular-templatecache');
+  tCache = require('gulp-angular-templatecache'),
+  imagemin = require('gulp-imagemin');
 
 var bower_js_files = [
   "public/bower_components/jquery/dist/jquery.min.js",
@@ -65,7 +66,11 @@ var sass_files = [
 
 var img_asset_files = [
   'public/img/1.jpg',
-  'public/img/concert.jpg'
+  'public/img/concert.jpg',
+  'public/img/guest.png',
+  'public/img/small-logo.png',
+  'public/img/testify.png',
+  'public/img/testify_motto.png',
 ];
 
 
@@ -96,6 +101,9 @@ gulp.task('css', function() {
 
 gulp.task('img_asset', function() {
   return gulp.src(img_asset_files)
+    .pipe(imagemin({
+      progressive: true
+    }))
     .pipe(gulp.dest('public/dist/img/'));
 });
 
