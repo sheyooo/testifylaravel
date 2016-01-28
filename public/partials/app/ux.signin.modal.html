@@ -1,16 +1,7 @@
-<md-dialog aria-label="Signin | Signup" ng-cloak flex="30" flex-sm="80" flex-xs="95" ng-controller="LoginCtrl">
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h4 class="text-center" flex>Please sign in to continue</h4>
-            <md-button aria-label="Close" class="md-icon-button" ng-click="cancel()">
-                <my-icon icon="close"></my-icon>
-            </md-button>
-        </div>
-    </md-toolbar>
-    <md-dialog-content style="max-height:810px; ">
-        <div class="md-dialog-content" layout="row">
+<md-dialog aria-label="Signin | Signup" ng-cloak flex="40" flex-md="50" flex-sm="80" flex-xs="95" ng-controller="LoginCtrl">
+
             <div layout="column" flex="100">
-              <md-card flex="30" flex-xs="95" flex-sm="60" flex-md="50" style="overflow: hidden">
+              <md-card class="no-m" style="overflow: hidden">
                   <md-toolbar class="md-hue-2" layout="row" layout-align="center center">
                       <h3>LOGIN TO TESTIFY</h3>
                   </md-toolbar>
@@ -48,6 +39,4 @@
                   </md-card-content>
               </md-card>
             </div>
-        </div>
-    </md-dialog-content>
 </md-dialog>
