@@ -208,15 +208,36 @@ class UsersController extends Controller
     }
 
     public function getActivities(Request $request, $id){
+      try{
+        $jwtUser = \JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        $jwtUser = null;
+      };
+
+
 
       try{
         $user = $this->findUser($id);
         $posts = \App\Post::whereHas('postActivities', function($query) use($user){
           return $query->where('user_id', $user->id);
         });
+
         $posts = $posts->orWhereHas('user', function($query) use($user){
           return $query->where('user_id', $user->id);
-        });
+        })->where([
+          ['user_id', $user->id]
+        ]);
+
+        if($jwtUser){
+          if($jwtUser->id == $user->id){
+            //Do nothing so anonymous posts of the jwtUser will be sent
+          }else{
+            $posts = $posts->where('anonymous', '0');
+          }
+        }else {
+          $posts = $posts->where('anonymous', '0');
+        }
+
         $posts = $posts->orderBy('created_at', 'desc');
         $posts = Tools::paginateByID($request, $posts);
         $posts = $posts->get();

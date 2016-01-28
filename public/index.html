@@ -2,34 +2,35 @@
 <html ng-app="testify" ng-controller="AppCtrl">
 
 <head>
-  <!-- build:cordova  -->
+  <!-- build:csp  -->
+  <!-- endbuild -->
+
+  <!-- build:base-url  -->
+  <base href="/">
   <!-- endbuild -->
 
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="author" content="Seyi Adekoya">
   <meta name="HandheldFriendly" content="true">
+
   <meta property="og:title" content="Sharing God's goodness | Testify">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://testify-staging.herokuapp.com">
   <meta property="og:site_name" content="Testify">
   <meta property="og:description" content="A community to share your testimonies and prayers">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
   <meta name="description" content="A community to share your testimonies and prayers">
   <meta name="keywords" content="Testify, testimony, prayer, christian, religion, nigeria, prayer request, christian community">
-  <!-- build:base-url  -->
-  <base href="/"></base>
-  <!-- endbuild -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="icon" href="img/favicon.png">
   <title>Testify | Sharing God's goodness</title>
-  <link href="plugins/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,500,700,400italic' rel='stylesheet'> -->
   <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic' rel='stylesheet'> -->
   <!-- build:font-url -->
 
   <!-- endbuild -->
-  <link href="bower_components/angular-material/angular-material.min.css" rel="stylesheet">
   <link href="bower_components/mdi/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="bower_components/angular-emoji-popup/dist/css/emoji.min.css" rel="stylesheet">
   <link href="dist/css/all.css" rel="stylesheet">
@@ -37,13 +38,39 @@
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
           display: none !important;
         }
+  </style>
+  <noscript>
+    <style type="text/css">
+          [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: block !important;
+            background: white;
+          }
+          .js-disabled-bar {
+            display: block;
+            display: absolute;
+            top: 0px;
+            bottom: 0px;
+            width: 100%;
+            height: auto;
+            background: #5DADE0;
+            color: #fff;
+            margin: 0px;
+            padding: 30px;
+          }
     </style>
-
+    <h3 class="js-disabled-bar"><a href="http://www.enable-javascript.com/" target="_blank" style="color: #fff;">Sorry, Testify needs JavaScript to work! Click here to see how to enable JavaScript in your web browser</a></h3>
+  </noscript>
 </head>
-
 <body ng-cloak layout="column">
   <div ui-view class="layout-fill"></div>
+  <!-- build:cordova -->
+
+  <!-- endbuild -->
   <script src="dist/js/libs.js"></script>
+  <!-- build:ng-cordova -->
+
+  <!-- endbuild -->
+
   <script src="dist/js/app.js"></script>
   <script src="dist/js/templates.js"></script>
 </body>

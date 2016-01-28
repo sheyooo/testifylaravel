@@ -1,23 +1,16 @@
 <div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
     <form novalidate>
         <md-card style="overflow: visible">
-                <div class="pt5 pl10" layout="row">
-                    <div flex="90" flex-xs="80" layout="row">
+                <div class layout="column">
+                    <div flex layout="row" class="p10">
                         <div class="square-img-container mr10" style="width: 40px; height: 40px;">
                             <img class="img-circle" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
                         </div>
                         <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{ user.name }}</span>
                     </div>
-                    <md-button class="md-primary md-hue-2 md-fab md-mini btn-outline" ng-click="toggleCatPopup()">
-                        <my-icon icon="tag-multiple"></my-icon>
-                        <md-tooltip md-delay="400" md-direction="top" md-autohide="true">
-                            Select categories
-                        </md-tooltip>
-                    </md-button>
                     <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
                         <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
-
-                            <div layout="column" style="height: 250px; width: 250px; overflow-y: auto" class="pt10">
+                            <div layout="column" style="height: 250px; width: 260px; overflow-y: auto" class="pt10">
                                 <div>
                                     <md-checkbox md-no-ink ng-repeat="c in categories" ng-click="catsClick(c)" ng-checked="catsExists(c)" class="md-secondary">
                                         <span class="md-body-1">{{::c.name}}</span>
@@ -48,7 +41,8 @@
                 }
                 </style>
                 <div emoji-form emoji-message="emojiMessage" layout="row">
-                    <textarea placeholder="share your testimony..." id="messageInput" ng-model="post"></textarea>
+                    <textarea placeholder="share your testimony..." id="messageInput" ng-model="post"
+                    ng-model-options="{ debounce: 7000 }"></textarea>
                     <button id="emojibtn" style="height: 36px; border: none">
                         <i class="icon icon-emoji"></i>
                     </button>
@@ -92,19 +86,28 @@
                     <span flex></span>
                     <md-switch name="anonymous" aria-label="Post anonymously" class="text-muted md-caption" ng-model="anonymous">
                         Post anonymously
-                        <md-tooltip md-delay="400" md-direction="left" md-autohide="true">
+                        <md-tooltip md-delay="400" md-direction="down" md-autohide="true">
                             Make this post anonymous
                         </md-tooltip>
                     </md-switch>
-                    <div layout="row" layout-padding>
-                        <md-button style="color: white;" class="no-text-transform no-shadow md-primary md-hue-2 md-raised" layout="row" ng-click="composePost($event)">
-                            <span ng-hide="newPost.creating">
+                    <div layout="row" class="pt10 pb10">
+                      <md-button class="md-primary md-hue-2 md-fab md-mini btn-outline mt0 mb0" ng-click="::toggleCatPopup()">
+                          <my-icon icon="tag-multiple"></my-icon>
+                          <md-tooltip md-delay="400" md-direction="down" md-autohide="true">
+                              Select categories
+                          </md-tooltip>
+                      </md-button>
+                    </div>
+
+                    <div layout="row" class="pt10 pb10">
+                        <md-button style="color: white;" class="no-text-transform no-shadow md-primary md-hue-2 md-raised mt0 mb0" layout="row" ng-click="::composePost($event)">
+                            <span ng-hide="newPost.creating" class="absolute-animation">
                                         <my-icon icon="send" style="line-height: 0px;
                                         position: relative;
                                         top: -2px;"></my-icon>
                                         <span>Post</span>
                             </span>
-                            <span ng-show="newPost.creating">
+                            <span ng-show="newPost.creating" class="absolute-animation">
                                             <md-progress-circular class="md-primary md-hue-3" md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
 
                                         </span>

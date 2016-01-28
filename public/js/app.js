@@ -97,6 +97,7 @@ app.run(function() {
   window.addEventListener('load', function() {
     new FastClick(document.body);
   }, false);
+
 });
 
 app.config(function($mdThemingProvider) {

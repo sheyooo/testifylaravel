@@ -33,7 +33,8 @@
     "angular-sanitize": "~1.4.8",
     "animate.css": "~3.5.1",
     "lodash": "3",
-    "fastclick": "~1.0.6"
+    "fastclick": "~1.0.6",
+    "ngCordova": "~0.1.24-alpha"
   },
   "resolutions": {
     "angular": "^1.4.8",

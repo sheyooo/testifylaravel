@@ -1,5 +1,5 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
@@ -22,7 +22,10 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   //console.log($scope.tokHashId);
 
   AppService.getCategoriesWithCount.then(function(cats) {
-
+    var l = cats.data.length;
+    for(var i = 0; i < l; i++){
+      cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
+    };
     $scope.categories = cats.data;
   });
 

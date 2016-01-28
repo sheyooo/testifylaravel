@@ -6,7 +6,7 @@
                         <span flex>
                         </span>
                         <div layout="row" layout-align="end center">
-                            <md-button class="md-icon-button" aria-label="Message {{user.profile.name}}">
+                            <md-button class="md-icon-button" ui-sref="web.app.dashboard.message({user_id: user.username || user.hash_id})" aria-label="Message {{user.profile.name}}">
                                 <my-icon icon="message-text-outline"></my-icon>
                             </md-button>
                             <md-menu class="no-p">
@@ -53,9 +53,9 @@
         <div flex-xs="100" flex-gt-xs="60" layout="column" style="position: relative; overflow: auto;">
             <div layout="column" style="overflow: auto;">
                 <md-card layout="row" layout-xs="column">
-                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".activities">Activity</md-button>
-                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".favorites">Favorites</md-button>
-                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".taps">Posts tapped into</md-button>
+                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".activities" ng-click="::loadUserActivities()">Activity</md-button>
+                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".favorites" ng-click="::loadUserFavorites()">Favorites</md-button>
+                    <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".taps" ng-click="::loadUserTaps()">Posts tapped into</md-button>
                 </md-card>
                 <md-content class='no-bg' ui-view>
                 </md-content>

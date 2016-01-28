@@ -12,13 +12,13 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
   '$stateParams', 'Restangular', 'UXService', '$document',
   function(AppService, Me, $scope, $state, $stateParams, Restangular,
     UXService, $document) {
-    $scope.app = AppService.app; //Post.getList();
-    $scope.post_status = {
-      loading: false
+    $scope.home = {
+      posts: AppService.app.posts,
+      posts_loading: false
     };
     var loadPosts = function() {
       var param = null;
-      $scope.post_status.loading = true;
+      $scope.home.posts_loading = true;
 
       if ($stateParams.cat) {
         load({
@@ -33,16 +33,17 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
 
         AppService.getPosts.getList(param).then(function(r) {
           //console.log(AppService.app);
+          $scope.home.posts = r.data;
           AppService.app.posts = r.data;
           /*l = r.data.length;
           for (i = 0; i < l; i++) {
               AppService.app.posts.unshift(r.data[i]);
           }*/
 
-          $scope.post_status.loading = false;
+          $scope.home.posts_loading = false;
           //console.log(r.data.plain());
         }, function(err) {
-          $scope.post_status.loading = false;
+          $scope.home.posts_loading = false;
           //console.log(err);
           UXService.toast("Something's wrong");
         });
@@ -198,45 +199,68 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
 
     $scope.user = {
       profile: {},
-      activities: [],
-      favorites: [],
-      taps: []
+      activities: {posts:[], loading: true},
+      favorites: {posts:[], loading: true},
+      taps: {posts:[], loading: true}
     };
 
-    $scope.post_status = {
-      loading: true
-    };
-
-
-    var loadUserProfile = function() {
+    $scope.loadUserProfile = function() {
       Restangular.one('users', $stateParams.id).one('profile').get().then(function(r){
         $scope.user_profile = r.data;
       });
     };
 
-    var loadUserPosts = function() {
+    $scope.loadUserActivities = function() {
+      $scope.user.activities.loading = true;
       user_profile.all('activities').getList().then(function(r) {
-        $scope.user.activities = r.data;
-        $scope.post_status.loading = false;
+        $scope.user.activities.posts = r.data;
+        $scope.user.activities.loading = false;
       });
     };
 
-    var loadUserFavorites = function() {
+    $scope.loadUserFavorites = function() {
+      $scope.user.favorites.loading = true;
+
       user_profile.all('favorites').getList().then(function(r) {
-        $scope.user.favorites = r.data;
+        $scope.user.favorites.posts = r.data;
+        $scope.user.favorites.loading = false;
+
       });
     };
 
-    var loadUserTaps = function() {
+    $scope.loadUserTaps = function() {
+      $scope.user.taps.loading = true;
+
       user_profile.all('taps').getList().then(function(r) {
-        $scope.user.taps = r.data;
+        $scope.user.taps.posts = r.data;
+        $scope.user.taps.loading = false;
+
       });
     };
 
-    loadUserProfile();
-    loadUserPosts();
-    loadUserFavorites();
-    loadUserTaps();
+    var load = function(){
+      $scope.loadUserProfile();
+
+      switch ($state.current.name) {
+        case 'web.app.dashboard.user.favorites':
+          $scope.loadUserFavorites();
+          break;
+        case 'web.app.dashboard.user.taps':
+          $scope.loadUserTaps();
+          break;
+        case 'web.app.dashboard.user.activities':
+          $scope.loadUserActivities();
+          break;
+        default:
+          $scope.loadUserActivities();
+        }
+
+    };
+
+    load();
+
+
+
 
 
   }
@@ -513,7 +537,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
           $scope.newPost.creating = false;
 
           if (r.status === 201) {
-            $scope.app.posts.unshift(r.data);
+            $scope.home.posts.unshift(r.data);
             //console.log(r.data);
           }
 

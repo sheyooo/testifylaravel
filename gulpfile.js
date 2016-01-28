@@ -1,11 +1,15 @@
 var gulp = require('gulp'),
+  addSrc = require('gulp-add-src'),
   jshint = require('gulp-jshint'),
   uglify = require('gulp-uglify'),
+  uglifyCss = require('gulp-uglifycss'),
   sourcemaps = require('gulp-sourcemaps'),
   concat = require('gulp-concat'),
   ngAnnotate = require('gulp-ng-annotate'),
   mainBowerFiles = require('main-bower-files'),
   sass = require('gulp-sass'),
+  prefix = require('gulp-autoprefixer'),
+  postcss = require('gulp-postcss'),
   htmlReplace = require('gulp-html-replace'),
   tCache = require('gulp-angular-templatecache'),
   imagemin = require('gulp-imagemin'),
@@ -43,27 +47,31 @@ var template_files = [
   '!public/index.html',
 ];
 
-var bower_css_files = [];
+var css_files = [
+  'public/plugins/bootstrap/dist/css/bootstrap.min.css',
+  'public/bower_components/angular-material/angular-material.min.css',
+  'public/plugins/override/angular-loading-bar/loading-bar.css',
+  'public/css/main.css',
+  'public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css',
+  'public/bower_components/animate.css/animate.min.css',
+  'public/css/ux-animations.css'
+];
+
+var sass_files = [
+  'public/css/scss/app.scss',
+];
 
 var cordova_www = [
   'public/bower_components/angular-material/angular-material.min.css',
   'public/bower_components/mdi/**/**',
   'public/bower_components/angular-emoji-popup/**/**',
+  'public/bower_components/ngCordova/**/**',
   'public/dist/**/**',
   'public/partials/**/**',
   'public/views/**/**',
   'public/plugins/**/**',
   'public/img/**/**',
-  'public/index.html'
-];
-
-var sass_files = [
-  'public/plugins/override/angular-loading-bar/loading-bar.css',
-  'public/css/scss/app.scss',
-  'public/css/main.css',
-  "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css",
-  'public/bower_components/animate.css/animate.min.css',
-  'public/css/ux-animations.css'
+  '!public/index.html'
 ];
 
 var img_asset_files = [
@@ -91,15 +99,20 @@ gulp.task('js', function() {
     .pipe(gulp.dest('public/dist/js/'));
 });
 
-gulp.task('css', function() {
+gulp.task('css', function(){
   return gulp.src(sass_files)
     .pipe(sourcemaps.init())
     .pipe(sass({
       outputStyle: 'compressed'
     }))
+    .pipe(addSrc.prepend(css_files))
+    .pipe(prefix())
+    .pipe(postcss([require('postcss-flexboxfixer')]))
+    .pipe(uglifyCss())
     .pipe(concat('all.css'))
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/dist/css/'));
+
 });
 
 gulp.task('img_assets', function() {
@@ -133,7 +146,7 @@ gulp.task('tCache', function(){
 
 gulp.task('watch', function() {
   gulp.watch(['public/js/**/*.js'], ['js']);
-  gulp.watch(sass_files, ['css']);
+  gulp.watch([sass_files, css_files], ['css']);
   gulp.watch(template_files, ['tCache']);
 
 });
@@ -148,9 +161,11 @@ gulp.task('cordova_sync', function(){
 gulp.task('cordovalize_index', function(){
   return gulp.src('public/index.html')
   .pipe(htmlReplace({
-    'cordova': "<script src=\'cordova.js\'></script>\n<meta http-equiv=\"Content-Security-Policy\" content=\"default-src *; style-src 'self' 'unsafe-inline' http: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; font-src http: file: ;\">",
+    'csp': "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src *; style-src 'self' 'unsafe-inline' http: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; font-src http: file: ;\">",
+    'cordova': "<script src=\'cordova.js\'></script>",
     'url-base': '',
-    'font-url': '<link href=\'http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic\' rel=\'stylesheet\'>'
+    'font-url': '<link href=\'dist/css/local-roboto-font.css\' rel=\'stylesheet\'>',
+    'ng-cordova': '<script src=\'bower_components/ngCordova/dist/ng-cordova.min.js\'></script>'
   }))
   .pipe(gulp.dest('cordova/www/'));
 });

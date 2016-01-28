@@ -7,7 +7,8 @@
     animation: fadeOut 0.3s;
 }
 
-.ng-hide-add.searchbar-anim{
+.ng-hide-add.searchbar-anim,
+.ng-hide-add.absolute-animation {
     position: absolute;
     animation: fadeOut 0.3s;
 }

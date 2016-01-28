@@ -1,3 +1,8 @@
+app.factory('isCordova', [function(){
+  var cordova = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+  return cordova;
+}]);
+
 app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   Auth, Me) {
 
@@ -32,9 +37,17 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   };
 }]);
 
+app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
+  if(isCordova){
+    return $window.facebookConnectPlugin;
+  }else {
+    return Facebook;
+  }
+}]);
+
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  'Facebook',
-  function($http, $localStorage, Restangular, $q, $state, Facebook) {
+  'FB', 'isCordova',
+  function($http, $localStorage, Restangular, $q, $state, FB, isCordova) {
     var user = {
       authenticated: false,
       id: null,
@@ -199,15 +212,26 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
         }
         return d.promise;
       };
-
-      Facebook.login(function(r) {
-        //console.log(r);
-        doFbLogin(r).then(function() {
-          d.resolve();
-        }, function(r) {
-          d.reject(r);
+      if(isCordova){
+        FB.login(['public_profile'], function(r) {
+          //console.log(r);
+          doFbLogin(r).then(function() {
+            d.resolve();
+          }, function(r) {
+            d.reject(r);
+          });
         });
-      });
+      }else{
+        FB.login(function(r) {
+          //console.log(r);
+          doFbLogin(r).then(function() {
+            d.resolve();
+          }, function(r) {
+            d.reject(r);
+          });
+        });
+      }
+
 
       return d.promise;
     };

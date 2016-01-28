@@ -52,7 +52,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
         templateUrl: 'partials/templates/Post/posts.html',
         scope: {
             posts: '=testifyPosts',
-            post_status: '=postStatus'
+            loading: '=loading'
         },
         controller: function($scope) {
             //console.log($scope.posts);
@@ -77,7 +77,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
     };
 }]);
 
-app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'Facebook', 'appUrl', function(PostService, CommentService, Auth, UXService, Facebook, appUrl) {
+app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'Facebook', 'appUrl', '$filter', function(PostService, CommentService, Auth, UXService, Facebook, appUrl, $filter) {
     return {
         restrict: 'A',
         require: "^?testifyPosts",
@@ -145,12 +145,41 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
 
             }
 
+            scope.showMore = false;
+            var less, more;
+            var postWordsCount = scope.post.text.split(' ').length;
+            more = $filter('colonToSmiley')(scope.post.text);
+            if(postWordsCount > 60){
+              var all_array = scope.post.text.split(' ');
+              less = all_array.slice(0, 60 - 1).join(' ') + '...';
+              less = $filter('colonToSmiley')(less);
+              scope.optimizedText = less;
+              scope.post_truncate = true;
+            }else{
+              scope.optimizedText = more;
+            }
+
+            scope.toggleMore = function () {
+              if(scope.showMore){
+                scope.optimizedText = less;
+              }else{
+                scope.optimizedText = more;
+              }
+              scope.showMore = !scope.showMore;
+            };
+
+
             var originatorEv;
             scope.openMenu = function($mdOpenMenu, ev) {
                 originatorEv = ev;
                 $mdOpenMenu(ev);
                 //console.log(ev)
             };
+            if(scope.post.prayer){
+              scope.amens_count = $filter('socialCounter')(scope.post.amens_count);
+            }
+            scope.taps_count = $filter('socialCounter')(scope.post.taps_count);
+            scope.comments_count = $filter('socialCounter')(scope.post.comments_count);
 
             scope.showCommentBox = false;
             scope.openCommentBox = function() {
@@ -177,6 +206,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                             text: scope.commentBox
                         }).then(function(r) {
                             scope.post.comments_count++;
+                            scope.comments_count = $filter('socialCounter')(scope.post.comments_count);
                             scope.post.comments.unshift(r.data);
                             scope.commentBox = "";
                         }, function(r){
@@ -207,6 +237,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     //array.splice(removeIndex, 1);
                     scope.post.comments.splice(i, 1);
                     scope.post.comments_count--;
+                    scope.comments_count = $filter('socialCounter')(scope.post.comments_count);
 
                     //scope.post = "";
 
@@ -255,6 +286,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                             //console.log(r);
                             scope.post.tapped_into = r.data.status;
                             scope.post.taps_count = r.data.count;
+                            scope.taps_count = $filter('socialCounter')(scope.post.taps_count);
                         });
                     } else {
                         scope.post.tapped_into = true;
@@ -263,6 +295,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                             //console.log("created");
                             scope.post.tapped_into = r.data.status;
                             scope.post.taps_count = r.data.count;
+                            scope.taps_count = $filter('socialCounter')(scope.post.taps_count);
                         });
                     }
                 };
@@ -284,9 +317,9 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     scope.post.amen = true;
                     scope.post.amens_count++;
                     PostService.post(scope.post.id).one('amens').post().then(function(r) {
-                        //console.log("created");
                         scope.post.amen = r.data.status;
                         scope.post.amens_count = r.data.count;
+                        scope.amens_count = $filter('socialCounter')(scope.post.amens_count);
                     });
 
                 };

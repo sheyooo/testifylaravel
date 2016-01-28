@@ -1,7 +1,7 @@
 <div layout="column" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate" ng-if="post_status.loading" md-diameter="100px"></md-progress-circular>
+    <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="100px"></md-progress-circular>
     <div layout="column" style="width: 100%">
-        <div ng-if=" !post_status.loading && !posts.length" layout="column">
+        <div ng-if=" !loading && !posts.length" layout="column">
             <div layout="row" layout-align="center center">
                 <my-icon class="text-muted" icon="comment-alert-outline" id="no-posts-iconography"></my-icon>
                 <style type="text/css">

@@ -1,27 +1,29 @@
 <md-card-content class="p5">
-  <div layout="column" layout-align="start top">
-    <div ng-if="post.user_ref_activities.length" layout="column" layout-fill class="">
+  <div layout="column">
+    <div ng-if="::post.user_ref_activities.length" layout="column">
       <span class="layout-padding"><a class="pl0 pr0" ui-sref="web.app.dashboard.user({id: post.user_ref.username || post.user_ref.hash_id})" style="font-weight: bold;">{{::post.user_ref.name}}</a> {{::interpretation}}</span>
       <md-divider class="mb10"></md-divider>
     </div>
-    <div layout="row" flex layout-fill class="pl10 pt10">
+    <div layout="row" flex class="pt10">
       <div flex="10" flex-sm="15" flex-xs="15" class="square-img-container">
-        <img class="img-circle square2" ng-src="{{::post.user.avatar || 'img/favicon.png'}}" alt="{{::post.user.name}}">
+        <a ui-sref="web.app.dashboard.user({id: post.user.username || post.user.hash_id})">
+          <img class="img-circle square2" ng-src="{{::post.user.avatar || 'img/favicon.png'}}" alt="{{::post.user.name}}">
+        </a>
       </div>
       <div flex layout="column" class="ml15">
         <span class="md-body-1">
                 <a ui-sref="web.app.dashboard.user({id: post.user.username || post.user.hash_id})" style="font-weight: bold">
-                  <md-tooltip md-direction="top">{{::post.user.name}}</md-tooltip>
-                  {{ post.user.username  || post.user.name || 'Anonymous' }}
+                  <md-tooltip md-direction="top">{{::post.user.name || 'Anonymous post'}}</md-tooltip>
+                  {{ ::post.user.username  || post.user.name || 'Anonymous' }}
                 </a>
-                </span>
+        </span>
         <div>
-          <span ng-if="post.user.location" style="font-size: 10px;" class="label label-default md-caption">{{::post.user.location}}</span>
+          <span ng-if="::post.user.location" style="font-size: 10px;" class="label label-default md-caption">{{::post.user.location}}</span>
         </div>
-        <span class="md-caption"><time am-time-ago="post.created_at"></time> </span>
+        <span class="md-caption"><time am-time-ago="::post.created_at"></time> </span>
         <div class="mb10" layout="row" layout-wrap>
           <span ng-if="::post.anonymous" style="font-size: 10px;" class="label label-primary md-caption mr5 mb5">Anonymous</span>
-          <span ng-repeat="cat in post.categories" style="font-size: 10px;" class="label label-primary md-caption mr5 mb5">{{::cat.name}}</span>
+          <span ng-repeat="cat in ::post.categories" style="font-size: 10px;" class="label label-primary md-caption mr5 mb5">{{::cat.name}}</span>
         </div>
       </div>
       <div flex="10" layout="row" layout-align="end start">
@@ -43,8 +45,8 @@
               </md-button>
             </md-menu-item>
             <md-menu-item>
-              <md-button md-no-ink ng-click="toggleFavorite()">
-                <my-icon ng-style="post.favorited ? {'color': '#e67e22'} : {}" icon="{{post.favorited ? 'star' : 'star-outline' }} ">
+              <md-button md-no-ink ng-click="::toggleFavorite()">
+                <my-icon ng-style="post.favorited ? {'color': '#e67e22'} : {'color': '#777'}" icon="star">
                 </my-icon>
                 Add to favorites
               </md-button>
@@ -57,7 +59,7 @@
               </md-button>
             </md-menu-item>
             <md-menu-item ng-show="(post.user.id == user.id)">
-              <md-button md-no-ink ng-click="deletePost()">
+              <md-button md-no-ink ng-click="::deletePost()">
                 <my-icon icon="delete" class="text-muted"></my-icon>
                 Delete post
               </md-button>
@@ -72,39 +74,44 @@
         </md-menu>
       </div>
     </div>
-    <div flex layout="column" layout-fill class="">
-      <p ng-txt-truncate="::post.text" ng-bind-html="::post.text | colonToSmiley" ng-tt-words-threshold="30" ng-tt-more-label="Show" ng-tt-less-label="Hide" class="md-body-1 md-accent pl5"></p>
-      <div ng-if="post.images.length" layout="row" layout-wrap layout-padding>
-        <div class="square-img-container img-thumbnail" flex="33" flex-xs="50" ng-repeat="img in post.images">
+    <div flex layout="column">
+      <p class="md-body-1 md-accent pl5">
+        <span ng-bind-html="optimizedText"></span>
+        <a ng-if="post_truncate" ng-click="::toggleMore()" style="font-weight: bold" >
+          {{ showMore ? 'Show less' : 'Show more'}}
+        </a>
+      </p>
+      <div ng-if="::post.images.length == 1" layout="row" layout-wrap layout-padding>
+        <div class="square-img-container img-thumbnail" flex="100" ng-repeat="img in ::post.images">
           <img ng-src="{{::img.url}}" alt="{{::img.url}}">
         </div>
       </div>
-      <div layout="row" class="pl10" hide show-gt-xs>
-        <p ng-if="post.prayer && post.amens_count" class="md-body-2 mb0 mt5 pr10">{{post.amens_count | socialCounter}} said Amen</p>
-        <p ng-if="post.taps_count" class="md-body-2 mb0 mt5 pr10">{{post.taps_count | socialCounter}} Taps</p>
-        <p ng-if="post.comments_count" class="md-body-2 mb0 mt5 pr10">{{post.comments_count | socialCounter}} Comments</p>
-        <p ng-if="post.favorites_count" class="md-body-2 mb0 mt5 pr10">{{post.favorites_count | socialCounter}} Favorites</p>
+      <div ng-if="::post.images.length >= 2" layout="row" layout-wrap layout-padding>
+        <div class="square-img-container img-thumbnail" flex="50" ng-repeat="img in ::post.images">
+          <img ng-src="{{::img.url}}" alt="{{::img.url}}">
+        </div>
       </div>
+
       <md-divider></md-divider>
       <md-divider></md-divider>
     </div>
     <div layout="row" class="pt5 pb5">
-      <md-button ng-if="post.prayer" ng-disabled="post.amen" class="no-m" layout="row" layout-align="start center" ng-click="sayAmen($event)" ng-class="{'md-accent md-hue-2' : !post.amen,'md-primary md-hue-2' : post.amen}">
+      <md-button ng-if="::post.prayer" ng-disabled="post.amen" class="no-m" layout="row" layout-align="start center" ng-click="::sayAmen($event)" ng-class="{'md-accent md-hue-2' : !post.amen,'md-primary md-hue-2' : post.amen}">
         <my-icon icon="telegram"></my-icon>
         <span hide show-gt-xs class="text-muted">Amen</span>
-        <span class="badge">{{post.amens_count | socialCounter}}</span>
+        <span class="badge">{{amens_count}}</span>
       </md-button>
-      <md-button class="no-m" ng-class="{'md-accent md-hue-2' : !post.tapped_into,'md-primary' : post.tapped_into}" ng-click="toggleTap($event)">
+      <md-button class="no-m" ng-class="{'md-accent md-hue-2' : !post.tapped_into,'md-primary' : post.tapped_into}" ng-click="::toggleTap($event)">
         <my-icon icon="unfold-less "> </my-icon>
         <span hide show-gt-xs class="text-muted">tap into</span>
-        <span class="badge">{{post.taps_count | socialCounter}}</span>
+        <span class="badge">{{taps_count}}</span>
       </md-button>
-      <md-button class="no-m md-accent md-hue-2 " ng-click="openCommentBox() ">
-        <my-icon icon="comment-outline "></my-icon>
+      <md-button class="no-m md-accent md-hue-2 " ng-click="::openCommentBox() ">
+        <my-icon icon="comment-outline"></my-icon>
         <span hide show-gt-sm class="text-muted">comment</span>
-        <span class="badge">{{post.comments_count | socialCounter }}</span>
+        <span class="badge">{{comments_count}}</span>
       </md-button>
-      <md-button class="no-m md-accent md-hue-2 " ng-click="shareToFb()">
+      <md-button class="no-m md-accent md-hue-2 " ng-click="::shareToFb()">
         <my-icon icon="share"> </my-icon>
         <span hide show-gt-md>share</span>
       </md-button>
@@ -113,30 +120,32 @@
       <md-divider></md-divider>
       <div layout="column" class="pl10 pt10">
         <div layout="row" class="pb5">
-          <textarea ng-model="commentBox" class="form-control" placeholder="Say something..." ng-keydown="addCommet($event)" style="resize: none; overflow: hidden"></textarea>
-          <md-button class="md-icon-button md-primary md-hue-2" aria-label="Send comment" ng-click="addComment($event)" md-no-ink>
+          <textarea ng-model="commentBox" class="form-control" placeholder="Say something..." ng-keydown="::addCommet($event)" style="resize: none; overflow: hidden"></textarea>
+          <md-button class="md-icon-button md-primary md-hue-2" aria-label="Send comment" ng-click="::addComment($event)" md-no-ink>
             <my-icon icon="send"></my-icon>
           </md-button>
         </div>
         <div ng-repeat="comment in post.comments | orderBy: '-created_at' track by comment.id">
           <div layout="row" flex layout-fill class="">
-            <div flex="10" flex-sm="10">
+            <div flex="10" flex-xs="20">
               <div class="square-img-container">
-                <img class="" ng-src="{{::comment.user.avatar}}">
+                <a ui-sref="web.app.dashboard.user({id: comment.user.username || comment.user.hash_id})">
+                  <img class="p5" ng-src="{{::comment.user.avatar}}">
+                </a>
               </div>
             </div>
             <div flex layout="column" class="ml5">
               <div>
-                <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({hash_id: comment.user.hash_id})">{{::comment.user.name}}</a>
+                <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: comment.user.username || comment.user.hash_id})">{{::comment.user.name}}</a>
                 <span class="md-body-1" ng-text-truncate="::comment.text" ng-tt-words-threshold="20" ng-tt-more-label="Show" ng-tt-less-label="Hide"></span>
               </div>
               <span class="md-caption">
-                                <time am-time-ago="::comment.created_at"></time>
-                            </span>
+                  <time am-time-ago="::comment.created_at"></time>
+              </span>
             </div>
             <div flex="10" layout="row" layout-align="end start">
               <md-menu md-position-mode="target-right target" class="no-p">
-                <md-button md-no-ink aria-label="Open Menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                <md-button md-no-ink aria-label="Open Menu" class="md-icon-button" ng-click="::openMenu($mdOpenMenu, $event)">
                   <my-icon md-menu-origin icon="chevron-down"></my-icon>
                 </md-button>
                 <md-menu-content width="2">
@@ -147,7 +156,7 @@
                     </md-button>
                   </md-menu-item>
                   <md-menu-item ng-if="(comment.user.id == user.id)">
-                    <md-button md-no-ink ng-click="deleteComment(comment.id)">
+                    <md-button md-no-ink ng-click="::deleteComment(comment.id)">
                       <my-icon icon="delete" class="text-muted"></my-icon>
                       Remove comment
                     </md-button>
@@ -167,7 +176,7 @@
           <md-progress-circular md-mode="indeterminate" md-diameter="50px"></md-progress-circular>
         </div>
         <div class="pt10" ng-show="CommentsUI.retryButton" layout="row" layout-align="center center" style="height: 40px;">
-          <md-button class="md-raised no-shadow no-text-transform md-primary md-hue-2" ng-click="openCommentBox()">
+          <md-button class="md-raised no-shadow no-text-transform md-primary md-hue-2" ng-click="::openCommentBox()">
             <my-icon icon="refresh"></my-icon>
             Retry
           </md-button>
@@ -175,7 +184,5 @@
         <a href="" class="mt5 mb5">Show more comments</a>
       </div>
     </div>
-
-
   </div>
 </md-card-content>

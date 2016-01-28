@@ -1,13 +1,12 @@
-<div layout-fill layout="column" layout-lg="row" ng-controller="ProfileEditCtrl">
+<div layout-fill layout="column" layout-gt-sm="row" ng-controller="ProfileEditCtrl">
   <style>
     label {
       color: #555;
     }
   </style>
-  <div flex-lg="50">
+  <div flex layout="column" style="height: auto">
     <div>
       <md-card>
-        <div layout-fill layout="column" style="position: relative">
           <md-card-content>
             <div layout="row" layout-align="center center">
               <div flex="50" flex-xs="80" class="img-circle img-thumbnail square-img-container">
@@ -39,7 +38,6 @@
               Cancel
             </md-button>
           </md-card-actions>
-        </div>
       </md-card>
     </div>
     <div>
@@ -83,81 +81,87 @@
       </md-card>
     </div>
   </div>
-  <div flex-lg="50 ">
-    <md-card>
-      <md-card-content>
-        <div ng-show="section_account">
-          <h3>Account</h3>
-          <div class="form-group">
-            <label>First Name</label>
-            <input class="form-control " type="text" ng-model="user_profile.first_name">
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input class="form-control " type="text" ng-model="user_profile.last_name">
-          </div>
-          <div class="form-group">
-            <label>Username</label>
-            <input class="form-control " type="text" ng-model="user_profile.username">
-          </div>
-          <div class="form-group">
-            <md-button class="md-accent md-hue-1 md-raised" ng-click="saveAccountInfo({first_name: user_profile.first_name, last_name: user_profile.last_name, username: user_profile.username})">Save</md-button>
-          </div>
-
-        </div>
-        <div ng-hide="section_account" layout="row">
-          <h4 flex="90" class="mt15">Edit Account</h4>
-          <md-button ng-click="section_account = true">
-            <my-icon class="text-muted" icon="pencil"></my-icon>
-          </md-button>
-        </div>
-      </md-card-content>
-    </md-card>
-    <md-card>
-      <md-toolbar>
-        <div class="md-toolbar-tools">
-          <h3>Preferences</h3>
-        </div>
-      </md-toolbar>
-      <md-card-content>
-        <label>Messaging:</label>
-        <md-switch ng-model="messaging" aria-label="Toggle messaging">
-          Turn on messaging
-        </md-switch>
-      </md-card-content>
-    </md-card>
-    <md-card>
-      <md-card-content>
-        <div ng-show="section_password">
-          <h3>Change password</h3>
-          <div class="form-group">
-            <label>Old password</label>
-            <input class="form-control" placeholder="Old password" type="password" ng-model="password.oldPassword">
-          </div>
-
-          <div class="form-group">
-            <label>New password</label>
-            <input class="form-control" placeholder="New password" type="password" ng-model="password.newPassword">
-          </div>
-
-          <div class="form-group">
-            <label>New password</label>
-            <input class="form-control mb10" placeholder="New password again" type="password" ng-model="password.newPassword1">
+  <div flex layout="column">
+    <div>
+      <md-card>
+        <md-card-content>
+          <div ng-show="section_account">
+            <h3>Account</h3>
+            <div class="form-group">
+              <label>First Name</label>
+              <input class="form-control " type="text" ng-model="user_profile.first_name">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input class="form-control " type="text" ng-model="user_profile.last_name">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input class="form-control " type="text" ng-model="user_profile.username">
+            </div>
+            <div class="form-group">
+              <md-button class="md-accent md-hue-1 md-raised" ng-click="saveAccountInfo({first_name: user_profile.first_name, last_name: user_profile.last_name, username: user_profile.username})">Save</md-button>
+            </div>
 
           </div>
+          <div ng-hide="section_account" layout="row">
+            <h4 flex="90" class="mt15">Edit Account</h4>
+            <md-button ng-click="section_account = true">
+              <my-icon class="text-muted" icon="pencil"></my-icon>
+            </md-button>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
+    <div>
+      <md-card>
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <h3>Preferences</h3>
+          </div>
+        </md-toolbar>
+        <md-card-content>
+          <label>Messaging:</label>
+          <md-switch ng-model="messaging" aria-label="Toggle messaging">
+            Turn on messaging
+          </md-switch>
+        </md-card-content>
+      </md-card>
+    </div>
+    <div>
+      <md-card>
+        <md-card-content>
+          <div ng-show="section_password">
+            <h3>Change password</h3>
+            <div class="form-group">
+              <label>Old password</label>
+              <input class="form-control" placeholder="Old password" type="password" ng-model="password.oldPassword">
+            </div>
 
-          <md-button class="no-text-transform md-accent md-hue-1 md-raised" ng-click="changePassword()">
-            <my-icon icon="check"></my-icon>
-            Save
-          </md-button>
-        </div>
-        <div ng-hide="section_password" layout="row">
-          <h4 flex="90" class="mt15">Change password</h4>
-          <md-button ng-click="section_password = true">
-            <my-icon class="text-muted" icon="pencil"></my-icon>
-          </md-button>
-        </div>
-      </md-card-content>
-    </md-card>
+            <div class="form-group">
+              <label>New password</label>
+              <input class="form-control" placeholder="New password" type="password" ng-model="password.newPassword">
+            </div>
+
+            <div class="form-group">
+              <label>New password</label>
+              <input class="form-control mb10" placeholder="New password again" type="password" ng-model="password.newPassword1">
+
+            </div>
+
+            <md-button class="no-text-transform md-accent md-hue-1 md-raised" ng-click="changePassword()">
+              <my-icon icon="check"></my-icon>
+              Save
+            </md-button>
+          </div>
+          <div ng-hide="section_password" layout="row">
+            <h4 flex="90" class="mt15">Change password</h4>
+            <md-button ng-click="section_password = true">
+              <my-icon class="text-muted" icon="pencil"></my-icon>
+            </md-button>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
   </div>
 </div>

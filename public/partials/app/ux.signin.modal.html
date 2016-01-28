@@ -1,4 +1,4 @@
-<md-dialog aria-label="Signin | Signup" ng-cloak flex="60" flex-sm="80" flex-xs="95" ng-controller="LoginCtrl">
+<md-dialog aria-label="Signin | Signup" ng-cloak flex="30" flex-sm="80" flex-xs="95" ng-controller="LoginCtrl">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h4 class="text-center" flex>Please sign in to continue</h4>
@@ -10,35 +10,43 @@
     <md-dialog-content style="max-height:810px; ">
         <div class="md-dialog-content" layout="row">
             <div layout="column" flex="100">
-                <form novalidate name="loginForm" ng-submit="loginForm.$valid && UXSubmitLogin()">
-                    <div class="input-group mb20">
-                        <div class="input-group-addon">
-                            <my-icon class="text-muted" style="line-height: 0px" icon="account-outline"></my-icon>
-                        </div>
-                        <input placeholder="Email or username" class="form-control input-lg" type="text" ng-model="loginDetails.user" />
-                    </div>
-                    <div class="input-group mb20">
-                        <div class="input-group-addon">
-                            <my-icon class="text-muted" style="line-height: 0px" icon="lock-outline"></my-icon>
-                        </div>
-                        <input placeholder="Password" class="form-control input-lg" type="password" ng-model="loginDetails.password">
-                    </div>
-                    <div layout="row" layout-wrap layout-align="center center">
-                        <md-button flex="100" flex-md="100" flex-sm="100" class="md-accent md-hue-1 btn-border">
-                            <i class="fa fa-sign-in fa-lg"></i> Login
-                        </md-button>
-                        <md-button class="md-primary md-hue-2 btn-border" flex="100" ui-sref="signup">
-                            <my-icon>account-plus</my-icon>
-                            Sign up
-                        </md-button>
-                        <md-button class="md-raised" flex="100" flex-sm="100" flex-md="100" ng-click="UXLoginFB()" style="color: white; background: #4E69A2">
-                            <i class="fa fa-facebook fa-lg mr10"></i> {{fb_button}}
-                        </md-button>
-                    </div>
-                    <div layout="column" layout-align="center center">
-                        <a ui-sref="landing" class="text-muted md-body-1">Forgot password?</a>
-                    </div>
-                </form>
+              <md-card flex="30" flex-xs="95" flex-sm="60" flex-md="50" style="overflow: hidden">
+                  <md-toolbar class="md-hue-2" layout="row" layout-align="center center">
+                      <h3>LOGIN TO TESTIFY</h3>
+                  </md-toolbar>
+                  <md-card-content>
+                      <div layout="column">
+                          <form novalidate name="loginForm" ng-submit="loginForm.$valid && UXSubmitLogin()">
+                              <div class="input-group mb20">
+                                  <div class="input-group-addon">
+                                      <my-icon class="text-muted" style="line-height: 0px" icon="account-outline"></my-icon>
+                                  </div>
+                                  <input placeholder="Email or username" class="form-control input-lg" type="text" ng-model="loginDetails.user" />
+                              </div>
+                              <div class="input-group mb20">
+                                  <div class="input-group-addon">
+                                      <my-icon class="text-muted" style="line-height: 0px" icon="lock-outline"></my-icon>
+                                  </div>
+                                  <input placeholder="Password" class="form-control input-lg" type="password" ng-model="loginDetails.password">
+                              </div>
+                              <div layout="column">
+                                  <md-button class="md-raised md-accent no-shadow md-hue-1" type="submit">
+                                      Login
+                                  </md-button>
+                                  <md-button class="md-raised md-primary no-shadow md-hue-2" ui-sref="web.app.signup">
+                                      Sign up
+                                  </md-button>
+                                  <md-button class="md-raised no-shadow" ng-click="UXLoginFB()" style="color: white; background: #4E69A2">
+                                      {{fb_button || 'Login with Facebook'}}
+                                  </md-button>
+                              </div>
+                              <div layout="column" layout-align="center center">
+                                  <a ui-sref="web.app.forgot" class="text-muted md-body-1">Forgot password?</a>
+                              </div>
+                          </form>
+                      </div>
+                  </md-card-content>
+              </md-card>
             </div>
         </div>
     </md-dialog-content>
