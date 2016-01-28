@@ -6,3 +6,7 @@ Homestead.json
 !/cordova
 /cordova/*
 !/cordova/config.xml
+!/cordova/plugins
+/cordova/plugins/*
+!/cordova/plugins/fetch.json
+!/cordova/keytool hash facebook login.txt
