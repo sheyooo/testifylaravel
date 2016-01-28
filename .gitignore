@@ -3,4 +3,6 @@
 Homestead.yaml
 Homestead.json
 .env
-/cordova
+!/cordova
+/cordova/*
+!/cordova/config.xml
