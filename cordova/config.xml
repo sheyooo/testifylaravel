@@ -1,33 +1,49 @@
 <?xml version='1.0' encoding='utf-8'?>
-    <widget id="com.testify.sheyi" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-        <name>Testify</name>
-        <icon src="www/img/favicon.png" />
-        <description>
+<widget id="com.testify.sheyi" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Testify</name>
+    <icon src="www/img/favicon.png" />
+    <description>
             App for testify.
         </description>
-        <author email="sheyiadekoya@gmail.com" href="">
+    <author email="sheyiadekoya@gmail.com" href="">
             Seyi Adekoya
         </author>
-        <content src="index.html" />
-        <access origin="*" />
-        <allow-navigation href="*" />
-        <allow-intent href="http://*/*" />
-        <allow-intent href="https://*/*" />
-        <allow-intent href="tel:*" />
-        <allow-intent href="sms:*" />
-        <allow-intent href="mailto:*" />
-        <allow-intent href="geo:*" />
-        <platform name="android">
-            <allow-intent href="market:*" />
-        </platform>
-        <platform name="ios">
-            <allow-intent href="itms:*" />
-            <allow-intent href="itms-apps:*" />
-        </platform>
-        <preference name="android-minSdkVersion" value="17" />
-        <preference name="loadUrlTimeoutValue" value="700000" />
-        <preference name="xwalkVersion" value="16+" />
-        <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-        <preference name="xwalkMode" value="embedded" />
-        <preference name="xwalkMultipleApk" value="true" />
-    </widget>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-navigation href="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+
+    <platform name="android">
+        <!-- you can use any density that exists in the Android project -->
+        <splash src="www/img/t9patch.9.png" />
+
+    </platform>
+
+
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="20000" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="FadeSplashScreen" value="false" />
+    <preference name="SplashMaintainAspectRatio" value="false" />
+    <preference name="SplashShowOnlyFirstTime" value="true" />
+
+
+    <preference name="android-minSdkVersion" value="17" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
+    <preference name="xwalkVersion" value="16+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
+</widget>

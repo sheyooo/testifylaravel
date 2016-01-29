@@ -38,7 +38,8 @@ var bower_js_files = [
   "public/bower_components/ng-file-upload/ng-file-upload.min.js",
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
   "public/bower_components/angular-emoji-popup/dist/js/config.js",
-  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js"
+  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
+  "public/bower_components/ngCordova/dist/ng-cordova.min.js"
 ];
 
 var template_files = [
@@ -164,8 +165,7 @@ gulp.task('cordovalize_index', function(){
     'csp': "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src *; style-src 'self' 'unsafe-inline' http: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; font-src http: file: ;\">",
     'cordova': "<script src=\'cordova.js\'></script>",
     'url-base': '',
-    'font-url': '<link href=\'dist/css/local-roboto-font.css\' rel=\'stylesheet\'>',
-    'ng-cordova': '<script src=\'bower_components/ngCordova/dist/ng-cordova.min.js\'></script>'
+    'font-url': '<link href=\'dist/css/local-roboto-font.css\' rel=\'stylesheet\'>'
   }))
   .pipe(gulp.dest('cordova/www/'));
 });

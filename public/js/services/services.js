@@ -38,7 +38,7 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
 }]);
 
 app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
-  
+
   if(isCordova){
     if($window.facebookConnectPlugin){
       return $window.facebookConnectPlugin;
@@ -51,8 +51,8 @@ app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Face
 }]);
 
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  'FB', 'isCordova',
-  function($http, $localStorage, Restangular, $q, $state, FB, isCordova) {
+  '$cordovaFacebook', 'Facebook', 'isCordova',
+  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova) {
     var user = {
       authenticated: false,
       id: null,
@@ -198,6 +198,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       var d = $q.defer();
 
       var doFbLogin = function(fb_response) {
+        console.log('called');
         var d = $q.defer();
         r = fb_response;
         if (r.status === 'connected') {
@@ -213,13 +214,16 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
             d.reject(r);
           });
         } else {
+          console.log('reject');
           d.reject();
+
         }
         return d.promise;
       };
+
       if(isCordova){
-        FB.login(['public_profile'], function(r) {
-          //console.log(r);
+        $cordovaFacebook.login(['public_profile', 'email']).then(function(r) {
+          console.log(r);
           doFbLogin(r).then(function() {
             d.resolve();
           }, function(r) {
@@ -227,7 +231,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
           });
         });
       }else{
-        FB.login(function(r) {
+        Facebook.login(function(r) {
           //console.log(r);
           doFbLogin(r).then(function() {
             d.resolve();
@@ -236,7 +240,6 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
           });
         });
       }
-
 
       return d.promise;
     };

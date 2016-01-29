@@ -1,5 +1,4 @@
 //"use strict";
-
 var app = angular.module('testify', ['ngMaterial',
   'chieffancypants.loadingBar',
   'ngAnimate',
@@ -12,29 +11,26 @@ var app = angular.module('testify', ['ngMaterial',
   'ngFileUpload',
   'ngImgCrop',
   'ngTextTruncate',
-  'emojiApp'
+  'emojiApp',
+  'ngCordova'
 ]);
 
-var cordova = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
-if ( cordova ) {
+if ( document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1 ) {
   app.constant('apiBase', "https://testify-staging.herokuapp.com/api/v1");
   app.constant('appBase', "/");
   app.constant('appUrl', "https://testify-staging.herokuapp.com");
-
 } else {
-
   app.constant('appUrl', "https://testify-staging.herokuapp.com");
   app.constant('appBase', "/");
   app.constant('apiBase', "api/v1");
 }
 
-//app.constant('apiBase', "http://localhost/testify/api");
-//app.constant('apiBase', "https://testify-for-testimonies.herokuapp.com/api");
 app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($compileProvider, $logProvider, $animateProvider) {
   $logProvider.debugEnabled(false);
   $compileProvider.debugInfoEnabled(false);
   //$animateProvider.classNameFilter( /\banimated\b/ );
 }]);
+
 app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   apiBase) {
   FacebookProvider.setAppId(180042792329807);
@@ -93,12 +89,22 @@ app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   ]);
 });
 
-app.run(function() {
+app.run(['$cordovaSplashscreen', '$cordovaKeyboard', '$cordovaStatusbar', function($cordovaSplashscreen, $cordovaKeyboard, $cordovaStatusbar) {
   window.addEventListener('load', function() {
     new FastClick(document.body);
   }, false);
 
-});
+  if(document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1){
+    document.addEventListener("deviceready", function () {
+      $cordovaStatusbar.style(1);
+      $cordovaStatusbar.styleHex('#97B6CA');
+      $cordovaKeyboard.hideAccessoryBar(true);
+      $cordovaSplashscreen.hide();
+
+    }, false);
+  }
+
+}]);
 
 app.config(function($mdThemingProvider) {
   var myPaletteMap = $mdThemingProvider.extendPalette('blue', {
@@ -237,7 +243,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
 
   $urlRouterProvider.otherwise(appBase + "home");
 
-  if ( cordova ) {
+  if ( document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1 ) {
 
   } else {
     $locationProvider.html5Mode({
