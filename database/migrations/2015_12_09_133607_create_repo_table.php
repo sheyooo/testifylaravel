@@ -14,6 +14,8 @@ class CreateRepoTable extends Migration
     {
         Schema::create('repo', function (Blueprint $table) {
           $table->engine = 'InnoDB';
+          $table->charset = 'utf8';
+          $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->timestamps();
             $table->string('type');

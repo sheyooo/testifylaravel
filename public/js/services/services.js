@@ -38,11 +38,13 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
 }]);
 
 app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
-  console.log(window);
-  console.log($window);
-  console.log(facebookConnectPlugin);
+  
   if(isCordova){
-    return $window.facebookConnectPlugin;
+    if($window.facebookConnectPlugin){
+      return $window.facebookConnectPlugin;
+    }else {
+      return Facebook;
+    }
   }else {
     return Facebook;
   }

@@ -14,6 +14,9 @@ class CreateImagePostTable extends Migration
     {
         Schema::create('image_post', function (Blueprint $table) {
             //
+            $table->engine= "InnoDB";
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
             $table->bigIncrements('id');
             $table->bigInteger('image_id')->unsigned();
             $table->bigInteger('post_id')->unsigned();
