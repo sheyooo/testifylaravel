@@ -51,8 +51,8 @@ app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Face
 }]);
 
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova',
-  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova) {
+  '$cordovaFacebook', 'Facebook', 'isCordova', 'UXService',
+  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, UXService) {
     var user = {
       authenticated: false,
       id: null,
@@ -198,7 +198,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       var d = $q.defer();
 
       var doFbLogin = function(fb_response) {
-        console.log('called');
+        //console.log('called');
         var d = $q.defer();
         r = fb_response;
         if (r.status === 'connected') {
@@ -214,7 +214,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
             d.reject(r);
           });
         } else {
-          console.log('reject');
+          //console.log('reject');
           d.reject();
 
         }
@@ -229,6 +229,8 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
           }, function(r) {
             d.reject(r);
           });
+        }, function(){
+          UXService.toast('We are having troubles connecting to Facebook, please try agian or sign up manually.');
         });
       }else{
         Facebook.login(function(r) {
