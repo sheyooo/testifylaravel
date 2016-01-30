@@ -17,9 +17,14 @@ class CreateChatMessagesTable extends Migration
           $table->collation = "utf8_unicode_ci";
 
           $table->bigIncrements('id');
+          $table->bigInteger('chat_id')->unsigned();
           $table->bigInteger('user_id')->unsigned();
           $table->text('text');
           $table->timestamps();
+
+          $table->foreign('chat_id')
+          ->references('id')->on('chats')
+          ->onDelete('cascade');
 
           $table->foreign('user_id')
           ->references('id')->on('users')

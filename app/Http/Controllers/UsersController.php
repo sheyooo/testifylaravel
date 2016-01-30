@@ -292,8 +292,6 @@ class UsersController extends Controller
         return \Response::make('', 401);
       }
 
-
-
       if(\Hash::check($request->oldPassword, $user->password) || $user->password == null){
 
         $v = Validator::make($request->all(), [
@@ -310,6 +308,41 @@ class UsersController extends Controller
         return \Response::make(['status' => 'Old password doesn\'t match'], 400);
       }
     }
+
+    public function sendMessage(Request $request, $id){
+      try{
+        $user = JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        return Response::make(['status' => 'Unauthorized'], 401);
+      }
+
+      $to_user = $this->findUser($id);
+      if(!$to_user)
+        return Response::make(['status' => 'User not found'], 404);
+
+      //\App\Chats::has('users', $to_user->id);
+      try{
+        $chat = \App\Chat::whereHas('users', function ($query) {
+            $query->where('id', $to_user->id)->where('id', $user->id);
+        })->firstOrFail();
+      }catch(\Exception $e){
+        $chat = \App\Chat;
+        $chat->users()->associate($user);
+        $chat->users()->associate($to_user);
+        $chat->save();
+      }
+
+
+      if(){
+
+      }
+
+
+
+    }
+
+
+
 
 
     /**
