@@ -334,14 +334,23 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             };
 
             scope.shareToFb = function() {
-                Facebook.ui({
-                    method: 'feed',
-                    link: appUrl,
-                    picture: appUrl + '/dist/img/testify-fb-share-pic.png',
-                    name: 'Testify',
-                    caption: 'Sharing God\'s goodness',
-                    description: scope.post.text + ' (Tesfify is a community for sharing your testimonies and engaging with other people\'s testimonies)'
-                }, function(response) {});
+              var options = {
+                method: 'feed',
+                link: appUrl,
+                picture: appUrl + '/dist/img/testify-fb-share-pic.png',
+                name: 'Testify',
+                caption: 'Sharing God\'s goodness',
+                description: scope.post.text + ' (Tesfify is a community for sharing your testimonies and engaging with other people\'s testimonies)'
+              };
+              if(isCordova){
+                $cordovaFacebook.showDialog(options)
+                  .then(function(success) {
+
+                  }, function (error) {});
+              }else{
+                Facebook.ui(options, function(response) {});
+              }
+
             };
 
             scope.deletePost = function() {
