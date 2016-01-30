@@ -142,7 +142,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       sex: null,
       location: null,
       email: null,
-      avatar: "img/guest.png",
+      avatar: null,
       profile: null
     };
 
@@ -342,7 +342,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       user.sex = null;
       user.location = null;
       user.email = null;
-      user.avatar = "img/guest.png";
+      user.avatar = null;
     };
 
     return {
