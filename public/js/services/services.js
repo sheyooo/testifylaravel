@@ -50,9 +50,88 @@ app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Face
   }
 }]);
 
+app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
+  function($mdDialog, $mdToast, Auth, $q, $document) {
+
+    var signinModal = function(ev) {
+      var d = $q.defer();
+      $mdDialog.show({
+          controller: 'UXModalLoginCtrl',
+          templateUrl: 'partials/app/ux.signin.modal.html',
+          parent: document.getElementsByClassName("dialog-holder"),
+          targetEvent: ev,
+          clickOutsideToClose: true
+        })
+        .then(function(res) {
+          d.resolve(res);
+        }, function() {
+          d.reject();
+        });
+
+      return d.promise;
+    };
+
+    var alert = function(ev, text) {
+      // Appending dialog to document.body to cover sidenav in docs app
+      // Modal dialogs should fully cover application
+      // to prevent interaction outside of dialog
+      $mdDialog.show(
+        $mdDialog.alert()
+        .parent(angular.element(document.querySelector('body')))
+        .clickOutsideToClose(true)
+        .title(text)
+        //.content(text)
+        .ariaLabel(text)
+        .ok('OK')
+        .targetEvent(ev)
+      );
+    };
+
+    var toast = function(text) {
+      $mdToast.show(
+        $mdToast.simple()
+        .content(text)
+        .position('top left')
+        .parent($document[0].querySelector('body'))
+        .hideDelay(7000)
+      );
+
+    };
+
+    var UXLoginFB = function() {
+      Auth.signinFB().then(function() {
+        $mdDialog.hide(true);
+      }, function() {
+        d = "Do nothing";
+      });
+    };
+
+    var UXSubmitLogin = function(loginDetails) {
+      Auth.signin(loginDetails).then(function(r) {
+        $mdDialog.hide(true);
+      }, function(err) {
+        console.log(err);
+        //console.log($scope.loginDetails);
+      });
+    };
+
+
+
+    return {
+
+      signinModal: signinModal,
+      alert: alert,
+      toast: toast,
+      UXLoginFB: UXLoginFB,
+      UXSubmitLogin: UXSubmitLogin
+
+    };
+  }
+]);
+
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova', 'UXService',
-  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, UXService) {
+  '$cordovaFacebook', 'Facebook', 'isCordova',
+  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova) {
     var user = {
       authenticated: false,
       id: null,
@@ -230,7 +309,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
             d.reject(r);
           });
         }, function(){
-          UXService.toast('We are having troubles connecting to Facebook, please try agian or sign up manually.');
+          d.reject();
         });
       }else{
         Facebook.login(function(r) {
@@ -341,82 +420,3 @@ app.factory('SocialService', ['Facebook', 'Auth', function(Facebook, Auth) {
 
   };
 }]);
-
-app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
-  function($mdDialog, $mdToast, Auth, $q, $document) {
-
-    var signinModal = function(ev) {
-      var d = $q.defer();
-      $mdDialog.show({
-          controller: 'UXModalLoginCtrl',
-          templateUrl: 'partials/app/ux.signin.modal.html',
-          parent: document.getElementsByClassName("dialog-holder"),
-          targetEvent: ev,
-          clickOutsideToClose: true
-        })
-        .then(function(res) {
-          d.resolve(res);
-        }, function() {
-          d.reject();
-        });
-
-      return d.promise;
-    };
-
-    var alert = function(ev, text) {
-      // Appending dialog to document.body to cover sidenav in docs app
-      // Modal dialogs should fully cover application
-      // to prevent interaction outside of dialog
-      $mdDialog.show(
-        $mdDialog.alert()
-        .parent(angular.element(document.querySelector('body')))
-        .clickOutsideToClose(true)
-        .title(text)
-        //.content(text)
-        .ariaLabel(text)
-        .ok('OK')
-        .targetEvent(ev)
-      );
-    };
-
-    var toast = function(text) {
-      $mdToast.show(
-        $mdToast.simple()
-        .content(text)
-        .position('top left')
-        .parent($document[0].querySelector('body'))
-        .hideDelay(7000)
-      );
-
-    };
-
-    var UXLoginFB = function() {
-      Auth.signinFB().then(function() {
-        $mdDialog.hide(true);
-      }, function() {
-        d = "Do nothing";
-      });
-    };
-
-    var UXSubmitLogin = function(loginDetails) {
-      Auth.signin(loginDetails).then(function(r) {
-        $mdDialog.hide(true);
-      }, function(err) {
-        console.log(err);
-        //console.log($scope.loginDetails);
-      });
-    };
-
-
-
-    return {
-
-      signinModal: signinModal,
-      alert: alert,
-      toast: toast,
-      UXLoginFB: UXLoginFB,
-      UXSubmitLogin: UXSubmitLogin
-
-    };
-  }
-]);

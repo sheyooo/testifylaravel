@@ -14,7 +14,8 @@ var gulp = require('gulp'),
   tCache = require('gulp-angular-templatecache'),
   imagemin = require('gulp-imagemin'),
   pngquant = require('imagemin-pngquant'),
-  jpegtran = require('imagemin-jpegtran');
+  jpegtran = require('imagemin-jpegtran'),
+  del = require('del');
 
 var bower_js_files = [
   "public/bower_components/jquery/dist/jquery.min.js",
@@ -55,7 +56,8 @@ var css_files = [
   'public/css/main.css',
   'public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css',
   'public/bower_components/animate.css/animate.min.css',
-  'public/css/ux-animations.css'
+  'public/css/ux-animations.css',
+  'public/bower_components/angular-emoji-popup/dist/css/emoji.min.css'
 ];
 
 var sass_files = [
@@ -63,10 +65,7 @@ var sass_files = [
 ];
 
 var cordova_www = [
-  'public/bower_components/angular-material/angular-material.min.css',
   'public/bower_components/mdi/**/**',
-  'public/bower_components/angular-emoji-popup/**/**',
-  'public/bower_components/ngCordova/**/**',
   'public/dist/**/**',
   'public/partials/**/**',
   'public/views/**/**',
@@ -82,9 +81,31 @@ var img_asset_files = [
   'public/img/small-logo.png',
   'public/img/testify.png',
   'public/img/testify_motto.png',
+  '!public/img/t9patch.9.png',
   'public/img/**'
 ];
 
+var cordova_clean_files = [
+  "cordova/www/*",
+  "!cordova/www/index.html",
+  "!cordova/www/bower_components",
+  "cordova/www/bower_components/mdi/*",
+  "!cordova/www/bower_components/mdi/css",
+  "!cordova/www/bower_components/mdi/css/materialdesignicons.min.css",
+  "!cordova/www/bower_components/mdi/fonts/**/**",
+  "!cordova/www/dist",
+  "cordova/www/dist/*",
+  "!cordova/www/dist/css/**/**",
+  "!cordova/www/dist/img/**/**",
+  "!cordova/www/dist/js/**/**",
+  "!cordova/www/dist/fonts",
+  "cordova/www/dist/fonts/*",
+  "!cordova/www/dist/fonts/Roboto-Bold.ttf",
+  "!cordova/www/dist/fonts/Roboto-Italic.ttf",
+  "!cordova/www/dist/fonts/Roboto-Medium.ttf",
+  "!cordova/www/dist/fonts/Roboto-Regular.ttf",
+
+];
 
 gulp.task('js', function() {
   return gulp.src(['public/js/**/*.js'])
@@ -168,4 +189,8 @@ gulp.task('cordovalize_index', function(){
     'font-url': '<link href=\'dist/css/local-roboto-font.css\' rel=\'stylesheet\'>'
   }))
   .pipe(gulp.dest('cordova/www/'));
+});
+
+gulp.task('cordova_cleanup', function(cb){
+  return del(cordova_clean_files, cb);
 });

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.testify.sheyi" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Testify</name>
-    <icon src="www/img/favicon.png" />
+    <icon src="www/dist/img/favicon.png" />
     <description>
             App for testify.
         </description>
@@ -27,7 +27,7 @@
 
     <platform name="android">
         <!-- you can use any density that exists in the Android project -->
-        <splash src="www/img/t9patch.9.png" />
+        <splash src="www/dist/img/t9patch.9.png" />
 
     </platform>
 
