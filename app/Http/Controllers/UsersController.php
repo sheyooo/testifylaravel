@@ -333,8 +333,11 @@ class UsersController extends Controller
       }
 
 
-      if(){
-
+      if(true){
+        $message = \App\ChatMessage;
+        $message->text = $request->message;
+        $chat->messages()->associate($message);
+        $chat->save();
       }
 
 

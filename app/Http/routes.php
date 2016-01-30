@@ -34,6 +34,7 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::post('users/{id}/profile/avatar', 'UsersController@setAvatar');
   Route::post('users/{id}/password', 'UsersController@changePassword');
   Route::post('users/{id}/profile', 'UsersController@updateProfile');
+  Route::post('users/{id}/message', 'UsersController@sendMessage');
   Route::resource('users', 'UsersController');
   Route::resource('posts', 'PostsController', ['only' => ['index', 'show', 'store', 'destroy']]);
   Route::resource('comments', 'CommentsController', ['only' => ['store', 'destroy']]);
