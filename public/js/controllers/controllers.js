@@ -376,7 +376,18 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
   }
 ]);
 
-app.controller('MessagesCtrl', [function() {
+app.controller('MessagesCtrl', ['$scope', '$state', 'Restangular', function($scope, $state, Restangular) {
+  $scope.messages = [];
+  $scope.chats = [];
+
+  $scope.goToMessage = function(user_id){
+    $state.go('web.app.dashboard.message', {user_id: user_id });
+    Restangular.all('me').all('messages').all(user_id).getList();
+  };
+
+
+
+
 
 }]);
 

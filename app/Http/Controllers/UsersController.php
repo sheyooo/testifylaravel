@@ -311,14 +311,14 @@ class UsersController extends Controller
 
     public function sendMessage(Request $request, $id){
       try{
-        $user = JWTAuth::parseToken()->toUser();
+        $user = \JWTAuth::parseToken()->toUser();
       }catch(\Exception $e){
-        return Response::make(['status' => 'Unauthorized'], 401);
+        return \Response::make(['status' => 'Unauthorized'], 401);
       }
 
       $to_user = $this->findUser($id);
       if(!$to_user)
-        return Response::make(['status' => 'User not found'], 404);
+        return \Response::make(['status' => 'User not found'], 404);
 
       //\App\Chats::has('users', $to_user->id);
       try{
@@ -344,7 +344,33 @@ class UsersController extends Controller
 
     }
 
+    public function getChatMessages($user_id){
+      try{
+        $user = \JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        return \Response::make(['status' => 'Unauthorized'], 401);
+      }
 
+      $to_user = $this->findUser($user_id);
+      if(!$to_user)
+        return \Response::make(['status' => 'User not found'], 404);
+
+      //\App\Chats::has('users', $to_user->id);
+      try{
+        $chat = \App\Chat::whereHas('users', function ($query) {
+            $query->where('id', $to_user->id)->where('id', $user->id);
+        })->firstOrFail();
+      }catch(\Exception $e){
+        $chat = \App\Chat;
+        $chat->users()->associate($user);
+        $chat->users()->associate($to_user);
+        $chat->save();
+      }
+
+      return $chat->messages();
+
+
+    }
 
 
 
