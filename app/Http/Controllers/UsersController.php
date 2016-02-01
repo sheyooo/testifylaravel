@@ -320,24 +320,40 @@ class UsersController extends Controller
       if(!$to_user)
         return \Response::make(['status' => 'User not found'], 404);
 
-      //\App\Chats::has('users', $to_user->id);
       try{
-        $chat = \App\Chat::whereHas('users', function ($query) {
-            $query->where('id', $to_user->id)->where('id', $user->id);
+        $chat = \App\Chat::whereHas('subs', function ($query) use($user){
+            $query->where('user_id', $user->id);
+        })->whereHas('subs', function ($query) use($to_user){
+            $query->where('user_id', $to_user->id);
         })->firstOrFail();
+
       }catch(\Exception $e){
-        $chat = \App\Chat;
-        $chat->users()->associate($user);
-        $chat->users()->associate($to_user);
+        $chat = new \App\Chat;
+        $sub = new \App\ChatSub;
+        $sub1 = new \App\ChatSub;
+
         $chat->save();
+
+        $sub->user()->associate($user);
+        $sub1->user()->associate($to_user);
+
+        $sub->chat()->associate($chat);
+        $sub1->chat()->associate($chat);
+
+        $sub->save();
+        $sub1->save();
       }
 
 
+
       if(true){
-        $message = \App\ChatMessage;
-        $message->text = $request->message;
-        $chat->messages()->associate($message);
+        $message = new \App\ChatMessage;
+        $message->text = '';// $request->message;
+        $message->user()->associate($user);
+        $chat->messages()->save($message);
         $chat->save();
+
+        return \Response::make($message, 201);
       }
 
 
@@ -355,20 +371,19 @@ class UsersController extends Controller
       if(!$to_user)
         return \Response::make(['status' => 'User not found'], 404);
 
-      //\App\Chats::has('users', $to_user->id);
+
       try{
-        $chat = \App\Chat::whereHas('users', function ($query) {
-            $query->where('id', $to_user->id)->where('id', $user->id);
+        $chat = \App\Chat::whereHas('subs', function ($query) use($user){
+            $query->where('user_id', $user->id);
+        })->whereHas('subs', function ($query) use($to_user){
+            $query->where('user_id', $to_user->id);
         })->firstOrFail();
+
+        return $chat->messages;
+
       }catch(\Exception $e){
-        $chat = \App\Chat;
-        $chat->users()->associate($user);
-        $chat->users()->associate($to_user);
-        $chat->save();
+        return [];
       }
-
-      return $chat->messages();
-
 
     }
 

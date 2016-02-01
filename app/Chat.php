@@ -11,6 +11,10 @@ class Chat extends Model
       return $this->hasManyThrough('\App\User', '\App\ChatSub');
     }
 
+    public function subs(){
+      return $this->hasMany('\App\ChatSub');
+    }
+
     public function messages(){
       return $this->hasMany('\App\ChatMessage');
     }

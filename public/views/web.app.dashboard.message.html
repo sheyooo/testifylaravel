@@ -12,7 +12,7 @@
           </md-card-header-text>
         </md-card-header>
         <md-content class="p5">
-          <div ng-repeat="comment in [1,2,3,4,5,6,7,8,9,10,12]">
+          <div ng-repeat="message in messages track by message.id">
             <div layout="row" flex layout-fill class="">
               <div flex="10" flex-sm="10">
                 <div class="square-img-container">
@@ -34,8 +34,14 @@
           </div>
 
         </md-content>
-        <md-card-footer>
-          <input type="text" name="name" value="">
+        <md-card-footer layout="row">
+          <div flex="80">
+            <input class="form-control" type="text" ng-model="inputMessage" placeholder="Send a message...">
+
+          </div>
+          <div flex>
+            <md-button ng-click="sendMessage()">Send</md-button>
+          </div>
         </md-card-footer>
       </md-card>
     </div>

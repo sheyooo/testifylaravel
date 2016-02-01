@@ -70,4 +70,8 @@ class User extends Model
     return $this->hasMany('\App\PostActivity');
   }
 
+  public function subs(){
+    return $this->hasMany('\App\ChatSub');
+  }
+
 }
