@@ -14,12 +14,12 @@ class CreateChatTable extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             //
-            $table->charset = "utf8";
-            $table->collation = "utf8_unicode_ci";
+            $table->charset = "utf8mb";
+            $table->collation = "utf8mb_unicode_ci";
 
             $table->bigIncrements('id');
             $table->string('hash_id');
-            $table->string('last_message');
+            $table->text('last_message');
             $table->timestamps();
         });
     }
