@@ -4,31 +4,33 @@
       <md-card style="height: 100%; max-height: 100%; position: relative; overflow: auto">
         <md-card-header>
           <md-card-avatar>
-            <img class="md-user-avatar" ng-src="{{::user.avatar}}"/>
+            <img class="md-user-avatar" ng-src="{{::messagingUser.avatar || 'dist/img/guest.png'}}"/>
           </md-card-avatar>
           <md-card-header-text>
-            <span class="md-title">Seyi</span>
-            <span class="md-subhead">You are messaging Seyi</span>
+            <span class="md-title">{{::messagingUser.name}}</span>
           </md-card-header-text>
         </md-card-header>
         <md-content class="p5">
-          <div ng-repeat="message in messages track by message.id">
+          <div ng-repeat="message in messages track by message.id" class="mb15">
             <div layout="row" flex layout-fill class="">
-              <div flex="10" flex-sm="10">
+              <div flex="10" flex-xs="15">
                 <div class="square-img-container">
-                  <img class="" ng-src="{{::user.avatar}}">
+                  <img class="" ng-src="{{::message.user.avatar}}">
                 </div>
               </div>
               <div flex layout="column" class="ml5">
                 <div>
-                  <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({hash_id: user.hash_id})">{{::user.name}}</a>
+                  <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: message.user.username || message.user.hash_id})">{{::message.user.name}}</a>
                 </div>
-                <span class="md-body-1">
-                  {{::user.name}}
-                </span>
-                <span class="md-caption">
-                    <time am-time-ago="::user.created_at"></time>
-                </span>
+                <div class="">
+                  <span class="md-body-1">
+                    {{::message.text}}
+                  </span>
+                  <span class="md-caption">
+                      <time am-time-ago="::user.created_at"></time>
+                  </span>
+                </div>
+
               </div>
             </div>
           </div>

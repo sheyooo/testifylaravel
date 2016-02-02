@@ -379,14 +379,42 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
 app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular', function($scope, $state, $stateParams, Restangular) {
   $scope.messages = [];
   $scope.chats = [];
+  $scope.inputMessage = '';
+
+  if ($state.current.name = 'web.app.dashboard.messages') {
+    Restangular.all('me').all('messages').getList().then(
+      function(r) {
+        $scope.chats = r.data;
+        //get all active chats
+      },function(r) {
+
+      }
+    );
+  }
+
+  if ($state.current.name = 'web.app.dashboard.message') {
+    Restangular.one('users', $stateParams.user_id).get().then(
+      function(r) {
+        $scope.messagingUser = r.data;
+      },function(r) {
+
+    });
+
+    Restangular.all('me').all('messages').all($stateParams.user_id).getList().then(
+      function(r) {
+        $scope.messages = r.data;
+      },function(r) {
+
+    });
+  }
 
   $scope.goToMessage = function(user_id){
     $state.go('web.app.dashboard.message', {user_id: user_id });
-    Restangular.all('me').all('messages').all(user_id).getList();
+
   };
 
   $scope.sendMessage = function(){
-    Restangular.all('users').one($stateParams.user_id).all('messages').post({message: $scope.messageInput}).then(function(r){
+    Restangular.all('users').one($stateParams.user_id).all('messages').post({message: $scope.inputMessage}).then(function(r){
       $scope.messages.push(r.data);
     }, function(r){
 

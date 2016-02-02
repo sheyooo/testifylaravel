@@ -73,34 +73,28 @@ class UsersController extends Controller
      */
     public function show(Request $request, $id)
     {
-        try{
-          $id = Tools::decodeHashID(self::$hashid_salt, $id);
-          $user = \App\User::findOrFail($id);
-        }catch(\Exception $e){
-          $uname = str_replace('@', '', $id);
-         try{
-          $user = \App\User::where('username', $uname)->firstOrFail();
-         }catch(\Exception $e){
-           try{
-             $user = \App\User::findOrFail($id);
-           }catch(\Exception $e){
-             $user = \Response::make(['error' => 'User not found'], 404);
-           }
+        $user = $this->findUser($id);
+
+        if($user){
+          
+         if($request->profile){
+           $user->profile;
          }
-        }
-        if($request->profile){
-          $user->profile;
-          return $user;
+
+         return $user;
         }else{
-          return $user;
+         $user = \Response::make(['error' => 'User not found'], 404);
         }
+
+
     }
 
     public function findUser($id){
       //ID can be the username, hash_id or databse id of the user;
       $user = null;
       try{
-        $user = \App\User::where('username', $id)->firstOrFail();
+        $uname = str_replace('@', '', $id);
+        $user = \App\User::where('username', $uname)->firstOrFail();
       }catch(\Exception $e){
         try{
           $id = Tools::decodeHashID(self::$hashid_salt, $id);
@@ -348,7 +342,7 @@ class UsersController extends Controller
 
       if(true){
         $message = new \App\ChatMessage;
-        $message->text = '';// $request->message;
+        $message->text = $request->message;
         $message->user()->associate($user);
         $chat->messages()->save($message);
         $chat->save();
@@ -377,7 +371,7 @@ class UsersController extends Controller
             $query->where('user_id', $user->id);
         })->whereHas('subs', function ($query) use($to_user){
             $query->where('user_id', $to_user->id);
-        })->firstOrFail();
+        })->with('messages.user')->firstOrFail();
 
         return $chat->messages;
 
@@ -387,6 +381,19 @@ class UsersController extends Controller
 
     }
 
+    public function getActiveChats(){
+      try{
+        $user = \JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        return \Response::make(['status' => 'Not Authorized'], 401);
+      }
+
+      $chats = \App\Chat::whereHas('subs', function ($query) use($user){
+          $query->where('user_id', $user->id);
+      })->get();
+
+      return $chats;
+    }
 
 
     /**

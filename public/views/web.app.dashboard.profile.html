@@ -6,8 +6,9 @@
                         <span flex>
                         </span>
                         <div layout="row" layout-align="end center">
-                            <md-button class="md-icon-button" ui-sref="web.app.dashboard.message({user_id: user.username || user.hash_id})" aria-label="Message {{user.profile.name}}">
+                            <md-button class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
                                 <my-icon icon="message-text-outline"></my-icon>
+                                Message
                             </md-button>
                             <md-menu class="no-p">
                                 <md-button aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)" class="md-icon-button">
