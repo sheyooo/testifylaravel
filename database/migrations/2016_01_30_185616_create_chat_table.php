@@ -19,6 +19,7 @@ class CreateChatTable extends Migration
 
             $table->bigIncrements('id');
             $table->string('hash_id');
+            $table->string('last_message');
             $table->timestamps();
         });
     }
