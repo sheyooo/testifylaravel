@@ -381,7 +381,7 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
   $scope.chats = [];
   $scope.inputMessage = '';
 
-  if ($state.current.name = 'web.app.dashboard.messages') {
+  if ($state.current.name === 'web.app.dashboard.messages') {
     Restangular.all('me').all('messages').getList().then(
       function(r) {
         $scope.chats = r.data;
@@ -392,7 +392,7 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
     );
   }
 
-  if ($state.current.name = 'web.app.dashboard.message') {
+  if ($state.current.name === 'web.app.dashboard.message') {
     Restangular.one('users', $stateParams.user_id).get().then(
       function(r) {
         $scope.messagingUser = r.data;
@@ -418,8 +418,8 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
       $scope.messages.push(r.data);
     }, function(r){
 
-    })
-  }
+    });
+  };
 
 
 

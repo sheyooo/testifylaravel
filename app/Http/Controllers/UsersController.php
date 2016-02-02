@@ -76,14 +76,14 @@ class UsersController extends Controller
         $user = $this->findUser($id);
 
         if($user){
-          
+
          if($request->profile){
            $user->profile;
          }
 
          return $user;
         }else{
-         $user = \Response::make(['error' => 'User not found'], 404);
+         return \Response::make(['error' => 'User not found'], 404);
         }
 
 
