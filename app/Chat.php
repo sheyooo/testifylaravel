@@ -8,7 +8,7 @@ class Chat extends Model
 {
     //
     public function users(){
-      return $this->hasManyThrough('\App\User', '\App\ChatSub');
+      return $this->hasManyThrough('\App\User', '\App\ChatSub', 'chat_id', 'id');
     }
 
     public function subs(){

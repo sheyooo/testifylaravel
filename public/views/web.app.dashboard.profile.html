@@ -6,7 +6,7 @@
                         <span flex>
                         </span>
                         <div layout="row" layout-align="end center">
-                            <md-button class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
+                            <md-button ng-if="user_profile.id != me.id" class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
                                 <my-icon icon="message-text-outline"></my-icon>
                                 Message
                             </md-button>

@@ -38,11 +38,10 @@
         </md-content>
         <md-card-footer layout="row">
           <div flex="80">
-            <input class="form-control" type="text" ng-model="inputMessage" placeholder="Send a message...">
-
+            <input class="form-control" style="font-size: 14px" type="text" ng-model="inputMessage" placeholder="Send a message...">
           </div>
-          <div flex>
-            <md-button ng-click="sendMessage()">Send</md-button>
+          <div flex class="pl10">
+            <md-button class="md-raised md-primary md-hue-2 no-shadow no-text-transform no-m" md-no-ink ng-click="sendMessage()">Send</md-button>
           </div>
         </md-card-footer>
       </md-card>

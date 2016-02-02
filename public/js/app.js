@@ -201,7 +201,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
       url: 'messages/:user_id',
       templateUrl: 'views/web.app.dashboard.message.html'
     }).state('web.app.dashboard.post', {
-      url: 'post/:hash_id',
+      url: 'posts/:hash_id',
       templateUrl: 'views/web.app.dashboard.post.html'
     }).state('web.app.dashboard.posts', {
       url: 'posts?cat',

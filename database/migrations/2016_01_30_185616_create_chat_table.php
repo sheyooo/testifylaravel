@@ -14,8 +14,8 @@ class CreateChatTable extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             //
-            $table->charset = "utf8mb";
-            $table->collation = "utf8mb_unicode_ci";
+            $table->charset = "utf8mb4";
+            $table->collation = "utf8mb4_unicode_ci";
 
             $table->bigIncrements('id');
             $table->string('hash_id');

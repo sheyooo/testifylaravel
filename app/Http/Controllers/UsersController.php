@@ -343,6 +343,7 @@ class UsersController extends Controller
       if(true){
         $message = new \App\ChatMessage;
         $message->text = $request->message;
+        $chat->last_message = $request->message;
         $message->user()->associate($user);
         $chat->messages()->save($message);
         $chat->save();
@@ -362,7 +363,7 @@ class UsersController extends Controller
       }
 
       $to_user = $this->findUser($user_id);
-      if(!$to_user)
+      if(!$to_user || $to_user->id == $user->id)
         return \Response::make(['status' => 'User not found'], 404);
 
 
@@ -390,7 +391,9 @@ class UsersController extends Controller
 
       $chats = \App\Chat::whereHas('subs', function ($query) use($user){
           $query->where('user_id', $user->id);
-      })->get();
+      })->with('users')->get();
+
+
 
       return $chats;
     }

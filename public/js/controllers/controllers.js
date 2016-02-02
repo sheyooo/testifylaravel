@@ -12,45 +12,62 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
   '$stateParams', 'Restangular', 'UXService', '$document',
   function(AppService, Me, $scope, $state, $stateParams, Restangular,
     UXService, $document) {
-    $scope.home = {
-      posts: AppService.app.posts,
-      posts_loading: false
-    };
-    var loadPosts = function() {
-      var param = null;
-      $scope.home.posts_loading = true;
 
-      if ($stateParams.cat) {
-        load({
-          category: $stateParams.cat
-        });
-      } else {
-        load({});
+      $scope.home = {
+        posts: [],
+        posts_loading: false
+      };
+
+      if ($state.current.name == "web.app.dashboard.post") {
+        $scope.home.posts_loading = true;
+
+        Restangular.one('posts', $stateParams.hash_id).get().then(
+          function(r) {
+            $scope.home.posts = [r.data];
+            $scope.home.posts_loading = false;
+          }
+        );
+      }
+
+      if ($state.current.name == "web.app.dashboard.home" || "web.app.dashboard.posts"){
+        var loadPosts = function() {
+          var param = null;
+          $scope.home.posts_loading = true;
+
+          if ($stateParams.cat) {
+            load({
+              category: $stateParams.cat
+            });
+          } else {
+            load({});
+          }
+
+
+          function load(param) {
+
+            AppService.getPosts.getList(param).then(function(r) {
+              //console.log(AppService.app);
+              $scope.home.posts = r.data;
+              AppService.app.posts = r.data;
+              /*l = r.data.length;
+              for (i = 0; i < l; i++) {
+                  AppService.app.posts.unshift(r.data[i]);
+              }*/
+
+              $scope.home.posts_loading = false;
+              //console.log(r.data.plain());
+            }, function(err) {
+              $scope.home.posts_loading = false;
+              //console.log(err);
+              UXService.toast("Something's wrong");
+            });
+          }
+        };
+
+        loadPosts();
       }
 
 
-      function load(param) {
-
-        AppService.getPosts.getList(param).then(function(r) {
-          //console.log(AppService.app);
-          $scope.home.posts = r.data;
-          AppService.app.posts = r.data;
-          /*l = r.data.length;
-          for (i = 0; i < l; i++) {
-              AppService.app.posts.unshift(r.data[i]);
-          }*/
-
-          $scope.home.posts_loading = false;
-          //console.log(r.data.plain());
-        }, function(err) {
-          $scope.home.posts_loading = false;
-          //console.log(err);
-          UXService.toast("Something's wrong");
-        });
-      }
-    };
-
-    loadPosts();
   }
 ]);
 
@@ -192,9 +209,10 @@ app.controller('LogoutCtrl', ['$scope', 'Auth', 'Me', function($scope, Auth, Me)
 }]);
 
 app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
-  '$state',
-  function(Restangular, $scope, $stateParams, $state) {
+  '$state', 'Auth',
+  function(Restangular, $scope, $stateParams, $state, Auth) {
     //console.log(profile);
+    $scope.me = Auth.userProfile;
     var user_profile = Restangular.one('users', $stateParams.id);
 
     $scope.user = {
@@ -376,7 +394,7 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
   }
 ]);
 
-app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular', function($scope, $state, $stateParams, Restangular) {
+app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular', 'Auth', function($scope, $state, $stateParams, Restangular, Auth) {
   $scope.messages = [];
   $scope.chats = [];
   $scope.inputMessage = '';
@@ -384,8 +402,24 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
   if ($state.current.name === 'web.app.dashboard.messages') {
     Restangular.all('me').all('messages').getList().then(
       function(r) {
+
+        var getOtherUser = function(users){
+          var count  = users.length;
+          for(i = 0; i < count; i++){
+
+            if(users[i].id != Auth.userProfile.id){
+              console.log(users[i]);
+              return users[i];
+            }
+          }
+        };
+
+        var count = r.data.length;
+        for(i = 0; i < count; i++){
+          r.data[i].otherUser = getOtherUser(r.data[i].users);
+        }
+
         $scope.chats = r.data;
-        //get all active chats
       },function(r) {
 
       }
@@ -414,11 +448,17 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
   };
 
   $scope.sendMessage = function(){
-    Restangular.all('users').one($stateParams.user_id).all('messages').post({message: $scope.inputMessage}).then(function(r){
-      $scope.messages.push(r.data);
-    }, function(r){
+    if($scope.inputMessage.trim()){
+      Restangular.all('users').one($stateParams.user_id).all('messages').post({message: $scope.inputMessage}).then(function(r){
+        $scope.messages.push(r.data);
+        $scope.inputMessage = '';
+      }, function(r){
 
-    });
+      });
+    }else{
+      //Do nothing!!!;
+    }
+
   };
 
 
