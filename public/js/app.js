@@ -97,7 +97,7 @@ app.run(['$cordovaSplashscreen', '$cordovaKeyboard', '$cordovaStatusbar', functi
   if(document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1){
     document.addEventListener("deviceready", function () {
       $cordovaStatusbar.style(1);
-      $cordovaStatusbar.styleHex('#97B6CA');
+      $cordovaStatusbar.styleHex('#819CAD');
       $cordovaKeyboard.hideAccessoryBar(true);
       $cordovaSplashscreen.hide();
 
