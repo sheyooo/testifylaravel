@@ -1,5 +1,5 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase, $filter) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter, PusherService) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
@@ -26,7 +26,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     for(var i = 0; i < l; i++){
       cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
     }
-    
+
     $scope.categories = cats.data;
   });
 
@@ -115,5 +115,6 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
     return d.promise;
   };
+
 
 });

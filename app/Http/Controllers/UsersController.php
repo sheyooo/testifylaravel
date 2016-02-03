@@ -6,10 +6,20 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Vinkla\Pusher\PusherManager;
+
 
 class UsersController extends Controller
 {
   private static $hashid_salt = 'user';
+
+  protected $pusher;
+
+    public function __construct(PusherManager $pusher)
+    {
+        $this->pusher = $pusher;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -345,8 +355,18 @@ class UsersController extends Controller
         $message->text = $request->message;
         $chat->last_message = $request->message;
         $message->user()->associate($user);
-        $chat->messages()->save($message);
-        $chat->save();
+        //$chat->messages()->save($message);
+        //$chat->save();
+
+
+        $this->pusher->trigger('test_channel', 'my_event', ['message' => $request->message]);
+        $this->pusher->trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
+          //'user' => $user,
+          'message' => $message
+        ]);
+        \PushNotification::app('appNameIOS')
+                ->to($deviceToken)
+                ->send('Hello World, i`m a push message');
 
         return \Response::make($message, 201);
       }

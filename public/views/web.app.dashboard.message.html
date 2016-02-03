@@ -1,19 +1,20 @@
 <div layout="row" flex layout="row" layout-fill layout-wrap layout-align="center start" ng-controller="MessagesCtrl">
     <span flex="20" flex-md="10" flex-sm="0"></span>
     <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
-      <md-card style="height: 100%; max-height: 100%; position: relative; overflow: auto">
-        <md-card-header>
-          <md-card-avatar>
-            <img class="md-user-avatar" ng-src="{{::messagingUser.avatar || 'dist/img/guest.png'}}"/>
-          </md-card-avatar>
-          <md-card-header-text>
-            <span class="md-title">{{::messagingUser.name}}</span>
-          </md-card-header-text>
-        </md-card-header>
-        <md-content class="p5">
+      <md-card style="height: 100%; max-height: 100%; position: relative; overflow: auto" layout="column">
+        <div class="layout-column" layout="column" style="height: auto">
+            <div flex="" layout="row" class="p10 layout-row flex">
+                <div class="square-img-container mr10" style="width: 40px; height: 40px;">
+                    <img class="img-circle" ng-src="{{::messagingUser.avatar || 'dist/img/guest.png'}}" alt="{{::messagingUser.name}}">
+                </div>
+                <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{::messagingUser.name}}</span>
+            </div>
+        </div>
+        <md-divider></md-divider>
+        <md-content class="p5" flex>
           <div ng-repeat="message in messages track by message.id" class="mb15">
             <div layout="row" flex layout-fill class="">
-              <div flex="10" flex-xs="15">
+              <div style="width: 50px" class="p5">
                 <div class="square-img-container">
                   <img class="" ng-src="{{::message.user.avatar}}">
                 </div>
@@ -34,16 +35,18 @@
               </div>
             </div>
           </div>
-
         </md-content>
-        <md-card-footer layout="row">
-          <div flex="80">
-            <input class="form-control" style="font-size: 14px" type="text" ng-model="inputMessage" placeholder="Send a message...">
+        <md-divider></md-divider>        
+        <div style="" layout="column" style="border-top: solid 2px #eee; height: auto;" class="p10">
+
+          <div layout="row">
+            <div flex layout="row">
+              <input class="form-control" style="font-size: 14px" type="text" ng-model="inputMessage" placeholder="Send a message...">
+              <md-button class="md-raised md-primary md-hue-2 no-shadow no-text-transform mt0 mb0" md-no-ink ng-click="sendMessage()">Send</md-button>
+            </div>
           </div>
-          <div flex class="pl10">
-            <md-button class="md-raised md-primary md-hue-2 no-shadow no-text-transform no-m" md-no-ink ng-click="sendMessage()">Send</md-button>
-          </div>
-        </md-card-footer>
+
+        </div>
       </md-card>
     </div>
     <span flex="20" flex-md="10" flex-sm="0"></span>

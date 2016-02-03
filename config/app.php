@@ -149,7 +149,9 @@ return [
          */
 
          \Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-         \Barryvdh\Cors\ServiceProvider::class
+         \Barryvdh\Cors\ServiceProvider::class,
+         \Vinkla\Pusher\PusherServiceProvider::class,
+         \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class
     ],
 
     /*
@@ -199,7 +201,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
-        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class
+        'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class
 
     ],
 

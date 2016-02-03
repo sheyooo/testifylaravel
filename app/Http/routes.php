@@ -41,6 +41,8 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::resource('posts', 'PostsController', ['only' => ['index', 'show', 'store', 'destroy']]);
   Route::resource('comments', 'CommentsController', ['only' => ['store', 'destroy']]);
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
+
+  Route::post('pusher/auth', 'PusherController@auth');
 });
 
 Route::get('{first?}/{second?}/{third?}', function($first = 1, $second = 2, $third = 3)

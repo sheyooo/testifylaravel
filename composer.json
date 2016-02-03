@@ -12,7 +12,10 @@
         "hashids/hashids": "^1.0",
         "facebook/php-sdk-v4": "^5.1",
         "imgix/imgix-php": "^1.0",
-        "aws/aws-sdk-php": "^3.11"
+        "aws/aws-sdk-php": "^3.11",
+        "vinkla/pusher": "^2.2",
+        "pusher/pusher-php-server": "^2.2",
+        "davibennun/laravel-push-notification": "dev-laravel5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

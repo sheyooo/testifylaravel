@@ -37,6 +37,41 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   };
 }]);
 
+app.factory('PusherService', ['Auth', function(Auth){
+
+  Pusher.log = function(message) {
+    if (window.console && window.console.log) {
+      window.console.log(message);
+    }
+  };
+
+  var pusher = new Pusher('b5fa9d11972af2e0b8d1', {
+    encrypted: true,
+    authEndpoint: 'api/v1/pusher/auth',
+    auth: {
+      headers: {
+        'Authorization': 'Bearer ' + Auth.rawToken
+      }
+    }
+  });
+  var channel = pusher.subscribe('test_channel');
+  channel.bind('my_event', function(data) {
+    alert(data.message);
+  });
+
+  var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
+  var notifications = pusher.subscribe(notif_channel);
+
+  notifications.bind('new_message', function(data) {
+    console.log(data);
+  });
+
+  return {
+      pusher: pusher,
+      notifications: notifications
+  };
+}]);
+
 app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
 
   if(isCordova){
@@ -165,6 +200,8 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       return window.atob(output);
     }
 
+    var rawToken = $localStorage.token;
+
     function getClaimsFromToken() {
       var token = $localStorage.token;
       var claims = {};
@@ -179,8 +216,6 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
     }
 
     var refreshProfile = function() {
-      //console.log("refresh")
-      //console.log(getClaimsFromToken());
 
       var d = $q.defer();
       if (getClaimsFromToken().hash_id && getClaimsFromToken().exp > Date
@@ -196,7 +231,9 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
           function(r) {
             buildAuthProfile(r.data);
             d.resolve(true);
+
             //console.log(getClaimsFromToken().id);
+
           },
           function(r) {
             if (r.status == 404) {
@@ -353,7 +390,8 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       refreshProfile: refreshProfile,
       resetProfile: resetProfile,
       userProfile: user,
-      token: getClaimsFromToken()
+      token: getClaimsFromToken(),
+      rawToken: rawToken
     };
   }
 ]);
