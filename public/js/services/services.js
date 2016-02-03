@@ -37,7 +37,7 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   };
 }]);
 
-app.factory('PusherService', ['Auth', function(Auth){
+app.factory('Pusher', ['Auth', function(Auth){
 
   Pusher.log = function(message) {
     if (window.console && window.console.log) {
@@ -54,22 +54,9 @@ app.factory('PusherService', ['Auth', function(Auth){
       }
     }
   });
-  var channel = pusher.subscribe('test_channel');
-  channel.bind('my_event', function(data) {
-    alert(data.message);
-  });
 
-  var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
-  var notifications = pusher.subscribe(notif_channel);
 
-  notifications.bind('new_message', function(data) {
-    console.log(data);
-  });
-
-  return {
-      pusher: pusher,
-      notifications: notifications
-  };
+  return pusher;
 }]);
 
 app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {

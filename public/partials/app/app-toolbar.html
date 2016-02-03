@@ -33,6 +33,8 @@
                             <md-button md-no-ink class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.messages')">
                                 <my-icon icon="email-outline">
                                 </my-icon>
+                                <span ng-if="app.messages.notifications.length" class="badge badge-notification">{{app.messages.notifications.length}}</span>
+
                             </md-button>
                         </div>
                     </div>

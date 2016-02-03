@@ -74,4 +74,8 @@ class User extends Model
     return $this->hasMany('\App\ChatSub');
   }
 
+  public function gcmIds(){
+    return $this->hasMany('\App\AndroidGcm');
+  }
+
 }

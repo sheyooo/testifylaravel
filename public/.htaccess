@@ -230,3 +230,5 @@ FileETag None
     ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 
 </IfModule>
+
+AddType text/cache-manifest .manifest

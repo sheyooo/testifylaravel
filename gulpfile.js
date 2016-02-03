@@ -40,7 +40,6 @@ var bower_js_files = [
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
   "public/bower_components/angular-emoji-popup/dist/js/config.js",
   "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
-  "public/bower_components/pusher/dist/pusher.min.js",
   "public/bower_components/ngCordova/dist/ng-cordova.min.js"
 ];
 

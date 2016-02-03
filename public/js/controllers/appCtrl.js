@@ -1,5 +1,5 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase, $filter, PusherService) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
@@ -20,7 +20,6 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   //console.log($state);
   //$scope.ui.showSideNav = $state.current.data.showSideNav;
   //console.log($scope.tokHashId);
-
   AppService.getCategoriesWithCount.then(function(cats) {
     var l = cats.data.length;
     for(var i = 0; i < l; i++){
@@ -87,8 +86,6 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     action: null
   }];
 
-
-
   $scope.getSearchResultIcon = function(type) {
     //console.log(icon[type]);
     return icon[type];
@@ -98,8 +95,6 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     "tag": "pound",
     "user": "at"
   };
-
-
 
   $scope.searchRepo = function(query) {
     var d = $q.defer();
@@ -115,6 +110,68 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
     return d.promise;
   };
+
+
+
+  var getIndexById = function(arr, obj){
+    var count = arr.length;
+    for(i = 0; i < count; i++){
+      if(arr[i].id == obj.id || obj ){
+        console.log(obj);
+        return i;
+      }
+      return -1;
+    }
+  };
+
+  var clearNotifications = function(chat_id){
+    
+    var idx = getIndexById($scope.app.messages.notifications, chat_id);
+    if(idx >= 0){
+      $scope.app.messages.notifications.splice(idx, 1);
+    }
+    if(!$scope.$$phase){
+      $scope.$digest();
+    }
+  };
+
+  var initPusher = function(){
+    var channel = Pusher.subscribe('test_channel');
+    channel.bind('my_event', function(data) {
+      //alert(data.message);
+    });
+
+    var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
+    var notifications = Pusher.subscribe(notif_channel);
+
+    notifications.bind('new_message', function(data) {
+
+      var idx = getIndexById($scope.app.messages.notifications, data.chat);
+      if(idx >= 0){
+        //$scope.app.messages.notifications.push(data.chat);
+      }else{
+        $scope.app.messages.notifications.push(data.chat);
+      }
+      $scope.$digest();
+    });
+
+    notifications.bind('pusher:subscription_error', function(status) {
+      if(status == 408 || status == 503){
+        // retry?
+      }
+    });
+  };
+
+  initPusher();
+
+  //clearNotifications(1);
+  $scope.app = {
+    messages: {
+      notifications: [],
+      clearNotifications: clearNotifications
+    }
+  };
+
 
 
 });

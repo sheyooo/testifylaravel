@@ -43,6 +43,7 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
 
   Route::post('pusher/auth', 'PusherController@auth');
+  Route::post('register_gcm/', 'NoticationController@storeGcm');
 });
 
 Route::get('{first?}/{second?}/{third?}', function($first = 1, $second = 2, $third = 3)

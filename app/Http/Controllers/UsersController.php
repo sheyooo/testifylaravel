@@ -7,18 +7,13 @@ use Validator;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Vinkla\Pusher\PusherManager;
+use Vinkla\Pusher\Facades\Pusher;
 
 
 class UsersController extends Controller
 {
   private static $hashid_salt = 'user';
 
-  protected $pusher;
-
-    public function __construct(PusherManager $pusher)
-    {
-        $this->pusher = $pusher;
-    }
 
     /**
      * Display a listing of the resource.
@@ -314,6 +309,7 @@ class UsersController extends Controller
     }
 
     public function sendMessage(Request $request, $id){
+      //$pusher = Pusher;
       try{
         $user = \JWTAuth::parseToken()->toUser();
       }catch(\Exception $e){
@@ -355,18 +351,25 @@ class UsersController extends Controller
         $message->text = $request->message;
         $chat->last_message = $request->message;
         $message->user()->associate($user);
-        //$chat->messages()->save($message);
-        //$chat->save();
+        $chat->messages()->save($message);
+        $chat->save();
 
 
-        $this->pusher->trigger('test_channel', 'my_event', ['message' => $request->message]);
-        $this->pusher->trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
+        Pusher::trigger('test_channel', 'my_event', ['message' => $request->message]);
+        Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
+          'chat' => $chat,
+          'user' => $user,
           //'user' => $user,
           'message' => $message
         ]);
-        \PushNotification::app('appNameIOS')
-                ->to($deviceToken)
-                ->send('Hello World, i`m a push message');
+
+        if(count($to_user->gcmIds)){
+          $deviceToken = $to_user->gcmIds;
+          \PushNotification::app('appNameAndroid')
+                  ->to($deviceToken)
+                  ->send('Hello World, i`m a push message');
+        };
+
 
         return \Response::make($message, 201);
       }

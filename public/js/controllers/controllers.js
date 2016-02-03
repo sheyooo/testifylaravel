@@ -406,9 +406,7 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
         var getOtherUser = function(users){
           var count  = users.length;
           for(i = 0; i < count; i++){
-
             if(users[i].id != Auth.userProfile.id){
-              console.log(users[i]);
               return users[i];
             }
           }
@@ -437,9 +435,16 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
     Restangular.all('me').all('messages').all($stateParams.user_id).getList().then(
       function(r) {
         $scope.messages = r.data;
+        if(r.data.length){
+          $scope.app.messages.clearNotifications(r.data[0].chat_id);
+          //console.log($scope);
+        }
       },function(r) {
 
     });
+
+
+
   }
 
   $scope.goToMessage = function(user_id){
