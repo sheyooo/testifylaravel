@@ -1,5 +1,5 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher, $stateParams) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
@@ -111,21 +111,18 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     return d.promise;
   };
 
-
-
   var getIndexById = function(arr, obj){
     var count = arr.length;
     for(i = 0; i < count; i++){
       if(arr[i].id == obj.id || obj ){
-        console.log(obj);
         return i;
       }
-      return -1;
     }
+    return -1;
   };
 
   var clearNotifications = function(chat_id){
-    
+
     var idx = getIndexById($scope.app.messages.notifications, chat_id);
     if(idx >= 0){
       $scope.app.messages.notifications.splice(idx, 1);
@@ -135,8 +132,20 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     }
   };
 
+  var checkIfCurrentChat = function(chat){
+    if($state.current.name == "web.app.dashboard.message"){
+        var count = chat.users.length;
+        for(i = 0; i < count; i++){
+          if(chat.users[i].hash_id == $stateParams.user_id || chat.users[i].username == $stateParams.user_id){
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+
   var initPusher = function(){
-    var channel = Pusher.subscribe('test_channel');
+    var channel = Pusher.subscribe('general');
     channel.bind('my_event', function(data) {
       //alert(data.message);
     });
@@ -144,15 +153,20 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
     var notifications = Pusher.subscribe(notif_channel);
 
-    notifications.bind('new_message', function(data) {
 
-      var idx = getIndexById($scope.app.messages.notifications, data.chat);
-      if(idx >= 0){
-        //$scope.app.messages.notifications.push(data.chat);
+
+    notifications.bind('new_message', function(data) {
+      //console.log("notif_bind");
+      if(checkIfCurrentChat(data.chat)){
+
       }else{
-        $scope.app.messages.notifications.push(data.chat);
+        var idx = getIndexById($scope.app.messages.notifications, data.chat);
+        if(idx == -1){
+          $scope.app.messages.notifications.push(data.chat);
+        }
+        $scope.$digest();
       }
-      $scope.$digest();
+
     });
 
     notifications.bind('pusher:subscription_error', function(status) {

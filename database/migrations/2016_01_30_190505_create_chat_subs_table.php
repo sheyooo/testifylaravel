@@ -19,6 +19,7 @@ class CreateChatSubsTable extends Migration
           $table->bigIncrements('id');
           $table->bigInteger('chat_id')->unsigned();
           $table->bigInteger('user_id')->unsigned();
+          $table->timestamp('last_seen');
           $table->timestamps();
 
           $table->foreign('chat_id')

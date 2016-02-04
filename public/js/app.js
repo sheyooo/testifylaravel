@@ -199,7 +199,18 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
       templateUrl: 'views/web.app.dashboard.messages.html'
     }).state('web.app.dashboard.message', {
       url: 'messages/:user_id',
-      templateUrl: 'views/web.app.dashboard.message.html'
+      templateUrl: 'views/web.app.dashboard.message.html',
+      controller: 'MessageCtrl',
+      resolve: {
+        messagingUser: function(Restangular, $stateParams, $q){
+          var d = $q.defer();
+          Restangular.one('users', $stateParams.user_id).get().then(
+            function(r) {
+              d.resolve(r.data);
+            });
+          return d.promise;
+        }
+      }
     }).state('web.app.dashboard.post', {
       url: 'posts/:hash_id',
       templateUrl: 'views/web.app.dashboard.post.html'

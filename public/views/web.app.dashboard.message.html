@@ -1,4 +1,4 @@
-<div layout="row" flex layout="row" layout-fill layout-wrap layout-align="center start" ng-controller="MessagesCtrl">
+<div layout="row" flex layout="row" layout-fill layout-wrap layout-align="center start">
     <span flex="20" flex-md="10" flex-sm="0"></span>
     <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
       <md-card style="height: 100%; max-height: 100%; position: relative; overflow: auto" layout="column">
@@ -11,32 +11,47 @@
             </div>
         </div>
         <md-divider></md-divider>
-        <md-content class="p5" flex>
-          <div ng-repeat="message in messages track by message.id" class="mb15">
-            <div layout="row" flex layout-fill class="">
-              <div style="width: 50px" class="p5">
-                <div class="square-img-container">
-                  <img class="" ng-src="{{::message.user.avatar}}">
+        <md-content class="p5" flex id="messages-container">
+          <div id="messages-holder">
+            <div ng-repeat="message in messages track by message.id" class="mb15">
+              <div layout="row" flex layout-fill class="">
+                <div style="width: 50px" class="p5">
+                  <div class="square-img-container">
+                    <img class="" ng-src="{{::message.user.avatar}}">
+                  </div>
                 </div>
-              </div>
-              <div flex layout="column" class="ml5">
-                <div>
-                  <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: message.user.username || message.user.hash_id})">{{::message.user.name}}</a>
+                <div flex layout="column" class="ml5">
+                  <div>
+                    <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: message.user.username || message.user.hash_id})">{{::message.user.name}}</a>
+                  </div>
+                  <div class="">
+                    <span class="md-body-1">
+                      {{::message.text}}
+                    </span>
+                    <span class="md-caption">
+                        <time am-time-ago="::user.created_at"></time>
+                    </span>
+                  </div>
                 </div>
-                <div class="">
-                  <span class="md-body-1">
-                    {{::message.text}}
-                  </span>
-                  <span class="md-caption">
-                      <time am-time-ago="::user.created_at"></time>
-                  </span>
-                </div>
-
               </div>
             </div>
           </div>
+          <div ng-if=" !loading && !messages.length" layout="column">
+              <div layout="row" layout-align="center center">
+                  <my-icon class="text-muted" icon="comment-processing-outline" id="no-posts-iconography"></my-icon>
+                  <style type="text/css">
+                  #no-posts-iconography:before {
+                      font-size: 100px;
+                      color: #ccc;
+                  }
+                  </style>
+              </div>
+              <h2 class="text-center" style="color: #aaa">
+                  No Message
+              </h2>
+          </div>
         </md-content>
-        <md-divider></md-divider>        
+        <md-divider></md-divider>
         <div style="" layout="column" style="border-top: solid 2px #eee; height: auto;" class="p10">
 
           <div layout="row">

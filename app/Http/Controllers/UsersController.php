@@ -320,31 +320,8 @@ class UsersController extends Controller
       if(!$to_user)
         return \Response::make(['status' => 'User not found'], 404);
 
-      try{
-        $chat = \App\Chat::whereHas('subs', function ($query) use($user){
-            $query->where('user_id', $user->id);
-        })->whereHas('subs', function ($query) use($to_user){
-            $query->where('user_id', $to_user->id);
-        })->firstOrFail();
 
-      }catch(\Exception $e){
-        $chat = new \App\Chat;
-        $sub = new \App\ChatSub;
-        $sub1 = new \App\ChatSub;
-
-        $chat->save();
-
-        $sub->user()->associate($user);
-        $sub1->user()->associate($to_user);
-
-        $sub->chat()->associate($chat);
-        $sub1->chat()->associate($chat);
-
-        $sub->save();
-        $sub1->save();
-      }
-
-
+      $chat = self::getChat($user, $to_user);
 
       if(true){
         $message = new \App\ChatMessage;
@@ -355,13 +332,15 @@ class UsersController extends Controller
         $chat->save();
 
 
-        Pusher::trigger('test_channel', 'my_event', ['message' => $request->message]);
+        Pusher::trigger('general', 'my_event', ['message' => $request->message]);
+        Pusher::trigger('private-message-' . $chat->id, 'new_message', $message, $request->socket_id);
         Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
-          'chat' => $chat,
-          'user' => $user,
+          'chat' => $chat->load('users'),
           //'user' => $user,
-          'message' => $message
+          //'user' => $user,
+          //'message' => $message
         ]);
+
 
         if(count($to_user->gcmIds)){
           $deviceToken = $to_user->gcmIds;
@@ -389,19 +368,11 @@ class UsersController extends Controller
       if(!$to_user || $to_user->id == $user->id)
         return \Response::make(['status' => 'User not found'], 404);
 
-
-      try{
-        $chat = \App\Chat::whereHas('subs', function ($query) use($user){
-            $query->where('user_id', $user->id);
-        })->whereHas('subs', function ($query) use($to_user){
-            $query->where('user_id', $to_user->id);
-        })->with('messages.user')->firstOrFail();
-
-        return $chat->messages;
-
-      }catch(\Exception $e){
-        return [];
-      }
+      $chat = self::getChat($user, $to_user);
+      //because of eager loading
+      $chatmessages = $chat;
+      $messages = $chatmessages->messages()->with('user')->get();
+      return \Response::make(['chat' => $chat, 'messages' => $messages ]);
 
     }
 
@@ -414,11 +385,39 @@ class UsersController extends Controller
 
       $chats = \App\Chat::whereHas('subs', function ($query) use($user){
           $query->where('user_id', $user->id);
-      })->with('users')->get();
+      })->has('messages')->with('users')->get();
 
-
+      //dd($chats);
 
       return $chats;
+    }
+
+    public static function getChat($user, $to_user){
+        try{
+          $chat = \App\Chat::whereHas('subs', function ($query) use($user){
+              $query->where('user_id', $user->id);
+          })->whereHas('subs', function ($query) use($to_user){
+              $query->where('user_id', $to_user->id);
+          })->firstOrFail();
+
+        }catch(\Exception $e){
+          $chat = new \App\Chat;
+          $sub = new \App\ChatSub;
+          $sub1 = new \App\ChatSub;
+
+          $chat->save();
+
+          $sub->user()->associate($user);
+          $sub1->user()->associate($to_user);
+
+          $sub->chat()->associate($chat);
+          $sub1->chat()->associate($chat);
+
+          $sub->save();
+          $sub1->save();
+        }
+
+        return $chat;
     }
 
 

@@ -18,8 +18,9 @@ class CreateChatTable extends Migration
             $table->collation = "utf8mb4_unicode_ci";
 
             $table->bigIncrements('id');
-            $table->string('hash_id');
+            //$table->string('hash_id');
             $table->text('last_message');
+            $table->timestamp('last_seen');
             $table->timestamps();
         });
     }

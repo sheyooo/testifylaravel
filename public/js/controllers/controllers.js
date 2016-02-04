@@ -394,81 +394,95 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
   }
 ]);
 
-app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular', 'Auth', function($scope, $state, $stateParams, Restangular, Auth) {
-  $scope.messages = [];
+app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular', 'Auth' , 'Pusher', function($scope, $state, $stateParams, Restangular, Auth, Pusher) {
   $scope.chats = [];
-  $scope.inputMessage = '';
 
-  if ($state.current.name === 'web.app.dashboard.messages') {
-    Restangular.all('me').all('messages').getList().then(
-      function(r) {
-
-        var getOtherUser = function(users){
-          var count  = users.length;
-          for(i = 0; i < count; i++){
-            if(users[i].id != Auth.userProfile.id){
-              return users[i];
-            }
-          }
-        };
-
-        var count = r.data.length;
+  Restangular.all('me').all('messages').getList().then(
+    function(r) {
+      console.log(r);
+      var getOtherUser = function(users){
+        var count  = users.length;
         for(i = 0; i < count; i++){
-          r.data[i].otherUser = getOtherUser(r.data[i].users);
+          if(users[i].id != Auth.userProfile.id){
+            return users[i];
+          }
         }
+      };
 
-        $scope.chats = r.data;
-      },function(r) {
-
+      var count = r.data.length;
+      for(i = 0; i < count; i++){
+        r.data[i].otherUser = getOtherUser(r.data[i].users);
       }
-    );
-  }
 
-  if ($state.current.name === 'web.app.dashboard.message') {
-    Restangular.one('users', $stateParams.user_id).get().then(
-      function(r) {
-        $scope.messagingUser = r.data;
-      },function(r) {
+      $scope.chats = r.data;
+    },function(r) {
 
-    });
-
-    Restangular.all('me').all('messages').all($stateParams.user_id).getList().then(
-      function(r) {
-        $scope.messages = r.data;
-        if(r.data.length){
-          $scope.app.messages.clearNotifications(r.data[0].chat_id);
-          //console.log($scope);
-        }
-      },function(r) {
-
-    });
-
-
-
-  }
+    }
+  );
 
   $scope.goToMessage = function(user_id){
     $state.go('web.app.dashboard.message', {user_id: user_id });
 
   };
 
-  $scope.sendMessage = function(){
-    if($scope.inputMessage.trim()){
-      Restangular.all('users').one($stateParams.user_id).all('messages').post({message: $scope.inputMessage}).then(function(r){
-        $scope.messages.push(r.data);
-        $scope.inputMessage = '';
-      }, function(r){
+}]);
 
-      });
-    }else{
-      //Do nothing!!!;
+app.controller('MessageCtrl', ['$scope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', function($scope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher){
+  $scope.messages = [];
+  $scope.inputMessage = '';
+  $scope.messagingUser = messagingUser;
+
+  if(!$stateParams.user_id){
+    $state.go('web.app.dashboard.home');
+  }
+
+  var push_new_message = function(message){
+    $scope.messages.push(message);
+
+    $("#messages-container").animate({
+        scrollTop: $("#messages-container")[0].scrollHeight + 500
+    }, 500);
+    if(!$scope.$$phase){
+      $scope.$digest();
     }
-
+    $scope.app.messages.clearNotifications(r.data.chat);
   };
 
+  Restangular.all('me').all('messages').one($stateParams.user_id).get().then(
+    function(r) {
+      //console.log($stateParams.user_id);
+      $scope.messages = r.data.messages;
+      if(r.data.messages.length){
+        $scope.app.messages.clearNotifications(r.data.chat);
+      }
+      var pm = Pusher.subscribe('private-message-' + r.data.chat.id);
 
+      pm.bind('new_message', push_new_message);
 
+      $("#messages-container").animate({
+          scrollTop: $("#messages-container")[0].scrollHeight + 500
+      }, 1);
 
+    },function(r) {
+
+  });
+
+  $scope.sendMessage = function(){
+      if($scope.inputMessage.trim()){
+        Restangular.all('users').one($stateParams.user_id).all('messages').post({
+          message: $scope.inputMessage,
+          socket_id: Pusher.connection.socket_id
+        }).then(function(r){
+          $scope.messages.push(r.data);
+          $scope.inputMessage = '';
+        }, function(r){
+
+        });
+      }else{
+        //Do nothing!!!;
+      }
+
+    };
 
 }]);
 
