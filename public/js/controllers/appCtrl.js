@@ -1,9 +1,9 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher, $stateParams) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher, $stateParams, PChannels, TokenService) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
-  $scope.tokHashId = Auth.token.hash_id;
+  $scope.tokHashId = TokenService.token().hash_id;
   //$state.go('web.app.login');
 
   $scope.ui = {
@@ -145,17 +145,18 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     };
 
   var initPusher = function(){
+    //Pusher.connect();
     var channel = Pusher.subscribe('general');
     channel.bind('my_event', function(data) {
       //alert(data.message);
     });
 
-    var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
-    var notifications = Pusher.subscribe(notif_channel);
+    //var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
+    //var notifications = Pusher.subscribe(notif_channel);
 
 
 
-    notifications.bind('new_message', function(data) {
+    PChannels.notifications.bind('new_message', function(data) {
       //console.log("notif_bind");
       if(checkIfCurrentChat(data.chat)){
 
@@ -169,7 +170,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
     });
 
-    notifications.bind('pusher:subscription_error', function(status) {
+    PChannels.notifications.bind('pusher:subscription_error', function(status) {
       if(status == 408 || status == 503){
         // retry?
       }

@@ -3,6 +3,48 @@ app.factory('isCordova', [function(){
   return cordova;
 }]);
 
+app.factory('TokenService', function($localStorage){
+
+  function urlBase64Decode(str) {
+    var output = str.replace('-', '+').replace('_', '/');
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw 'Illegal base64url string!';
+    }
+    return window.atob(output);
+  }
+
+  var getClaimsFromToken = function() {
+    var token = $localStorage.token;
+    var claims = {};
+
+    //console.log(token);
+    if (typeof token !== 'undefined') {
+      var encoded = token.split('.')[1];
+      claims = JSON.parse(urlBase64Decode(encoded));
+    }
+
+    return claims;
+  };
+
+  var rawToken = function(){
+    return $localStorage.token;
+  };
+
+  return {
+    token: getClaimsFromToken,
+    rawToken: rawToken
+  };
+});
+
 app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   Auth, Me) {
 
@@ -37,7 +79,7 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   };
 }]);
 
-app.factory('Pusher', ['Auth', function(Auth){
+app.factory('Pusher', ['TokenService', function(TokenService){
 
   Pusher.log = function(message) {
     if (window.console && window.console.log) {
@@ -50,7 +92,7 @@ app.factory('Pusher', ['Auth', function(Auth){
     authEndpoint: 'api/v1/pusher/auth',
     auth: {
       headers: {
-        'Authorization': 'Bearer ' + Auth.rawToken
+        'Authorization': 'Bearer ' + TokenService.rawToken()
       }
     }
   });
@@ -152,8 +194,8 @@ app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
 ]);
 
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova',
-  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova) {
+  '$cordovaFacebook', 'Facebook', 'isCordova', 'PChannels', 'TokenService',
+  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, PChannels, TokenService) {
     var user = {
       authenticated: false,
       id: null,
@@ -170,53 +212,25 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
 
     Restangular.setFullResponse(true);
 
-    function urlBase64Decode(str) {
-      var output = str.replace('-', '+').replace('_', '/');
-      switch (output.length % 4) {
-        case 0:
-          break;
-        case 2:
-          output += '==';
-          break;
-        case 3:
-          output += '=';
-          break;
-        default:
-          throw 'Illegal base64url string!';
-      }
-      return window.atob(output);
-    }
-
-    var rawToken = $localStorage.token;
-
-    function getClaimsFromToken() {
-      var token = $localStorage.token;
-      var claims = {};
-
-      //console.log(token);
-      if (typeof token !== 'undefined') {
-        var encoded = token.split('.')[1];
-        claims = JSON.parse(urlBase64Decode(encoded));
-      }
-
-      return claims;
-    }
-
     var refreshProfile = function() {
-
+      //console.log(TokenService.token.hash_id);
+      //console.log(TokenService.token().hash_id);
+      //console.log(TokenService.token().exp);
       var d = $q.defer();
-      if (getClaimsFromToken().hash_id && getClaimsFromToken().exp > Date
+      if (TokenService.token().hash_id && TokenService.token().exp > Date
         .now() / 1000) {
         //console.log("truthy");
         //console.log(getClaimsFromToken().hash_id);
         //console.log(Date.now() / 1000);
         //console.log(getClaimsFromToken().exp);
+        //console.log(TokenService.token.hash_id);
 
-        Restangular.one('users', getClaimsFromToken().hash_id).get({
+        Restangular.one('users', TokenService.token().hash_id).get({
           profile: true
         }).then(
           function(r) {
             buildAuthProfile(r.data);
+            PChannels.notifications_subscribe();
             d.resolve(true);
 
             //console.log(getClaimsFromToken().id);
@@ -350,6 +364,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
     };
 
     var logout = function() {
+      PChannels.notifications_unsubscribe();
       tokenClaims = {};
       delete $localStorage.token;
       refreshProfile();
@@ -377,15 +392,13 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
       refreshProfile: refreshProfile,
       resetProfile: resetProfile,
       userProfile: user,
-      token: getClaimsFromToken(),
-      rawToken: rawToken
     };
   }
 ]);
 
-app.factory('Me', ['Auth', 'Restangular', '$q', function(Auth, Restangular, $q) {
+app.factory('Me', ['Auth', 'Restangular', '$q', 'TokenService', function(Auth, Restangular, $q, TokenService) {
 
-  var uid = Auth.token.sub;
+  var uid = TokenService.token().sub;
   //console.log(uid);
 
   var me = Restangular.one('users', uid);
@@ -445,3 +458,22 @@ app.factory('SocialService', ['Facebook', 'Auth', function(Facebook, Auth) {
 
   };
 }]);
+
+app.factory('PChannels', function(TokenService, Pusher){
+
+  var notifications_subscribe = function(){
+    var channel = Pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
+    notifications = channel;
+    return channel;
+  };
+
+  var notifications = notifications_subscribe();
+
+  return {
+    notifications: notifications,
+    notifications_subscribe: notifications_subscribe,
+    notifications_unsubscribe: function (){
+      return Pusher.unsubscribe('private-notifications-' + TokenService.token().hash_id);
+    }
+  };
+});

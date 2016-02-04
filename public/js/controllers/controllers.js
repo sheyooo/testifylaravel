@@ -399,7 +399,7 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
 
   Restangular.all('me').all('messages').getList().then(
     function(r) {
-      console.log(r);
+      //console.log(r);
       var getOtherUser = function(users){
         var count  = users.length;
         for(i = 0; i < count; i++){
@@ -420,17 +420,13 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
     }
   );
 
-  $scope.goToMessage = function(user_id){
-    $state.go('web.app.dashboard.message', {user_id: user_id });
-
-  };
-
 }]);
 
-app.controller('MessageCtrl', ['$scope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', function($scope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher){
+app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', function($scope, $rootScope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher){
   $scope.messages = [];
   $scope.inputMessage = '';
   $scope.messagingUser = messagingUser;
+  var chat_channel = "";
 
   if(!$stateParams.user_id){
     $state.go('web.app.dashboard.home');
@@ -451,11 +447,12 @@ app.controller('MessageCtrl', ['$scope', 'messagingUser', 'Restangular', 'Auth',
   Restangular.all('me').all('messages').one($stateParams.user_id).get().then(
     function(r) {
       //console.log($stateParams.user_id);
+      chatChannel = 'private-message-' + r.data.chat.id;
       $scope.messages = r.data.messages;
       if(r.data.messages.length){
         $scope.app.messages.clearNotifications(r.data.chat);
       }
-      var pm = Pusher.subscribe('private-message-' + r.data.chat.id);
+      var pm = Pusher.subscribe(chatChannel);
 
       pm.bind('new_message', push_new_message);
 
@@ -475,6 +472,9 @@ app.controller('MessageCtrl', ['$scope', 'messagingUser', 'Restangular', 'Auth',
         }).then(function(r){
           $scope.messages.push(r.data);
           $scope.inputMessage = '';
+          $("#messages-container").animate({
+              scrollTop: $("#messages-container")[0].scrollHeight + 500
+          }, 1);
         }, function(r){
 
         });
@@ -484,6 +484,9 @@ app.controller('MessageCtrl', ['$scope', 'messagingUser', 'Restangular', 'Auth',
 
     };
 
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+    Pusher.unsubscribe(chatChannel);
+  });
 }]);
 
 app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
