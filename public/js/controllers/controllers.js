@@ -400,21 +400,23 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
   Restangular.all('me').all('messages').getList().then(
     function(r) {
       //console.log(r);
-      var getOtherUser = function(users){
-        var count  = users.length;
-        for(i = 0; i < count; i++){
-          if(users[i].id != Auth.userProfile.id){
-            return users[i];
+      var chats = r.data;
+      var getOtherUserFromSubs = function(subs){
+        var count  = subs.length;
+
+        for(var i = 0; i < count; i++){
+          if(subs[i].user_id != Auth.userProfile.id){
+            return subs[i].user;
           }
         }
       };
 
       var count = r.data.length;
-      for(i = 0; i < count; i++){
-        r.data[i].otherUser = getOtherUser(r.data[i].users);
+      for(var i = 0; i < count; i++){
+        chats[i].otherUser = getOtherUserFromSubs(r.data[i].subs);
       }
 
-      $scope.chats = r.data;
+      $scope.chats = chats;
     },function(r) {
 
     }

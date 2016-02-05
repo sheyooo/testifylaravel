@@ -385,7 +385,7 @@ class UsersController extends Controller
       //ammend this query
       $chats = \App\Chat::whereHas('subs', function ($query) use($user){
           $query->where('user_id', $user->id);
-      })->has('messages')->with('users')->get();
+      })->has('messages')->with('subs.user')->get();
 
       //dd($chats);
 
