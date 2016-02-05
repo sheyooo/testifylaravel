@@ -335,7 +335,7 @@ class UsersController extends Controller
         //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
         Pusher::trigger('private-message-' . $chat->id, 'new_message', $message, $request->socket_id);
         Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
-          'chat' => $chat->load('users'),
+          'chat' => $chat,//->load('users'),
           //'user' => $user,
           //'user' => $user,
           //'message' => $message

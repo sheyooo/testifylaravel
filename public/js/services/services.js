@@ -45,8 +45,8 @@ app.factory('TokenService', function($localStorage){
   };
 });
 
-app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
-  Auth, Me) {
+app.factory('AppService', ['Restangular', 'Auth', 'Me', '$q', '$timeout', function(Restangular,
+  Auth, Me, $q, $timeout) {
 
   var app = {
     posts: []
@@ -62,11 +62,37 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
 
   var getPosts = Restangular.all('posts');
 
-  var getCategories = Restangular.all('categories').getList();
+  var getCategories = function(){
+    var d = $q.defer();
 
-  var getCategoriesWithCount = Restangular.all('categories').getList({
-    count: true
-  });
+    (function makeCall(){
+      Restangular.all('categories').getList().then(function(r){
+        d.resolve(r);
+      }, function(){
+        $timeout(function () {
+          makeCall();
+        }, 10000);
+      });
+    })();
+
+    return d.promise;
+  };
+
+  var getCategoriesWithCount = function(){
+    var d = $q.defer();
+
+    (function makeCall(){
+      Restangular.all('categories').getList({count: true}).then(function(r){
+        d.resolve(r);
+      }, function(){
+        $timeout(function () {
+          makeCall();
+        }, 10000);
+      });
+    })();
+
+    return d.promise;
+  };
 
 
   return {
@@ -199,9 +225,9 @@ app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
   }
 ]);
 
-app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova', 'PChannels', 'TokenService', 'Pusher',
-  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, PChannels, TokenService, Pusher) {
+app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
+  '$cordovaFacebook', 'Facebook', 'isCordova', 'NotificationsService', 'TokenService', 'Pusher',
+  function($localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, NotificationsService, TokenService, Pusher) {
     var user = {
       authenticated: false,
       id: null,
@@ -237,7 +263,10 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
           function(r) {
             buildAuthProfile(r.data);
             Pusher.headerAuthBearerRefresh();//get the fresh token
-            PChannels.notifications_subscribe();
+            //console.log(Pusher.pusher);
+            NotificationsService.reInitPusher();
+            //console.log(Pusher.pusher);
+
             d.resolve(true);
 
             //console.log(getClaimsFromToken().id);
@@ -371,7 +400,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
     };
 
     var logout = function() {
-      PChannels.notifications_unsubscribe();
+      NotificationsService.unsubscribe();
       tokenClaims = {};
       delete $localStorage.token;
       refreshProfile();
@@ -468,13 +497,15 @@ app.factory('SocialService', ['Facebook', 'Auth', function(Facebook, Auth) {
 
 app.factory('PChannels', function(TokenService, Pusher){
 
+  var notif_channel = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
+
   var notifications_subscribe = function(){
-    var channel = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
-    notifications = channel;
-    return channel;
+    //var channel = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
+    //notifications = channel;
+    notif_channel.subscribe('private-notifications-' + TokenService.token().hash_id);
   };
 
-  var notifications = notifications_subscribe();
+  var notifications = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
 
   return {
     notifications: notifications,
@@ -482,5 +513,82 @@ app.factory('PChannels', function(TokenService, Pusher){
     notifications_unsubscribe: function (){
       return Pusher.pusher.unsubscribe('private-notifications-' + TokenService.token().hash_id);
     }
+  };
+});
+
+app.factory('NotificationsService', function(TokenService, Pusher, $state, $stateParams, $rootScope){
+
+  var n_chanell = null;
+
+  var m_notif = [];
+
+  var getIndexById = function(arr, obj){
+    var count = arr.length;
+    for(i = 0; i < count; i++){
+      if(arr[i].id == obj.id || obj ){
+        return i;
+      }
+    }
+    return -1;
+  };
+
+  var checkIfCurrentChat = function(chat){
+    if($state.current.name == "web.app.dashboard.message"){
+        var count = chat.users.length;
+        for(i = 0; i < count; i++){
+          if(chat.users[i].hash_id == $stateParams.user_id || chat.users[i].username == $stateParams.user_id){
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+
+  var initPusher = function(){
+    if(!TokenService.token().hash_id)
+      return;
+
+    var n = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
+    n_chanell = n;
+    n.bind('new_message', function(data) {
+      //console.log("notif_bind");
+      if(checkIfCurrentChat(data.chat)){
+
+      }else{
+        var idx = getIndexById(m_notif, data.chat);
+        if(idx == -1){
+          m_notif.push(data.chat);
+          $rootScope.$digest();
+        }
+      }
+
+    });
+
+    n.bind('pusher:subscription_error', function(status) {
+      if(status == 408 || status == 503){
+        // retry?
+      }
+    });
+  };
+
+  var clearNotifications = function(chat_id){
+
+    var idx = getIndexById(m_notif, chat_id);
+    if(idx >= 0){
+      m_notif.splice(idx, 1);
+    }
+  };
+
+  var unsubscribe = function (){
+    n_chanell.unsubscribe('private-notifications-' + TokenService.token().hash_id);
+  };
+
+  initPusher();
+
+  return {
+    MessageNotifications: m_notif,
+    clearNotifications: clearNotifications,
+    unsubscribe: unsubscribe,
+    reInitPusher: initPusher
   };
 });

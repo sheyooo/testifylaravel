@@ -424,7 +424,7 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
 
 }]);
 
-app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', function($scope, $rootScope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher){
+app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', 'NotificationsService', function($scope, $rootScope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher, NotificationsService){
   $scope.messages = [];
   $scope.inputMessage = '';
   $scope.messagingUser = messagingUser;
@@ -440,10 +440,8 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
     $("#messages-container").animate({
         scrollTop: $("#messages-container")[0].scrollHeight + 500
     }, 500);
-    if(!$scope.$$phase){
-      $scope.$digest();
-    }
-    $scope.app.messages.clearNotifications(r.data.chat);
+
+    NotificationsService.clearNotifications(r.data.chat);
   };
 
   Restangular.all('me').all('messages').one($stateParams.user_id).get().then(
@@ -510,7 +508,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
         });
     }, 0);
 
-    AppService.getCategories.then(function(cats) {
+    AppService.getCategories().then(function(cats) {
       $scope.categories = cats.data;
 
       var length = $scope.categories.length;
@@ -704,7 +702,7 @@ app.controller('UXModalPostCategorizeCtrl', ['$scope', '$mdDialog',
   'AppService', 'selectedCategories',
   function($scope, $mdDialog, AppService, selectedCategories) {
 
-    AppService.getCategories.then(function(res) {
+    AppService.getCategories().then(function(res) {
       $scope.categories = res.data;
       console.log($scope.actives);
     });

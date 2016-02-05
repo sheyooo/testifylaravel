@@ -1,5 +1,5 @@
 app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
-  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher, $stateParams, PChannels, TokenService) {
+  $location, $state, $q, AppService, Auth, Me, appBase, $filter, Pusher, $stateParams, NotificationsService, TokenService, $timeout) {
   $scope.location = $location;
   $scope.user = Auth.userProfile;
   $scope.composingPost = false;
@@ -21,33 +21,14 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   //$scope.ui.showSideNav = $state.current.data.showSideNav;
   //console.log($scope.tokHashId);
 
-  var loadCategories = function(){
-    var d = $q.defer();
-    AppService.getCategoriesWithCount.then(function(cats) {
-      var l = cats.data.length;
-      for(var i = 0; i < l; i++){
-        cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
-      }
-      $scope.categories = cats.data;
-      d.resolve();
-    }, function(){
-      d.reject();
-    });
 
-    return d.promise;
-  };
-
-//retry loading categories if not loaded
-  (function() {
-    loadCategories().then(function () {
-
-    }, function() {
-      $setTimeout(function () {
-        loadCategories();
-      }, 10000);
-    });
-  })();
-//retry loading categories if not loaded
+  AppService.getCategoriesWithCount().then(function(cats) {
+    var l = cats.data.length;
+    for(var i = 0; i < l; i++){
+      cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
+    }
+    $scope.categories = cats.data;
+  });
 
 
   var originatorEv;
@@ -131,79 +112,9 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     return d.promise;
   };
 
-  var getIndexById = function(arr, obj){
-    var count = arr.length;
-    for(i = 0; i < count; i++){
-      if(arr[i].id == obj.id || obj ){
-        return i;
-      }
-    }
-    return -1;
-  };
-
-  var clearNotifications = function(chat_id){
-
-    var idx = getIndexById($scope.app.messages.notifications, chat_id);
-    if(idx >= 0){
-      $scope.app.messages.notifications.splice(idx, 1);
-    }
-    if(!$scope.$$phase){
-      $scope.$digest();
-    }
-  };
-
-  var checkIfCurrentChat = function(chat){
-    if($state.current.name == "web.app.dashboard.message"){
-        var count = chat.users.length;
-        for(i = 0; i < count; i++){
-          if(chat.users[i].hash_id == $stateParams.user_id || chat.users[i].username == $stateParams.user_id){
-            return true;
-          }
-        }
-        return false;
-      }
-    };
-
-  var initPusher = function(){
-    //Pusher.connect();
-    var channel = Pusher.pusher.subscribe('general');
-    channel.bind('my_event', function(data) {
-      //alert(data.message);
-    });
-
-    //var notif_channel = 'private-notifications-'+ Auth.token.hash_id;
-    //var notifications = Pusher.subscribe(notif_channel);
-
-
-
-    PChannels.notifications.bind('new_message', function(data) {
-      //console.log("notif_bind");
-      if(checkIfCurrentChat(data.chat)){
-
-      }else{
-        var idx = getIndexById($scope.app.messages.notifications, data.chat);
-        if(idx == -1){
-          $scope.app.messages.notifications.push(data.chat);
-        }
-        $scope.$digest();
-      }
-
-    });
-
-    PChannels.notifications.bind('pusher:subscription_error', function(status) {
-      if(status == 408 || status == 503){
-        // retry?
-      }
-    });
-  };
-
-  initPusher();
-
-  //clearNotifications(1);
   $scope.app = {
     messages: {
-      notifications: [],
-      clearNotifications: clearNotifications
+      notifications: NotificationsService.MessageNotifications
     }
   };
 
