@@ -66,6 +66,7 @@ var sass_files = [
 
 var cordova_www = [
   'public/bower_components/mdi/**/**',
+  'public/bower_components/pusher/**/**',
   'public/dist/**/**',
   'public/partials/**/**',
   'public/views/**/**',
@@ -93,6 +94,9 @@ var cordova_clean_files = [
   "!cordova/www/bower_components/mdi/css",
   "!cordova/www/bower_components/mdi/css/materialdesignicons.min.css",
   "!cordova/www/bower_components/mdi/fonts/**/**",
+  "cordova/www/bower_components/pusher/*",
+  "!cordova/www/bower_components/pusher/dist",
+  "!cordova/www/bower_components/pusher/dist/**/**",
   "!cordova/www/dist",
   "cordova/www/dist/*",
   "!cordova/www/dist/css/**/**",
@@ -104,6 +108,7 @@ var cordova_clean_files = [
   "!cordova/www/dist/fonts/Roboto-Italic.ttf",
   "!cordova/www/dist/fonts/Roboto-Medium.ttf",
   "!cordova/www/dist/fonts/Roboto-Regular.ttf",
+  "!cordova/www/img"
 
 ];
 

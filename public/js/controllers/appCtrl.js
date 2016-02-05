@@ -20,14 +20,34 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   //console.log($state);
   //$scope.ui.showSideNav = $state.current.data.showSideNav;
   //console.log($scope.tokHashId);
-  AppService.getCategoriesWithCount.then(function(cats) {
-    var l = cats.data.length;
-    for(var i = 0; i < l; i++){
-      cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
-    }
 
-    $scope.categories = cats.data;
-  });
+  var loadCategories = function(){
+    var d = $q.defer();
+    AppService.getCategoriesWithCount.then(function(cats) {
+      var l = cats.data.length;
+      for(var i = 0; i < l; i++){
+        cats.data[i].count = $filter('socialCounter')(cats.data[i].count);
+      }
+      $scope.categories = cats.data;
+      d.resolve();
+    }, function(){
+      d.reject();
+    });
+
+    return d.promise;
+  };
+
+//retry loading categories if not loaded
+  (function() {
+    loadCategories().then(function () {
+
+    }, function() {
+      $setTimeout(function () {
+        loadCategories();
+      }, 10000);
+    });
+  })();
+//retry loading categories if not loaded
 
 
   var originatorEv;
@@ -146,7 +166,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
   var initPusher = function(){
     //Pusher.connect();
-    var channel = Pusher.subscribe('general');
+    var channel = Pusher.pusher.subscribe('general');
     channel.bind('my_event', function(data) {
       //alert(data.message);
     });

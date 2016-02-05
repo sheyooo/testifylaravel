@@ -332,7 +332,7 @@ class UsersController extends Controller
         $chat->save();
 
 
-        Pusher::trigger('general', 'my_event', ['message' => $request->message]);
+        //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
         Pusher::trigger('private-message-' . $chat->id, 'new_message', $message, $request->socket_id);
         Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
           'chat' => $chat->load('users'),
@@ -382,7 +382,7 @@ class UsersController extends Controller
       }catch(\Exception $e){
         return \Response::make(['status' => 'Not Authorized'], 401);
       }
-
+      //ammend this query
       $chats = \App\Chat::whereHas('subs', function ($query) use($user){
           $query->where('user_id', $user->id);
       })->has('messages')->with('users')->get();

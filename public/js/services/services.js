@@ -79,7 +79,7 @@ app.factory('AppService', ['Restangular', 'Auth', 'Me', function(Restangular,
   };
 }]);
 
-app.factory('Pusher', ['TokenService', function(TokenService){
+app.factory('Pusher', ['TokenService', 'isCordova', 'apiBase', function(TokenService, isCordova, apiBase){
 
   Pusher.log = function(message) {
     if (window.console && window.console.log) {
@@ -89,7 +89,7 @@ app.factory('Pusher', ['TokenService', function(TokenService){
 
   var pusher = new Pusher('b5fa9d11972af2e0b8d1', {
     encrypted: true,
-    authEndpoint: 'api/v1/pusher/auth',
+    authEndpoint: apiBase + '/pusher/auth',
     auth: {
       headers: {
         'Authorization': 'Bearer ' + TokenService.rawToken()
@@ -97,8 +97,14 @@ app.factory('Pusher', ['TokenService', function(TokenService){
     }
   });
 
+  var headerAuthBearerRefresh = function () {
+    pusher.config.auth.headers.Authorization = 'Bearer ' + TokenService.rawToken();
+  };
 
-  return pusher;
+  return {
+    pusher: pusher,
+    headerAuthBearerRefresh: headerAuthBearerRefresh
+  };
 }]);
 
 app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
@@ -194,8 +200,8 @@ app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
 ]);
 
 app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova', 'PChannels', 'TokenService',
-  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, PChannels, TokenService) {
+  '$cordovaFacebook', 'Facebook', 'isCordova', 'PChannels', 'TokenService', 'Pusher',
+  function($http, $localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, PChannels, TokenService, Pusher) {
     var user = {
       authenticated: false,
       id: null,
@@ -230,6 +236,7 @@ app.factory('Auth', ['$http', '$localStorage', 'Restangular', '$q', '$state',
         }).then(
           function(r) {
             buildAuthProfile(r.data);
+            Pusher.headerAuthBearerRefresh();//get the fresh token
             PChannels.notifications_subscribe();
             d.resolve(true);
 
@@ -462,7 +469,7 @@ app.factory('SocialService', ['Facebook', 'Auth', function(Facebook, Auth) {
 app.factory('PChannels', function(TokenService, Pusher){
 
   var notifications_subscribe = function(){
-    var channel = Pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
+    var channel = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
     notifications = channel;
     return channel;
   };
@@ -473,7 +480,7 @@ app.factory('PChannels', function(TokenService, Pusher){
     notifications: notifications,
     notifications_subscribe: notifications_subscribe,
     notifications_unsubscribe: function (){
-      return Pusher.unsubscribe('private-notifications-' + TokenService.token().hash_id);
+      return Pusher.pusher.unsubscribe('private-notifications-' + TokenService.token().hash_id);
     }
   };
 });

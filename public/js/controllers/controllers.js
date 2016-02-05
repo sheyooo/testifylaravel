@@ -452,7 +452,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
       if(r.data.messages.length){
         $scope.app.messages.clearNotifications(r.data.chat);
       }
-      var pm = Pusher.subscribe(chatChannel);
+      var pm = Pusher.pusher.subscribe(chatChannel);
 
       pm.bind('new_message', push_new_message);
 
@@ -468,7 +468,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
       if($scope.inputMessage.trim()){
         Restangular.all('users').one($stateParams.user_id).all('messages').post({
           message: $scope.inputMessage,
-          socket_id: Pusher.connection.socket_id
+          socket_id: Pusher.pusher.connection.socket_id
         }).then(function(r){
           $scope.messages.push(r.data);
           $scope.inputMessage = '';
@@ -485,7 +485,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
     };
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-    Pusher.unsubscribe(chatChannel);
+    Pusher.pusher.unsubscribe(chatChannel);
   });
 }]);
 
