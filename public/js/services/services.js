@@ -516,7 +516,7 @@ app.factory('PChannels', function(TokenService, Pusher){
   };
 });
 
-app.factory('NotificationsService', function(TokenService, Pusher, $state, $stateParams, $rootScope){
+app.factory('NotificationsService', function(TokenService, Pusher, $state, $stateParams, $rootScope, Restangular){
 
   var n_chanell = null;
 
@@ -524,8 +524,8 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
 
   var getIndexById = function(arr, obj){
     var count = arr.length;
-    for(i = 0; i < count; i++){
-      if(arr[i].id == obj.id || obj ){
+    for(var i = 0; i < count; i++){
+      if(arr[i].id == obj.id){
         return i;
       }
     }
@@ -552,16 +552,40 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
     n_chanell = n;
     n.bind('new_message', function(data) {
       //console.log("notif_bind");
-      if(checkIfCurrentChat(data.chat)){
+      if(checkIfCurrentChat(data)){
 
       }else{
-        var idx = getIndexById(m_notif, data.chat);
+        var idx = getIndexById(m_notif, data);
         if(idx == -1){
-          m_notif.push(data.chat);
-          $rootScope.$digest();
+          m_notif.push(data);
+          if(!$rootScope.$$phase){
+            $rootScope.$digest();
+          }
         }
       }
 
+    });
+
+    n.bind('pusher:subscription_succeeded', function(status) {
+      Restangular.one('me').all('messages').all('unread').getList().then(
+        function(r){
+
+          var count = r.data.length;
+          m_notif.splice(0, r.data.length);//Clear the array first
+          for(var i = 0; i < count; i++){
+            //console.log(i, count);
+            //var idx = getIndexById(m_notif, r.data[i]);
+            //if(idx == -1){
+              m_notif.push(r.data[i]);//repopulate the array since its from the server
+            //}
+          }
+
+          if(!$rootScope.$$phase){
+            $rootScope.$digest();
+          }
+
+        }
+      );
     });
 
     n.bind('pusher:subscription_error', function(status) {

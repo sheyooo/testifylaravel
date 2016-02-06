@@ -334,12 +334,7 @@ class UsersController extends Controller
 
         //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
         Pusher::trigger('private-message-' . $chat->id, 'new_message', $message, $request->socket_id);
-        Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', [
-          'chat' => $chat,//->load('users'),
-          //'user' => $user,
-          //'user' => $user,
-          //'message' => $message
-        ]);
+        Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', $chat);
 
 
         if(count($to_user->gcmIds)){
@@ -369,6 +364,9 @@ class UsersController extends Controller
         return \Response::make(['status' => 'User not found'], 404);
 
       $chat = self::getChat($user, $to_user);
+      $sub = $chat->subs()->where('user_id', $user->id)->first();
+      $sub->last_seen = \Carbon\Carbon::now();//update for notification purposes
+      $sub->save();
       //because of eager loading
       $chatmessages = $chat;
       $messages = $chatmessages->messages()->with('user')->get();
@@ -390,6 +388,31 @@ class UsersController extends Controller
       //dd($chats);
 
       return $chats;
+    }
+
+    public function getUnreadMessages(){
+      try{
+        $user = \JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        return \Response::make(['status' => 'Unauthorized'], 401);
+      }
+
+      $r = \App\Chat:://leftJoin('chat_subs', 'chats.updated_at', '=', 'chat_subs.last_seen')
+                      leftJoin('chat_subs', function ($join) {
+                        $join->on('chats.id', '=', 'chat_subs.chat_id')
+                              ->on('chats.updated_at', '>', 'chat_subs.last_seen');
+                      })
+                      ->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
+                      //->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
+                      ->where('users.id', $user->id)
+                      ->select('chats.*')
+                      ->get();
+
+      //$r->transform(function($item, $key){
+        //return $item['chat'];
+      //});
+      return $r;
+
     }
 
     public static function getChat($user, $to_user){

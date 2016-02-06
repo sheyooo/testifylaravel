@@ -450,7 +450,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
       chatChannel = 'private-message-' + r.data.chat.id;
       $scope.messages = r.data.messages;
       if(r.data.messages.length){
-        $scope.app.messages.clearNotifications(r.data.chat);
+        NotificationsService.clearNotifications(r.data.chat);
       }
       var pm = Pusher.pusher.subscribe(chatChannel);
 
