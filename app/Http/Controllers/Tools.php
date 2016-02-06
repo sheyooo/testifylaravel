@@ -62,7 +62,6 @@ class Tools extends Controller
       return $data;
     }
 
-
     public static function uploadToAmazon($file, $key, $folder){
       if(!$folder){
         $folder = 'posts/';

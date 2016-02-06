@@ -424,11 +424,12 @@ app.controller('MessagesCtrl', ['$scope', '$state', '$stateParams', 'Restangular
 
 }]);
 
-app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', 'NotificationsService', function($scope, $rootScope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher, NotificationsService){
+app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restangular', 'Auth', '$stateParams', '$state', 'Pusher', 'NotificationsService', 'UtilityService', function($scope, $rootScope, messagingUser, Restangular, Auth, $stateParams, $state, Pusher, NotificationsService, UtilityService){
   $scope.messages = [];
   $scope.inputMessage = '';
   $scope.messagingUser = messagingUser;
   var chat_channel = "";
+  var chat_id = null;//will be set after call to server in restangular promise
 
   if(!$stateParams.user_id){
     $state.go('web.app.dashboard.home');
@@ -437,24 +438,62 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
   var push_new_message = function(message){
     $scope.messages.push(message);
 
+    if(!$scope.$$phase){
+      $scope.$digest();
+    }
+
     $("#messages-container").animate({
         scrollTop: $("#messages-container")[0].scrollHeight + 500
     }, 500);
 
-    NotificationsService.clearNotifications(r.data.chat);
+    NotificationsService.clearNotifications(chat_id);//TO-DO::: MAKE THIS A SERVER CALL TO CLEAR NOTIFICATION ON SERVER SIDE
   };
 
-  Restangular.all('me').all('messages').one($stateParams.user_id).get().then(
+  var subscription_succeeded = function(message){
+    //$scope.messages.push(message);
+    smartLoad($scope.messages);
+  };
+
+  var smartLoad = function(messages){
+    var id = UtilityService.findHighestID(messages);
+    //console.log(id);
+
+    Restangular.all('me').all('messages').one($stateParams.user_id).get({
+      after: id
+    }).then(
+      function(r) {
+        //console.log($stateParams.user_id);
+        var count = r.data.length;
+        if(count){
+          for(var i = 0; i < count; i++){
+            $scope.messages.push(r.data[i]);
+          }
+          NotificationsService.clearNotifications(chat_id);
+        }
+
+        $("#messages-container").animate({
+            scrollTop: $("#messages-container")[0].scrollHeight + 500
+        }, 1);
+
+      },function(r) {
+
+    });
+
+  };
+
+  Restangular.all('me').all('messages').one($stateParams.user_id).getList().then(
     function(r) {
-      //console.log($stateParams.user_id);
-      chatChannel = 'private-message-' + r.data.chat.id;
-      $scope.messages = r.data.messages;
-      if(r.data.messages.length){
-        NotificationsService.clearNotifications(r.data.chat);
+      //console.log(r.headers('X-CHAT-ID'));
+      chat_id = r.headers('X-CHAT-ID');
+      chatChannel = 'private-message-' + chat_id;
+      $scope.messages = r.data;
+      if(r.length){
+        NotificationsService.clearNotifications(chat_id);
       }
       var pm = Pusher.pusher.subscribe(chatChannel);
 
       pm.bind('new_message', push_new_message);
+      pm.bind('pusher:subscription_succeeded', subscription_succeeded);
 
       $("#messages-container").animate({
           scrollTop: $("#messages-container")[0].scrollHeight + 500
@@ -487,6 +526,9 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
     Pusher.pusher.unsubscribe(chatChannel);
   });
+
+
+
 }]);
 
 app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',

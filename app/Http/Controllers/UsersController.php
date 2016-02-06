@@ -334,7 +334,7 @@ class UsersController extends Controller
 
         //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
         Pusher::trigger('private-message-' . $chat->id, 'new_message', $message, $request->socket_id);
-        Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', $chat);
+        Pusher::trigger('private-notifications-' . $to_user->hash_id, 'new_message', $chat->load('users'));
 
 
         if(count($to_user->gcmIds)){
@@ -352,7 +352,7 @@ class UsersController extends Controller
 
     }
 
-    public function getChatMessages($user_id){
+    public function getChatMessages(Request $request, $user_id){
       try{
         $user = \JWTAuth::parseToken()->toUser();
       }catch(\Exception $e){
@@ -367,10 +367,10 @@ class UsersController extends Controller
       $sub = $chat->subs()->where('user_id', $user->id)->first();
       $sub->last_seen = \Carbon\Carbon::now();//update for notification purposes
       $sub->save();
-      //because of eager loading
-      $chatmessages = $chat;
-      $messages = $chatmessages->messages()->with('user')->get();
-      return \Response::make(['chat' => $chat, 'messages' => $messages ]);
+
+      $messages = Tools::paginateByID($request, $chat->messages()->with('user')->orderBy('created_at', 'desc'))->get();
+      //return $messages;
+      return \Response::make(array_reverse($messages->toArray()))->header('X-CHAT-ID', $chat->id);
 
     }
 

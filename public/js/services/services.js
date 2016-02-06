@@ -535,6 +535,7 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
   var checkIfCurrentChat = function(chat){
     if($state.current.name == "web.app.dashboard.message"){
         var count = chat.users.length;
+
         for(i = 0; i < count; i++){
           if(chat.users[i].hash_id == $stateParams.user_id || chat.users[i].username == $stateParams.user_id){
             return true;
@@ -614,5 +615,24 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
     clearNotifications: clearNotifications,
     unsubscribe: unsubscribe,
     reInitPusher: initPusher
+  };
+});
+
+app.factory('UtilityService', function(){
+
+  var findHighestID = function(arr){
+    var count = arr.length;
+    //console.log(arr, count);
+    return arr[count - 1].id;
+  };
+
+  var findHighestTimestamp = function(arr){
+    var count = arr.length;
+    return arr[count - 1].created_at;
+  };
+
+  return {
+    findHighestID: findHighestID,
+    findHighestTimestamp: findHighestTimestamp
   };
 });
