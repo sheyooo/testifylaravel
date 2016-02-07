@@ -36,6 +36,7 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::post('users/{id}/profile', 'UsersController@updateProfile');
   Route::post('users/{id}/messages', 'UsersController@sendMessage');
   Route::get('me/messages/unread', 'UsersController@getUnreadMessages');
+  Route::put('me/messages/{id}/read', 'UsersController@setChatRead');
   Route::get('me/messages/{user_id}', 'UsersController@getChatMessages');
   Route::get('me/messages/', 'UsersController@getActiveChats');
   Route::resource('users', 'UsersController');

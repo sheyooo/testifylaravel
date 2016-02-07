@@ -397,21 +397,36 @@ class UsersController extends Controller
         return \Response::make(['status' => 'Unauthorized'], 401);
       }
 
-      $r = \App\Chat:://leftJoin('chat_subs', 'chats.updated_at', '=', 'chat_subs.last_seen')
-                      leftJoin('chat_subs', function ($join) {
+      $r = \App\Chat::leftJoin('chat_subs', function ($join) {
                         $join->on('chats.id', '=', 'chat_subs.chat_id')
                               ->on('chats.updated_at', '>', 'chat_subs.last_seen');
                       })
                       ->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
-                      //->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
                       ->where('users.id', $user->id)
                       ->select('chats.*')
                       ->get();
 
-      //$r->transform(function($item, $key){
-        //return $item['chat'];
-      //});
       return $r;
+
+    }
+
+    public function setChatRead($id){
+
+      try{
+        $user = \JWTAuth::parseToken()->toUser();
+      }catch(\Exception $e){
+        return \Response::make(['status' => 'Unauthorized'], 401);
+      }
+
+      $c = \App\Chat::find($id);
+      $s = $c->subs()->where('user_id', $user->id)->first();
+
+      if($s){
+        $s->last_seen = \Carbon\Carbon::now();
+        $s->save();
+      }
+
+      return ;
 
     }
 
