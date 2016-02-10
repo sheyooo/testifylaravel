@@ -1,5 +1,6 @@
 <div layout="column" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="100px"></md-progress-circular>
+    <!-- <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="100px"></md-progress-circular> -->
+    <h3 ng-if="loading" style="color: #aaa">Loading posts...</h3>
     <div layout="column" style="width: 100%">
         <div ng-if=" !loading && !posts.length" layout="column">
             <div layout="row" layout-align="center center">

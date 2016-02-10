@@ -258,7 +258,18 @@ img {
   top: 15px;
 }
 
+.md-sidenav-backdrop {
+  -webkit-transition: all 1s ease-in-out !important;
+  transition: all 1s ease-in-out !important;
+    //opacity: 0 !important;
+    //display: none !important;
+}
 
+md-sidenav.md-closed-add,
+md-sidenav.md-closed-remove {
+    -webkit-transition: all .5s ease-in-out !important;
+    transition: all .5s ease-in-out !important;
+}
 
 .sidenav-items {
   padding: 0;

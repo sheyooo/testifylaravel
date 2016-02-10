@@ -178,14 +178,12 @@ gulp.task('watch', function() {
 
 });
 
-gulp.task('build', ['js', 'css', 'js_libs', 'tCache', 'img_asset']);
-
 gulp.task('cordova_sync', function(){
   return gulp.src(cordova_www, {base: 'public/'})
   .pipe(gulp.dest('cordova/www/'));
 });
 
-gulp.task('cordovalize_index', function(){
+gulp.task('cordovalize_index', ['cordova_sync'], function(){
   return gulp.src('public/index.html')
   .pipe(htmlReplace({
     'csp': "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src *; style-src 'self' 'unsafe-inline' http: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; font-src http: file: ;\">",
@@ -196,6 +194,10 @@ gulp.task('cordovalize_index', function(){
   .pipe(gulp.dest('cordova/www/'));
 });
 
-gulp.task('cordova_cleanup', function(cb){
+gulp.task('cordova_cleanup', ['cordovalize_index'], function(cb){
   return del(cordova_clean_files, cb);
 });
+
+gulp.task('build', ['js', 'css', 'js_libs', 'tCache', 'img_assets']);
+
+gulp.task('cordovalize', ['cordova_sync', 'cordovalize_index', 'cordova_cleanup']);
