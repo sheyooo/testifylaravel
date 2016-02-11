@@ -598,7 +598,7 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
 
   var clearNotifications = function(chat_id){
 
-    Restangular.one('me').one('messages', chat_id).one('read').put();
+    Restangular.one('me').one('messages', chat_id).one('read').patch();
 
     var idx = getIndexById(m_notif, chat_id);
     if(idx >= 0){
