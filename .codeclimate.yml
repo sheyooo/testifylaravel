@@ -1,0 +1,25 @@
+engines:
+  phpmd:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+    config:
+      standard: "PSR1,PSR2"
+  golint:
+    enabled: false
+  eslint:
+    enabled: false
+  csslint:
+    enabled: false
+ratings:
+  paths:
+  - app/**
+  - **.php
+exclude_paths:
+- spec/**/*
+- vendor/**/*
+- public/**/*
+- database/**
+- cordova/**
+- config/**
+- bootstrap/**
