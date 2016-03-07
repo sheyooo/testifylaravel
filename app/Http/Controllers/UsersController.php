@@ -81,12 +81,12 @@ class UsersController extends Controller
         $user = $this->findUser($userID);
 
         if($user){
-          if($request->profile){
-            $user->profile;
-          }
-          return $user;
+            if($request->profile){
+                $user->profile;
+            }
+            return $user;
         }else{
-          return \Response::make(['error' => 'User not found'], 404);
+            return \Response::make(['error' => 'User not found'], 404);
         }
 
 
@@ -168,14 +168,13 @@ class UsersController extends Controller
         $user = $this->findUser($userID);
         $posts = \App\Post::whereHas('favorites', function ($query) use ($user){
           return $query->where('user_id', $user->id);
-        });// $user->favorites()->orderBy('created_at', 'desc')->get();
+        });
+        // $user->favorites()->orderBy('created_at', 'desc')->get();
         $posts = Tools::paginateByID($request, $posts);
         $posts = $posts->get();
-        //return ($fav_posts);
         $pc = new PostsController();
         $posts = $pc->formatPostsIfAnon($posts);
 
-        //dd($favorites);
         return $posts;
       }catch( Exception $exception){
         return \Response::make(['error' => 'User not found'], 404);
