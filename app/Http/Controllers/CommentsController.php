@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 class CommentsController extends Controller
 {
     /**
@@ -32,7 +29,8 @@ class CommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,7 +41,8 @@ class CommentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -54,7 +53,8 @@ class CommentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -65,8 +65,9 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -77,23 +78,23 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
-        try{
-         $c = \App\Comment::findOrFail($id);
-         $user = \JWTAuth::parseToken()->toUser();
-         if($user->id == $c->user->id){
-           $c->postActivity()->delete();
-           $c->delete();
-         }else{
-          return \Response::make(['error' => 'The comment does not belong to you'], 400);
-         }
-        }catch(Exception $e){
-
+        try {
+            $c = \App\Comment::findOrFail($id);
+            $user = \JWTAuth::parseToken()->toUser();
+            if ($user->id == $c->user->id) {
+                $c->postActivity()->delete();
+                $c->delete();
+            } else {
+                return \Response::make(['error' => 'The comment does not belong to you'], 400);
+            }
+        } catch (Exception $e) {
         }
     }
 }
