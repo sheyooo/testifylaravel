@@ -167,8 +167,8 @@ class UsersController extends Controller
         // $user->favorites()->orderBy('created_at', 'desc')->get();
         $posts = Tools::paginateByID($request, $posts);
             $posts = $posts->get();
-            $pc = new PostsController();
-            $posts = $pc->formatPostsIfAnon($posts);
+            $postsCtrl = new PostsController();
+            $posts = $postsCtrl->formatPostsIfAnon($posts);
 
             return $posts;
         } catch (Exception $exception) {
@@ -186,8 +186,8 @@ class UsersController extends Controller
         $posts = Tools::paginateByID($request, $posts);
             $posts = $posts->get();
         //return ($fav_posts);
-        $pc = new PostsController();
-            $posts = $pc->formatPostsIfAnon($posts);
+        $postsCtrl = new PostsController();
+            $posts = $postsCtrl->formatPostsIfAnon($posts);
 
         //dd($favorites);
         return $posts;
@@ -231,19 +231,19 @@ class UsersController extends Controller
             $posts = $posts->get();
 
             $posts = $posts->each(function ($post, $key) use ($user) {
-          $user_ref = [
+          $userRef = [
             'name' => $user->name,
             'hash_id' => $user->hash_id,
           ];
-          $post['user_ref'] = $user_ref;
+          $post['user_ref'] = $userRef;
           $post['user_ref_activities'] = $post->postActivities()->whereHas('user', function ($query) use ($user) {
             return $query->where('user_id', $user->id);
           })->get();
 
         });
 
-            $pc = new PostsController();
-            $posts = $pc->formatPostsIfAnon($posts);
+            $postsCtrl = new PostsController();
+            $posts = $postsCtrl->formatPostsIfAnon($posts);
 
             return $posts;
         } catch (Exception $exception) {
@@ -259,12 +259,12 @@ class UsersController extends Controller
             $user = null;
         }
 
-        $to_user = $this->findUser($request->user_id);
+        $toUser = $this->findUser($request->user_id);
 
-        if ($user && $to_user) {
+        if ($user && $toUser) {
             $request = new \App\Friend();
             $request->from = $user->id;
-            $request->to = $to_user->id;
+            $request->to = $toUser->id;
             $request->save();
         } else {
             return \Response::make(['status' => 'Fatal error'], 400);
@@ -302,10 +302,10 @@ class UsersController extends Controller
         }
 
         if (\Hash::check($request->oldPassword, $user->password) || $user->password == null) {
-            $v = Validator::make($request->all(), [
-          'newPassword' => 'min:6',
-        ]);
-            if ($v->fails()) {
+            $validator = Validator::make($request->all(), [
+              'newPassword' => 'min:6',
+            ]);
+            if ($validator->fails()) {
                 return \Response::make(['status' => 'New password not up to 6 characters'], 400);
             } else {
                 $user->password = \Hash::make($request->newPassword);
@@ -327,12 +327,12 @@ class UsersController extends Controller
           return \Response::make(['status' => 'Unauthorized'], 401);
       }
 
-        $to_user = $this->findUser($userID);
-        if (!$to_user) {
+        $toUser = $this->findUser($userID);
+        if (!$toUser) {
             return \Response::make(['status' => 'User not found'], 404);
         }
 
-        $chat = self::getChat($user, $to_user);
+        $chat = self::getChat($user, $toUser);
 
         if (true) {
             $message = new \App\ChatMessage();
@@ -344,10 +344,10 @@ class UsersController extends Controller
 
         //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
         Pusher::trigger('private-message-'.$chat->id, 'new_message', $message, $request->socket_id);
-            Pusher::trigger('private-notifications-'.$to_user->hash_id, 'new_message', $chat->load('users'));
+            Pusher::trigger('private-notifications-'.$toUser->hash_id, 'new_message', $chat->load('users'));
 
-            if (count($to_user->gcmIds)) {
-                $deviceToken = $to_user->gcmIds;
+            if (count($toUser->gcmIds)) {
+                $deviceToken = $toUser->gcmIds;
                 \PushNotification::app('appNameAndroid')
                   ->to($deviceToken)
                   ->send('Hello World, i`m a push message');
@@ -365,19 +365,21 @@ class UsersController extends Controller
             return \Response::make(['status' => 'Unauthorized'], 401);
         }
 
-        $to_user = $this->findUser($userID);
-        if (!$to_user || $to_user->id == $user->id) {
+        $toUser = $this->findUser($userID);
+        if (!$toUser || $toUser->id == $user->id) {
             return \Response::make(['status' => 'User not found'], 404);
         }
 
-        $chat = self::getChat($user, $to_user);
+        $chat = self::getChat($user, $toUser);
         $sub = $chat->subs()->where('user_id', $user->id)->first();
         $sub->last_seen = \Carbon\Carbon::now();//update for notification purposes
-      $sub->save();
+        $sub->save();
 
-        $messages = Tools::paginateByID($request, $chat->messages()->with('user')->orderBy('created_at', 'desc'))->get();
-      //return $messages;
-      return \Response::make(array_reverse($messages->toArray()))->header('X-CHAT-ID', $chat->id);
+        $messages = Tools::paginateByID(
+                            $request, $chat->messages()->with('user')->orderBy('created_at', 'desc')
+                            )->get();
+        //return $messages;
+        return \Response::make(array_reverse($messages->toArray()))->header('X-CHAT-ID', $chat->id);
     }
 
     public function getActiveChats()
@@ -434,13 +436,13 @@ class UsersController extends Controller
         }
     }
 
-    public static function getChat($user, $to_user)
+    public static function getChat($user, $toUser)
     {
         try {
             $chat = \App\Chat::whereHas('subs', function ($query) use ($user) {
               $query->where('user_id', $user->id);
-          })->whereHas('subs', function ($query) use ($to_user) {
-              $query->where('user_id', $to_user->id);
+          })->whereHas('subs', function ($query) use ($toUser) {
+              $query->where('user_id', $toUser->id);
           })->firstOrFail();
         } catch (\Exception $exceptionxception) {
             $chat = new \App\Chat();
@@ -450,7 +452,7 @@ class UsersController extends Controller
             $chat->save();
 
             $sub->user()->associate($user);
-            $sub1->user()->associate($to_user);
+            $sub1->user()->associate($toUser);
 
             $sub->chat()->associate($chat);
             $sub1->chat()->associate($chat);
