@@ -1,18 +1,18 @@
 <md-card-content class="p5">
   <div layout="column">
     <div ng-if="::post.user_ref_activities.length" layout="column">
-      <span class="layout-padding"><a class="pl0 pr0" ui-sref="web.app.dashboard.user({id: post.user_ref.username || post.user_ref.hash_id})" style="font-weight: bold;">{{::post.user_ref.name}}</a> {{::interpretation}}</span>
+      <span class="layout-padding"><a class="pl0 pr0" ui-sref="web.app.dashboard.centered.user({id: post.user_ref.username || post.user_ref.hash_id})" style="font-weight: bold;">{{::post.user_ref.name}}</a> {{::interpretation}}</span>
       <md-divider class="mb10"></md-divider>
     </div>
     <div layout="row" flex class="pt10">
-      <div flex="10" flex-sm="15" flex-xs="15" class="square-img-container">
-        <a ui-sref="web.app.dashboard.user({id: post.user.username || post.user.hash_id})">
-          <img class="img-circle square2" ng-src="{{::post.user.avatar || 'dist/img/favicon.png'}}" alt="{{::post.user.name}}">
+      <div class="square-img-container" style="width: 50px">
+        <a ui-sref="web.app.dashboard.centered.user({id: post.user.username || post.user.hash_id})">
+          <img class="img-circle square2" ng-src="{{ post.anonymous ? 'dist/img/favicon.png' : post.user.avatar || 'dist/img/guest.png'}}" alt="{{::post.user.name}}">
         </a>
       </div>
       <div flex layout="column" class="ml15">
         <span class="md-body-1">
-                <a ui-sref="web.app.dashboard.user({id: post.user.username || post.user.hash_id})" style="font-weight: bold">
+                <a ui-sref="web.app.dashboard.centered.user({id: post.user.username || post.user.hash_id})" style="font-weight: bold">
                   <md-tooltip md-direction="top">{{::post.user.name || 'Anonymous post'}}</md-tooltip>
                   {{ ::post.user.username  || post.user.name || 'Anonymous' }}
                 </a>
@@ -96,24 +96,27 @@
       <md-divider></md-divider>
     </div>
     <div layout="row" class="pt5 pb5">
-      <md-button ng-if="::post.prayer" ng-disabled="post.amen" class="no-m" layout="row" layout-align="start center" ng-click="::sayAmen($event)" ng-class="{'md-accent md-hue-2' : !post.amen,'md-primary md-hue-2' : post.amen}">
+
+      <md-button md-no-ink ng-if="::post.prayer" class="no-m no-text-transform bold-text" ng-click="::sayAmen($event)" ng-class="{'md-accent md-hue-2' : !post.amen,'md-primary md-hue-2' : post.amen}">
         <my-icon icon="telegram"></my-icon>
         <span hide show-gt-xs class="text-muted">Amen</span>
         <span class="badge">{{amens_count}}</span>
       </md-button>
-      <md-button class="no-m" ng-class="{'md-accent md-hue-2' : !post.tapped_into,'md-primary' : post.tapped_into}" ng-click="::toggleTap($event)">
-        <my-icon icon="unfold-less "> </my-icon>
-        <span hide show-gt-xs class="text-muted">tap into</span>
+
+      <md-button md-no-ink class="no-m no-text-transform bold-text" ng-class="{'md-accent md-hue-2' : !post.tapped_into,'md-primary' : post.tapped_into}" ng-click="::toggleTap($event)">
+        <my-icon icon="unfold-less"></my-icon>
+        <span hide show-gt-xs class="text-muted">Tap into</span>
         <span class="badge">{{taps_count}}</span>
       </md-button>
-      <md-button class="no-m md-accent md-hue-2 " ng-click="::openCommentBox() ">
+
+      <md-button md-no-ink class="no-m md-accent md-hue-2 no-text-transform bold-text" ng-click="::openCommentBox() ">
         <my-icon icon="comment-outline"></my-icon>
-        <span hide show-gt-sm class="text-muted">comment</span>
+        <span hide show-gt-sm class="text-muted">Comment</span>
         <span class="badge">{{comments_count}}</span>
       </md-button>
-      <md-button class="no-m md-accent md-hue-2 " ng-click="::shareToFb()">
+      <md-button md-no-ink class="no-m md-accent md-hue-2 no-text-transform bold-text" ng-click="::shareToFb()">
         <my-icon icon="share"> </my-icon>
-        <span hide show-gt-md>share</span>
+        <span hide show-gt-md>Share</span>
       </md-button>
     </div>
     <div ng-show="showCommentBox">
@@ -129,14 +132,14 @@
           <div layout="row" flex layout-fill class="">
             <div flex="10" flex-xs="20">
               <div class="square-img-container">
-                <a ui-sref="web.app.dashboard.user({id: comment.user.username || comment.user.hash_id})">
+                <a ui-sref="web.app.dashboard.centered.user({id: comment.user.username || comment.user.hash_id})">
                   <img class="p5" ng-src="{{::comment.user.avatar}}">
                 </a>
               </div>
             </div>
             <div flex layout="column" class="ml5">
               <div>
-                <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: comment.user.username || comment.user.hash_id})">{{::comment.user.name}}</a>
+                <a class="md-body-2" style="font-weight: bolder; color: #3b5998" ui-sref="web.app.dashboard.centered.user({id: comment.user.username || comment.user.hash_id})">{{::comment.user.name}}</a>
                 <span class="md-body-1" ng-text-truncate="::comment.text" ng-tt-words-threshold="20" ng-tt-more-label="Show" ng-tt-less-label="Hide"></span>
               </div>
               <span class="md-caption">

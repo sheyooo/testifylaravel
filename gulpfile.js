@@ -18,29 +18,29 @@ var gulp = require('gulp'),
   del = require('del');
 
 var bower_js_files = [
-  "public/bower_components/jquery/dist/jquery.min.js",
+  "public/bower_components/jquery/dist/jquery.js",
   "public/bower_components/fastclick/lib/fastclick.js",
-  "public/bower_components/angular/angular.min.js",
-  "public/bower_components/angular-sanitize/angular-sanitize.min.js",
-  "public/bower_components/angular-ui-router/release/angular-ui-router.min.js",
-  "public/bower_components/angular-messages/angular-messages.min.js",
-  "public/bower_components/underscore/underscore.min.js",
-  "public/bower_components/lodash/lodash.min.js",
+  "public/bower_components/angular/angular.js",
+  "public/bower_components/angular-sanitize/angular-sanitize.js",
+  "public/bower_components/angular-ui-router/release/angular-ui-router.js",
+  "public/bower_components/angular-messages/angular-messages.js",
+  "public/bower_components/underscore/underscore.js",
+  "public/bower_components/lodash/lodash.js",
   "public/bower_components/angular-facebook/lib/angular-facebook.js",
-  "public/bower_components/angular-animate/angular-animate.min.js",
-  "public/bower_components/restangular/dist/restangular.min.js",
-  "public/bower_components/ngstorage/ngStorage.min.js",
-  "public/bower_components/angular-aria/angular-aria.min.js",
-  "public/bower_components/angular-material/angular-material.min.js",
-  "public/bower_components/angular-loading-bar/build/loading-bar.min.js",
+  "public/bower_components/angular-animate/angular-animate.js",
+  "public/bower_components/restangular/dist/restangular.js",
+  "public/bower_components/ngstorage/ngStorage.js",
+  "public/bower_components/angular-aria/angular-aria.js",
+  "public/bower_components/angular-material/angular-material.js",
+  "public/bower_components/angular-loading-bar/build/loading-bar.js",
   "public/bower_components/moment/min/moment.min.js",
-  "public/bower_components/angular-moment/angular-moment.min.js",
+  "public/bower_components/angular-moment/angular-moment.js",
   "public/plugins/ng-text-truncate/ng-text-truncate.js",
-  "public/bower_components/ng-file-upload/ng-file-upload.min.js",
+  "public/bower_components/ng-file-upload/ng-file-upload.js",
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
-  "public/bower_components/angular-emoji-popup/dist/js/config.js",
-  "public/bower_components/angular-emoji-popup/dist/js/emoji.min.js",
-  "public/bower_components/ngCordova/dist/ng-cordova.min.js"
+  "public/bower_components/emojione/lib/js/emojione.min.js",
+  "public/bower_components/emojionearea/js/emojionearea.min.js",
+  "public/bower_components/ngCordova/dist/ng-cordova.js"
 ];
 
 var template_files = [
@@ -57,7 +57,8 @@ var css_files = [
   'public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css',
   'public/bower_components/animate.css/animate.min.css',
   'public/css/ux-animations.css',
-  'public/bower_components/angular-emoji-popup/dist/css/emoji.min.css'
+  'public/bower_components/emojione/assets/css/emojione.min.css',
+  'public/bower_components/emojionearea/css/emojionearea.min.css'
 ];
 
 var sass_files = [
@@ -156,7 +157,7 @@ gulp.task('js_libs', function() {
   return gulp.src(bower_js_files)
     .pipe(sourcemaps.init())
     .pipe(ngAnnotate())
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(concat('libs.js'))
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/dist/js/'));

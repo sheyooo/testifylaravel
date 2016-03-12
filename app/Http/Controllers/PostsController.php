@@ -12,7 +12,7 @@ class PostsController extends Controller
     {
         //$this->middleware('jwt.refresh', ['except' => ['index', 'show']]);
 
-    $this->middleware('jwt.auth', ['except' => ['index', 'show', 'getComments']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'getComments']]);
     }
 
     /**
@@ -78,8 +78,8 @@ class PostsController extends Controller
     {
         //
         $post = new \App\Post();
-        $post->text = $request->post;
-        $post->anonymous = $request->anonymous;
+        $post->text = htmlspecialchars($request->post);
+        $post->anonymous = htmlspecialchars($request->anonymous);
 
         try {
             $user = \JWTAuth::parseToken()->toUser();
@@ -91,6 +91,14 @@ class PostsController extends Controller
                     $post->images()->sync($request->images);
                 }
                 $post->save();
+
+                $action = $post;
+                $activity = new \App\PostActivity();
+                $action->user_id = $user->id;
+                $activity->action()->associate($post);
+                $activity->user()->associate($user);
+                $activity->post()->associate($post);
+                $activity->save();
 
                 $post = $this->show($post->id);
 
@@ -187,11 +195,11 @@ class PostsController extends Controller
             $user = \JWTAuth::parseToken()->toUser();
             $comment = new \App\Comment();
             $activity = new \App\PostActivity();
-            $comment->text = $request->text;
+            $comment->text = htmlspecialchars($request->text);
             $post = \App\Post::find($id);
             $post->comments()->save($comment->user()->associate($user));
-      //$comment->user;
-      $activity->action()->associate($comment);
+            //$comment->user;
+            $activity->action()->associate($comment);
             $activity->user()->associate($user);
             $activity->post()->associate($post);
             $activity->save();

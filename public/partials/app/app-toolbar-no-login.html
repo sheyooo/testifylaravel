@@ -7,10 +7,12 @@
                     </my-icon>
                 </md-button>
                 <div style="height: 35px; width: 30px" layout="column" class="mr10">
-                    <a ui-sref="web.app.dashboard.home"><img class="" layout-fill src="dist/img/small-logo.png" alt=""></a>
+                    <a layout-fill ui-sref="web.app.dashboard.centered.home">
+                        <img class="" layout-fill src="dist/img/small-logo.png" alt="Logo">
+                    </a>
                 </div>
                 <div layout="column">
-                    <a ui-sref="web.app.dashboard.home"><h2 style="text-shadow: 0px 0px 1px #000, 0px 0px 2px #000">Testify</h2></a>
+                    <a ui-sref="web.app.dashboard.centered.home"><h2 style="text-shadow: 0px 0px 1px #000, 0px 0px 2px #000">Testify</h2></a>
                     <span hide show-gt-md class="md-subhead" style="text-shadow: 0px 0px 1px #000, 0px 0px 2px #000">sharing God's goodness</span>
                 </div>
             </div>
@@ -19,7 +21,7 @@
             <div layout="row" flex="50">
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="center center" style="position: relative;">
-                        <md-button class="md-icon-button" aria-label="More " ng-click="redirect('web.app.dashboard.home')">
+                        <md-button class="md-icon-button" aria-label="More " ng-click="redirect('web.app.dashboard.centered.home')">
                             <my-icon style="line-height: 0px; text-shadow: 0px 0px 1px #000, 0px 0px 2px #000" icon="home">
                             </my-icon>
                         </md-button>

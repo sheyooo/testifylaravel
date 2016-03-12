@@ -17,12 +17,12 @@
               <div layout="row" flex layout-fill class="">
                 <div style="width: 50px" class="p5">
                   <div class="square-img-container">
-                    <img class="" ng-src="{{::message.user.avatar}}">
+                    <img class="" ng-src="{{::message.user.avatar || 'dist/img/guest.png'}}">
                   </div>
                 </div>
                 <div flex layout="column" class="ml5">
                   <div>
-                    <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.user({id: message.user.username || message.user.hash_id})">{{::message.user.name}}</a>
+                    <a class="md-body-2" style="font-weight: bolder; color: #2980b9" ui-sref="web.app.dashboard.centered.user({id: message.user.username || message.user.hash_id})">{{::message.user.name}}</a>
                   </div>
                   <div class="">
                     <span class="md-body-1">

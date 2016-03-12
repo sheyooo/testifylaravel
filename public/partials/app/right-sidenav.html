@@ -1,18 +1,20 @@
-<md-sidenav layout="column" flex-lg="20" layout-fill class="md-sidenav-right md-whiteframe-z1" md-component-id="right" md-is-locked-open="$mdMedia('gt-md')">
-    <md-content class="pt10">
+<md-sidenav layout="column" flex-lg="20" flex-md="30" layout-fill class="md-sidenav-right md-whiteframe-z1" md-component-id="right" md-is-locked-open="$mdMedia('gt-md')">
+    <md-content layout-fill class="pt10 p10">
+
         <div layout="column">
-            <div class="right-sn-categories" ng-repeat="cat in categories track by cat.id" layout="row" style="border-radius: 100px; padding: 1px; overflow: hidden">
-                <div flex="30" class="cat-edge" layout="row">
-                    <md-button aria-label="{{::cat.count}}">
-                        {{ ::cat.count}}
-                    </md-button>
+            <div class="right-sn-categories" ng-repeat="cat in categories track by cat.id" layout="row">
+                <div flex="30" class="cat-edge" layout="row" layout-align="center center">
+                  <span class="cat-edge-text">{{ ::cat.count}}</span>
                 </div>
                 <div flex="70" class="cat-middle" layout="row">
-                    <md-button class="no-text-transform" md-no-ink ng-click="ui.toggleNav('right')" aria-label="Filter {{::cat.name}}" ui-sref="web.app.dashboard.posts({cat: cat.name})" ui-sref-active="cat-active">
+                    <md-button class="no-text-transform" md-no-ink ng-click="ui.toggleNav('right')" aria-label="Filter {{::cat.name}}" ui-sref="web.app.dashboard.centered.posts({cat: cat.name})" ui-sref-active="cat-active">
                         {{ ::cat.name }}
+                        <my-icon style="display: none" icon="checkbox-blank-circle"></my-icon>
+
                     </md-button>
                 </div>
             </div>
-        </div>
+          </div>
+
     </md-content>
 </md-sidenav>

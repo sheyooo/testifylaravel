@@ -108,7 +108,9 @@ class Post extends Model
       return $this->hasMany('\App\PostActivity');
     }
 
-
+    public function postActivity(){
+      return $this->morphOne('\App\PostActivity', 'action');
+    }
 
 
 

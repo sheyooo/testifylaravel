@@ -30,24 +30,35 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::get('users/{id}/favorites', 'UsersController@getFavorites');
   Route::get('users/{id}/activities', 'UsersController@getActivities');
   Route::get('users/{id}/taps', 'UsersController@getTaps');
-  Route::get('users/{id}/profile', 'UsersController@getProfile');
-  Route::post('users/{id}/profile/avatar', 'UsersController@setAvatar');
-  Route::post('users/{id}/password', 'UsersController@changePassword');
-  Route::post('users/{id}/profile', 'UsersController@updateProfile');
+  Route::get('users/{id}', 'UsersController@show');
+
   Route::post('users/{id}/messages', 'UsersController@sendMessage');
+  Route::get('me', 'UsersController@show');
   Route::get('me/messages/unread', 'UsersController@getUnreadMessages');
   Route::patch('me/messages/{id}/read', 'UsersController@setChatRead');
   Route::get('me/messages/{user_id}', 'UsersController@getChatMessages');
-  Route::get('me/messages/', 'UsersController@getActiveChats');
+  Route::get('me/messages', 'UsersController@getActiveChats');
+  Route::get('me/notifications', 'NotificationsController@getNotifications');
+  Route::get('me/friend_requests', 'UsersController@getFriendRequests');
+  Route::post('me/friend_requests', 'UsersController@acceptRequest');
+  Route::delete('me/friend_requests/{user_id}', 'UsersController@deleteRelationship');
+  Route::get('me/friends', 'UsersController@getFriends');
+  Route::get('me/friends/activities', 'FriendshipController@getFriendsActivity');
+  Route::post('me/friends', 'UsersController@sendFriendRequest');
+
+  Route::post('me/profile/avatar', 'UsersController@setAvatar');
+  Route::post('me/password', 'UsersController@changePassword');
+  Route::post('me/profile', 'UsersController@updateProfile');
+
   Route::resource('users', 'UsersController');
   Route::resource('posts', 'PostsController', ['only' => ['index', 'show', 'store', 'destroy']]);
   Route::resource('comments', 'CommentsController', ['only' => ['store', 'destroy']]);
   Route::resource('images', 'ImagesController', ['only' => ['store', 'destroy']]);
 
   Route::post('pusher/auth', 'PusherController@auth');
-  Route::post('register_gcm/', 'NoticationController@storeGcm');
+  Route::post('register_gcm/', 'NotificationsController@storeGcm');
 });
-
+// if the unfound url start with api return a 404
 Route::get('{first?}/{second?}/{third?}', function($first = 1, $second = 2, $third = 3)
 {
   if(preg_match("/api/", $first) ){

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Carbon\Carbon;
 
 class CreateUsersTable extends Migration
 {
@@ -14,9 +15,9 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
 
-          $table->engine = 'InnoDB';
-          $table->charset = 'utf8';
-          $table->collation = 'utf8_unicode_ci';
+            $table->engine = 'InnoDB';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
             $table->bigIncrements('id');
             $table->string('hash_id');
             $table->string('first_name');
@@ -26,6 +27,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('avatar', 300)->nullable();
             $table->string('password', 60)->nullable();
+            $table->timestamp('last_notif_seen')
+                    ->default(Carbon::now());
             $table->rememberToken();
             $table->timestamps();
         });

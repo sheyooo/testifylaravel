@@ -7,7 +7,7 @@
               <a ui-sref="web.app.dashboard.message({user_id: chat.otherUser.username || chat.otherUser.hash_id})">
                 <md-card-header class="">
                   <md-card-avatar>
-                      <img ng-src="{{::chat.otherUser.avatar}}" alt="{{::chat.otherUser.name}}">
+                      <img ng-src="{{::chat.otherUser.avatar || "dist/img/guest.png"}}" alt="{{::chat.otherUser.name}}">
                   </md-card-avatar>
                   <md-card-header-text>
                     <span class="md-title">{{::chat.otherUser.name}}</span>

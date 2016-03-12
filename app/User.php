@@ -33,14 +33,14 @@ class User extends Model
    return $this->first_name . " " . $this->last_name;
   }
 
-  public function getAvatarAttribute($value){
-   if($value){
-    return $value;
-   }else{
-    return 'img/guest.png';
-   }
-
-  }
+  // public function getAvatarAttribute($value){
+  //  if($value){
+  //   return $value;
+  //  }else{
+  //   return 'img/guest.png';
+  //  }
+  //
+  // }
 
   public function profile(){
 
@@ -70,7 +70,7 @@ class User extends Model
     return $this->hasMany('\App\PostActivity');
   }
 
-  public function subs(){
+  public function chatSubs(){
     return $this->hasMany('\App\ChatSub');
   }
 

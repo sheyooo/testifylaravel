@@ -10,6 +10,19 @@ use Vinkla\Pusher\Facades\Pusher;
 class UsersController extends Controller
 {
     private static $hashIDSalt = 'user';
+    private $user = null;
+
+    /**
+     * Try to instantiate a User model as a property from the Bearer Token
+     */
+    public function __construct()
+    {
+        try{
+            $this->user = \JWTAuth::parseToken()->toUser();
+        }catch(\Exception $e){
+            $this->user = null;
+        }
+    }
 
     /**
      * Display a listing of the resource.
@@ -18,15 +31,14 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-            $user['profile'] = $user->profile();
-
-            return $user;
-        } catch (\Exception $exception) {
+        //This is supposed to list users leave it this way for now
+        if (is_null($this->user)){
             return \Response::make(['error' => 'No profile found'], 404);
         }
+
+        $this->user->load('profile');
+
+        return $this->user;
     }
 
     /**
@@ -73,19 +85,28 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $userID)
+    public function show(Request $request, $userID = null)
     {
-        $user = $this->findUser($userID);
+        if (is_null($userID)){
+            $user = $this->user;
+        }else{
+            $user = $this->findUser($userID);
+        }
 
-        if ($user) {
-            if ($request->profile) {
-                $user->profile;
-            }
-
-            return $user;
-        } else {
+        if (is_null($user)){
             return \Response::make(['error' => 'User not found'], 404);
         }
+
+        if ($request->profile) {
+            $user->load('profile');
+        }
+
+        if ( ! is_null($this->user) && $this->user->id != $user->id){
+            $relationship = FriendshipController::getRelationship($user, $this->user);
+            $user['relationship'] = $relationship;
+        }
+
+        return $user;
     }
 
     public function findUser($userID)
@@ -107,53 +128,40 @@ class UsersController extends Controller
         return $user;
     }
 
-    public function getProfile(Request $request, $userID)
+    public function updateProfile(Request $request)
     {
-        try {
-            $user = $this->findUser($userID);
-            $user->profile;
-
-            return $user;
-        } catch (\Exception $exception) {
-            return \Response::make(['error' => 'User not found'], 404);
-        }
-    }
-
-    public function updateProfile(Request $request, $userID)
-    {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (Exception $exception) {
+        if (is_null($this->user)){
+            return \Response::make('', 401);
         }
 
-        if (!$user->profile) {
-            $user->profile()->save(new \App\Profile());
-            $user->save();
+        if (is_null($this->user->profile)) {
+            $this->user->profile()->save(new \App\Profile());
+            $this->user->save();
         }
 
         if ($request->preference_messaging) {
-            $user->profile->preference_messaging = $request->preference_messaging;
+            $this->user->profile->preference_messaging = $request->preference_messaging;
         }
 
         if ($request->last_name) {
-            $user->last_name = $request->last_name;
-            $user->first_name = $request->first_name;
+            $this->user->last_name = $request->last_name;
+            $this->user->first_name = $request->first_name;
             if ($request->username) {
-                $user->username = $request->username;
+                $this->user->username = $request->username;
             }
 
-            $user->save();
+            $this->user->save();
         }
 
         if ($request->location) {
-            $user->location = $request->location;
-            $user->profile->favorite_book = $request->favorite_book;
-            $user->profile->favorite_verse = $request->favorite_verse;
-            $user->profile->favorite_parable = $request->favorite_parable;
-            $user->profile->denomination = $request->denomination;
+            $this->user->location = $request->location;
+            $this->user->profile->favorite_book = $request->favorite_book;
+            $this->user->profile->favorite_verse = $request->favorite_verse;
+            $this->user->profile->favorite_parable = $request->favorite_parable;
+            $this->user->profile->denomination = $request->denomination;
 
-            $user->save();
-            $user->profile->save();
+            $this->user->save();
+            $this->user->profile->save();
         }
     }
 
@@ -162,10 +170,10 @@ class UsersController extends Controller
         try {
             $user = $this->findUser($userID);
             $posts = \App\Post::whereHas('favorites', function ($query) use ($user) {
-          return $query->where('user_id', $user->id);
-        });
-        // $user->favorites()->orderBy('created_at', 'desc')->get();
-        $posts = Tools::paginateByID($request, $posts);
+              return $query->where('user_id', $user->id);
+            });
+            // $user->favorites()->orderBy('created_at', 'desc')->get();
+            $posts = Tools::paginateByID($request, $posts);
             $posts = $posts->get();
             $postsCtrl = new PostsController();
             $posts = $postsCtrl->formatPostsIfAnon($posts);
@@ -181,16 +189,16 @@ class UsersController extends Controller
         try {
             $user = $this->findUser($userID);
             $posts = \App\Post::whereHas('taps', function ($query) use ($user) {
-          return $query->where('user_id', $user->id);
-        });// $user->favorites()->orderBy('created_at', 'desc')->get();
-        $posts = Tools::paginateByID($request, $posts);
+              return $query->where('user_id', $user->id);
+            });// $user->favorites()->orderBy('created_at', 'desc')->get();
+            $posts = Tools::paginateByID($request, $posts);
             $posts = $posts->get();
-        //return ($fav_posts);
-        $postsCtrl = new PostsController();
+            //return ($fav_posts);
+            $postsCtrl = new PostsController();
             $posts = $postsCtrl->formatPostsIfAnon($posts);
 
-        //dd($favorites);
-        return $posts;
+            //dd($favorites);
+            return $posts;
         } catch (Exception $exception) {
             return \Response::make(['error' => 'User not found'], 404);
         }
@@ -207,8 +215,9 @@ class UsersController extends Controller
         try {
             $user = $this->findUser($userID);
             $posts = \App\Post::whereHas('postActivities', function ($query) use ($user) {
-          return $query->where('user_id', $user->id);
-        });
+              return $query->where('user_id', $user->id);
+                            //->where('action_type', '!=', 'App\\Post');
+            });
 
             $posts = $posts->orWhereHas('user', function ($query) use ($user) {
           return $query->where('user_id', $user->id);
@@ -231,16 +240,16 @@ class UsersController extends Controller
             $posts = $posts->get();
 
             $posts = $posts->each(function ($post, $key) use ($user) {
-          $userRef = [
-            'name' => $user->name,
-            'hash_id' => $user->hash_id,
-          ];
-          $post['user_ref'] = $userRef;
-          $post['user_ref_activities'] = $post->postActivities()->whereHas('user', function ($query) use ($user) {
-            return $query->where('user_id', $user->id);
-          })->get();
+              $userRef = [
+                'name' => $user->name,
+                'hash_id' => $user->hash_id,
+              ];
+              $post['user_ref'] = $userRef;
+              $post['user_ref_activities'] = $post->postActivities()->whereHas('user', function ($query) use ($user) {
+                  return $query->where('user_id', $user->id);
+              })->get();
 
-        });
+            });
 
             $postsCtrl = new PostsController();
             $posts = $postsCtrl->formatPostsIfAnon($posts);
@@ -253,37 +262,33 @@ class UsersController extends Controller
 
     public function sendFriendRequest(Request $request)
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (Exception $exception) {
-            $user = null;
+        if (is_null($this->user)){
+            return \Response::make(['status' => 'Unauthorized'], 401);
         }
 
         $toUser = $this->findUser($request->user_id);
 
-        if ($user && $toUser) {
+        if ($toUser) {
             $request = new \App\Friend();
-            $request->from = $user->id;
+            $request->from = $this->user->id;
             $request->to = $toUser->id;
             $request->save();
         } else {
-            return \Response::make(['status' => 'Fatal error'], 400);
+            return \Response::make(['status' => 'User not found'], 400);
         }
     }
 
-    public function setAvatar(Request $request, $userID)
+    public function setAvatar(Request $request)
     {
-        $user = null;
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
-            //$user = \App\User::find(1);
-        return \Response::make('', 401);
+        if (is_null($this->user)){
+            return \Response::make('', 401);
         }
 
-        if ($img = ImagesController::saveImage($request->file, $user, 'avatars/')) {
-            $user->avatar = $img->url;
-            $user->save();
+        $img = ImagesController::saveImage($request->file,
+                                            $this->user, 'avatars/');
+        if ($img) {
+            $this->user->avatar = $img->url;
+            $this->user->save();
 
             return \Response::make($img, 201);
         } else {
@@ -293,23 +298,19 @@ class UsersController extends Controller
 
     public function changePassword(Request $request)
     {
-        $user = null;
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
-            //$user = \App\User::find(1);
-        return \Response::make('', 401);
+        if (is_null($this->user)){
+            return \Response::make('', 401);
         }
 
-        if (\Hash::check($request->oldPassword, $user->password) || $user->password == null) {
+        if (\Hash::check($request->oldPassword, $this->user->password) || $this->user->password == null) {
             $validator = Validator::make($request->all(), [
               'newPassword' => 'min:6',
             ]);
             if ($validator->fails()) {
                 return \Response::make(['status' => 'New password not up to 6 characters'], 400);
             } else {
-                $user->password = \Hash::make($request->newPassword);
-                $user->save();
+                $this->user->password = \Hash::make($request->newPassword);
+                $this->user->save();
 
                 return \Response::make(['status' => 'Successfully changed password'], 202);
             }
@@ -320,31 +321,28 @@ class UsersController extends Controller
 
     public function sendMessage(Request $request, $userID)
     {
-        //$pusher = Pusher;
-      try {
-          $user = \JWTAuth::parseToken()->toUser();
-      } catch (\Exception $exception) {
+        if (is_null($this->user)){
           return \Response::make(['status' => 'Unauthorized'], 401);
-      }
+        }
 
         $toUser = $this->findUser($userID);
-        if (!$toUser) {
+        if (is_null($toUser)) {
             return \Response::make(['status' => 'User not found'], 404);
         }
 
-        $chat = self::getChat($user, $toUser);
+        $chat = $this->getChat($toUser);
 
         if (true) {
             $message = new \App\ChatMessage();
             $message->text = $request->message;
             $chat->last_message = $request->message;
-            $message->user()->associate($user);
+            $message->user()->associate($this->user);
             $chat->messages()->save($message);
             $chat->save();
 
-        //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
-        Pusher::trigger('private-message-'.$chat->id, 'new_message', $message, $request->socket_id);
-            Pusher::trigger('private-notifications-'.$toUser->hash_id, 'new_message', $chat->load('users'));
+            //Pusher::trigger('general', 'news_feed', ['message' => $request->message]);
+            Pusher::trigger('private-message-'.$chat->id, 'new_message', $message, $request->socket_id);
+            Pusher::trigger('private-notifications-'.$toUser->hash_id, 'new_message', $this->user);
 
             if (count($toUser->gcmIds)) {
                 $deviceToken = $toUser->gcmIds;
@@ -359,76 +357,70 @@ class UsersController extends Controller
 
     public function getChatMessages(Request $request, $userID)
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
+        if(is_null($this->user)){
             return \Response::make(['status' => 'Unauthorized'], 401);
         }
 
         $toUser = $this->findUser($userID);
-        if (!$toUser || $toUser->id == $user->id) {
+        if (is_null($toUser) || $toUser->id == $this->user->id) {
             return \Response::make(['status' => 'User not found'], 404);
         }
 
-        $chat = self::getChat($user, $toUser);
-        $sub = $chat->subs()->where('user_id', $user->id)->first();
-        $sub->last_seen = \Carbon\Carbon::now();//update for notification purposes
+        $chat = $this->getChat($toUser);
+        $sub = $chat->subs()->where('user_id', $this->user->id)->first();
+        //update for notification purposes
+        $sub->last_seen = \Carbon\Carbon::now();
         $sub->save();
 
         $messages = Tools::paginateByID(
-                            $request, $chat->messages()->with('user')->orderBy('created_at', 'desc')
-                            )->get();
+                            $request, $chat->messages()->with('user')
+                                            ->orderBy('created_at', 'desc')
+                                        )->get();
         //return $messages;
-        return \Response::make(array_reverse($messages->toArray()))->header('X-CHAT-ID', $chat->id);
+        return \Response::make($messages->reverse()->values())
+                        ->header('X-CHAT-ID', $chat->id);
     }
 
     public function getActiveChats()
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
+        if(is_null($this->user)){
             return \Response::make(['status' => 'Not Authorized'], 401);
         }
-      //ammend this query
-      $chats = \App\Chat::whereHas('subs', function ($query) use ($user) {
-          $query->where('user_id', $user->id);
-      })->has('messages')->with('subs.user')->get();
 
-      //dd($chats);
+        $user = $this->user;
+        $chats = \App\Chat::whereHas('subs', function ($query) use ($user) {
+          $query->where('user_id', $this->user->id);
+        })->has('messages')->with('subs.user')->get();
 
-      return $chats;
+        return $chats;
     }
 
     public function getUnreadMessages()
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
+        if(is_null($this->user)){
             return \Response::make(['status' => 'Unauthorized'], 401);
         }
 
         $unread = \App\Chat::leftJoin('chat_subs', function ($join) {
                         $join->on('chats.id', '=', 'chat_subs.chat_id')
-                              ->on('chats.updated_at', '>', 'chat_subs.last_seen');
-                      })
-                      ->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
-                      ->where('users.id', $user->id)
-                      ->select('chats.*')
-                      ->get();
+                            ->on('chats.updated_at', '>', 'chat_subs.last_seen');
+                        })
+                        ->leftJoin('users', 'users.id', '=', 'chat_subs.user_id')
+                        ->where('users.id', $this->user->id)
+                        ->select('chats.*')
+                        ->get();
 
         return $unread;
     }
 
     public function setChatRead($userID)
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
+        if(is_null($this->user)){
             return \Response::make(['status' => 'Unauthorized'], 401);
         }
 
         $chat = \App\Chat::find($userID);
-        $subs = $chat->subs()->where('user_id', $user->id)->first();
+        $subs = $chat->subs()->where('user_id', $this->user->id)->first();
 
         if ($subs) {
             $subs->last_seen = \Carbon\Carbon::now();
@@ -436,22 +428,27 @@ class UsersController extends Controller
         }
     }
 
-    public static function getChat($user, $toUser)
+    public function getChat($toUser)
     {
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = $this->user;
         try {
             $chat = \App\Chat::whereHas('subs', function ($query) use ($user) {
-              $query->where('user_id', $user->id);
+              $query->where('user_id', $this->user->id);
           })->whereHas('subs', function ($query) use ($toUser) {
               $query->where('user_id', $toUser->id);
           })->firstOrFail();
-        } catch (\Exception $exceptionxception) {
+        } catch (\Exception $exception) {
             $chat = new \App\Chat();
             $sub = new \App\ChatSub();
             $sub1 = new \App\ChatSub();
 
             $chat->save();
 
-            $sub->user()->associate($user);
+            $sub->user()->associate($this->user);
             $sub1->user()->associate($toUser);
 
             $sub->chat()->associate($chat);
@@ -464,17 +461,25 @@ class UsersController extends Controller
         return $chat;
     }
 
+    public function getFriends()
+    {
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
+        }
+
+        return FriendshipController::getFriends($this->user);
+    }
+
     public function getFriendRequests()
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (Exception $exception) {
-            $user = null;
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
         }
+
         $request = Request::capture();
 
-        if ($user) {
-            $reqs = \App\Friend::where('to', $user->id)->where('status', 0);
+        if ($this->user) {
+            $reqs = \App\Friend::where('to', $this->user->id)->where('status', 0);
             if ($request->profiles == 'true') {
                 $reqs = $reqs->with('fromUser')->with('toUser');
             }
@@ -485,28 +490,36 @@ class UsersController extends Controller
 
     public function acceptRequest()
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-        } catch (Exception $exception) {
-            $user = null;
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
         }
+
         $request = Request::capture();
-      //$who
 
-      if ($user && $request->user_id) {
-          $reqs = \App\Friend::where('to', $user->id)->where('status', 0);
-          if ($request->profiles == 'true') {
-              $reqs = $reqs->with('fromUser')->with('toUser');
-          }
+        if ($request->user_id) {
+          $req = \App\Friend::where('to', $this->user->id)->where('from', $request->user_id)->where('status', 0)->first();
 
-          return $reqs->get();
-      }
+          $req->status = 1;
+          $req->save();
+
+          return \Response::make(['status' => 'Succesful'], 200);
+        }
     }
 
-    public function getNotifications()
+    public function deleteRelationship($userID)
     {
-        //$gen = AppController::getGeneralNotif();
-        //return $friend_requests = $this->getFriendRequests();
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
+        }
+
+        $who = \App\User::find($userID);
+
+        if ($who) {
+          $req = FriendshipController::getRelationship($who, $this->user);
+          $req->delete();
+
+          return \Response::make(['status' => 'Succesful'], 200);
+        }
     }
 
     public function update(Request $request, $userID)
@@ -517,4 +530,5 @@ class UsersController extends Controller
     {
         //
     }
+
 }

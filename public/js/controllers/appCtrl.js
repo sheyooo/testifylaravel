@@ -9,8 +9,14 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   $scope.ui = {
     showSearch: false,
     showSideNav: $state,
-    toggleNav: function(which) {
-      $mdSidenav(which).toggle();
+    toggleNav: function (which) {
+      if(which === 'left'){
+        $mdSidenav(which).toggle();
+        $mdSidenav('right').close();
+      }else{
+        $mdSidenav(which).toggle();
+        $mdSidenav('left').close();
+      }
       //console.log(which);
     },
     toggleSearchBox: function() {
@@ -50,7 +56,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
   $scope.menu = [{
     link: '',
-    state: 'web.app.dashboard.home',
+    state: 'web.app.dashboard.centered.home',
     title: 'Feeds',
     icon: 'home',
     condition: true,
@@ -59,7 +65,7 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
 
   $scope.menuAuth = [{
     link: 'profile',
-    state: "web.app.dashboard.user({id: user.username || user.hash_id})",
+    state: "web.app.dashboard.centered.user({id: user.username || user.hash_id})",
     title: 'Profile',
     icon: 'account',
     condition: 'user.authenticated',
@@ -73,14 +79,14 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
     click: ''
   }, {
     link: '',
-    state: "web.app.dashboard.user.favorites({id: user.username || user.hash_id})",
+    state: "web.app.dashboard.centered.user.favorites({id: user.username || user.hash_id})",
     title: 'Favourites',
     icon: 'star',
     condition: 'user.authenticated',
     action: null
   }, {
     link: '',
-    state: "web.app.dashboard.user.edit({id: user.username || user.hash_id})",
+    state: "web.app.dashboard.centered.user.edit({id: user.username || user.hash_id})",
     title: 'Preferences',
     icon: 'settings',
     condition: 'user.authenticated',
@@ -113,6 +119,11 @@ app.controller('AppCtrl', function($rootScope, $scope, $mdSidenav, $mdMedia,
   };
 
   $scope.app = {
+    notifications: {
+      messages: NotificationsService.MessageNotifications,
+      friend_requests: NotificationsService.FriendRequestNotifications,
+      general: NotificationsService.Notifications
+    },
     messages: {
       notifications: NotificationsService.MessageNotifications
     }

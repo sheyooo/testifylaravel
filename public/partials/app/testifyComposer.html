@@ -1,61 +1,64 @@
 <div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
     <form novalidate>
         <md-card style="overflow: visible">
-                <div class layout="column">
-                    <div flex layout="row" class="p10">
-                        <div class="square-img-container mr10" style="width: 40px; height: 40px;">
-                            <img class="img-circle" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
-                        </div>
-                        <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{ user.name }}</span>
-                    </div>
-                    <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
-                        <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
-                            <div layout="column" style="height: 270px; width: 280px; overflow-y: auto" class="pt10">
-                                <div layout="row" layout-wrap>
-                                  <span flex="50" ng-repeat="c in categories">
-                                    <md-checkbox md-no-ink  ng-click="catsClick(c)" ng-checked="catsExists(c)" class="md-secondary">
-                                        <span class="md-body-1">{{::c.name}}</span>
-                                    </md-checkbox>
-                                  </span>
-                                </div>
-                            </div>
-                            <md-divider></md-divider>
-                            <div layout="row" layout-align="center center" class="pt5">
-                                <md-button aria-label="Done" class="md-fab md-mini md-accent md-hue-1" ng-click="toggleCatPopup()">
-                                    <my-icon icon="check"></my-icon>
-                                </md-button>
-                            </div>
-                        </md-card-content>
-                    </md-card>
-                </div>
             <md-divider></md-divider>
-            <md-card-content layout="column" class="pb0">
-                <style type="text/css">
-                .emoji-wysiwyg-editor {
-                    font-size: 14px;
-                    line-height: 20px;
-                    overflow: hidden;
-                    height: auto;
-                    box-sizing: border-box;
-                }
+            <div class layout="column">
+                <!-- <div flex layout="row" class="p10">
+                    <div class="square-img-container mr10" style="width: 40px; height: 40px;">
+                        <img class="img-circle" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
+                    </div>
+                    <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{ user.name }}</span>
+                </div> -->
 
-                .emoji-menu {
-                    margin-top: 0px;
-                    margin-left: -200px;
-                }
+                <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
+                    <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
+                        <div layout="column" style="height: 270px; width: 280px; overflow-y: auto" class="pt10">
+                            <div layout="row" layout-wrap>
+                              <span flex="50" ng-repeat="c in categories">
+                                <md-checkbox md-no-ink  ng-click="catsClick(c)" ng-checked="catsExists(c)" class="md-warn md-hue-1">
+                                    <span class="md-body-1">{{::c.name}}</span>
+                                </md-checkbox>
+                              </span>
+                            </div>
+                        </div>
+                        <md-divider></md-divider>
+                        <div layout="row" layout-align="center center" class="pt5">
+                            <md-button aria-label="Done" class="md-fab md-mini md-accent md-hue-1" ng-click="toggleCatPopup()">
+                                <my-icon icon="check"></my-icon>
+                            </md-button>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <md-card-content layout="row" class="p15" style="background: #FAFAFA">
+                <style type="text/css">
+                    .emojionearea {
+                        margin-bottom: 20px;
+                        box-shadow: none !important;
+                        border-radius: 0px;
+                    }
+                    .emojionearea-editor {
+                        min-height: 80px !important;
+                    }
                 </style>
-                <div emoji-form emoji-message="emojiMessage" layout="row">
-                    <textarea placeholder="share your testimony..." id="messageInput" ng-model="post"></textarea>
-                    <button id="emojibtn" style="height: 36px; border: none">
-                        <i class="icon icon-emoji"></i>
-                    </button>
+                <div layout="row" flex="auto">
+                    <div class="square-img-container mr5" style="width: 40px; height: 40px;">
+                        <img class="" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
+                    </div>
                 </div>
-                <!-- <md-divider></md-divider> -->
+
+                <div layout="column" flex="grow">
+                    <textarea style="display: none" id="tComposerInput"></textarea>
+                </div>
             </md-card-content>
+
             <div ng-show="composingPost">
-                <div class="pl10 pr10" layout="row" layout-wrap>
-                    <span class="label label-primary mr5 mt5" ng-repeat="c in selectedCategories">
+                <div class="pl10 pr10 pt10" layout="row" layout-wrap>
+                    <span class="label label-primary mr5 mt5 label-cats-anim" ng-repeat="c in selectedCategories">
                         {{::c.name}}
+                    </span>
+                    <span class="label label-danger mr5 mt5" ng-if="selectedCategories.length == 0">
+                        No category selected
                     </span>
                     <span class="label label-default mt5" style=" cursor: pointer" ng-click="toggleCatPopup()">
                     <md-tooltip md-delay="400" md-direction="top" md-autohide="true">
@@ -73,7 +76,7 @@
                             <div flex class="square-img-container">
                                 <img ngf-src="img || 'dist/img/testify.png'" ngf-no-oject-url="true" />
                             </div>
-                            <md-progress-circular class="md-primary md-hue-3 composer-img-upload-progress" md-mode="determinate" md-diameter="50px" ng-hide="img.complete" value="{{img.progress}}"></md-progress-circular>
+                            <md-progress-circular class="md-primary md-hue-3 composer-img-upload-progress" md-mode="determinate" md-diameter="50px" ng-hide="img.complete || img.progress == 0" value="{{img.progress}}"></md-progress-circular>
                         </md-card>
                     </div>
                 </div>
@@ -94,7 +97,7 @@
                         </md-tooltip>
                     </md-switch>
                     <div layout="row" class="pt10 pb10">
-                      <md-button class="md-primary md-hue-2 md-fab md-mini btn-outline mt0 mb0" ng-click="::toggleCatPopup()">
+                      <md-button class="md-primary md-hue-2 md-fab md-mini mt0 mb0" ng-click="::toggleCatPopup()">
                           <my-icon icon="tag-multiple"></my-icon>
                           <md-tooltip md-delay="400" md-direction="down" md-autohide="true">
                               Select categories

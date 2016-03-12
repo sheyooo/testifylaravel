@@ -77,7 +77,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
     };
 }]);
 
-app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'Facebook', 'appUrl', '$filter', function(PostService, CommentService, Auth, UXService, Facebook, appUrl, $filter) {
+app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'Facebook', '$cordovaFacebook', 'appUrl', '$filter', 'EmojioneService', 'isCordova', function(PostService, CommentService, Auth, UXService, Facebook, $cordovaFacebook, appUrl, $filter, EmojioneService, isCordova) {
     return {
         restrict: 'A',
         require: "^?testifyPosts",
@@ -96,7 +96,8 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                 'App\\Tap': ['tapped into', 'this post'],
                 'App\\Favorite': ['favorited', 'this post'],
                 'App\\Amen': ['said amen', 'to this post'],
-                'App\\Comment': ['commented', 'on this post']
+                'App\\Comment': ['commented', 'on this post'],
+                'App\\Post': ['posted', 'on his wall'],
             };
 
             if (scope.post.user_ref_activities) {
@@ -148,11 +149,11 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             scope.showMore = false;
             var less, more;
             var postWordsCount = scope.post.text.split(' ').length;
-            more = $filter('colonToSmiley')(scope.post.text);
+            more = EmojioneService.emojione.shortnameToImage(scope.post.text);
             if(postWordsCount > 60){
               var all_array = scope.post.text.split(' ');
-              less = all_array.slice(0, 60 - 1).join(' ') + '...';
-              less = $filter('colonToSmiley')(less);
+              less = all_array.slice(0, 59).join(' ') + '&hellip;';
+              less = EmojioneService.emojione.shortnameToImage(less);
               scope.optimizedText = less;
               scope.post_truncate = true;
             }else{
@@ -173,8 +174,8 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             scope.openMenu = function($mdOpenMenu, ev) {
                 originatorEv = ev;
                 $mdOpenMenu(ev);
-                //console.log(ev)
             };
+
             if(scope.post.prayer){
               scope.amens_count = $filter('socialCounter')(scope.post.amens_count);
             }
@@ -311,8 +312,12 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             };
 
             scope.sayAmen = function(ev) {
-                //console.log(scope.post.post_id)
                 var doSayAmen = function() {
+
+                    if(scope.post.amen === true){
+                        UXService.toast("You have already said Amen to this post");
+                        return ;
+                    }
 
                     scope.post.amen = true;
                     scope.post.amens_count++;
@@ -376,10 +381,14 @@ app.directive('myIcon', ['$timeout', function($timeout) {
     };
 }]);
 
-app.directive('testifyComposer', [function() {
+app.directive('testifyComposer', function($timeout) {
     return {
         restrict: 'A',
         templateUrl: 'partials/app/testifyComposer.html',
+        link: function(scope, elem, attrs) {
+
+
+        }
         //controller: 'TComposerCtrl'
     };
-}]);
+});

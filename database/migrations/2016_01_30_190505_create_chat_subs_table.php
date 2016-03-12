@@ -22,6 +22,8 @@ class CreateChatSubsTable extends Migration
           $table->timestamp('last_seen');
           $table->timestamps();
 
+          $table->unique('chat_id', 'user_id');
+
           $table->foreign('chat_id')
           ->references('id')->on('chats')
           ->onDelete('cascade');

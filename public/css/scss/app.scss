@@ -63,7 +63,15 @@ p,
 }
 @media only screen and(orientation: landscape) and (max-width: 959px) {
   .main-layout.dashboard {
-    padding-top: 48px;
+    padding-top: 64px;
+  }
+  md-toolbar{
+      height: 64px !important;
+
+      .md-toolbar-tools{
+          height: 64px !important;
+          max-height: 64px !important
+      }
   }
 }
 .app-header {
@@ -86,6 +94,9 @@ p,
 }
 .login-bg {
   background: url(../img/concert.jpg) no-repeat 0 0 /cover;
+}
+.pull-right{
+    float: right !important;
 }
 // Angular
 [ng-click] {
@@ -171,6 +182,8 @@ md-list-item.md-3-line {
 img {
   width: 100%;
   height: 100%;
+  border-radius: 3px;
+  
 }
 .left-post-toolbar {
   & >* {
@@ -201,33 +214,40 @@ img {
 }
 /* custom categories element styling */
 .right-sn-categories {
-  background: #97B6CA;
+  background-color: #6AA3C8;
   color: #fff;
   height: 40px;
-  //display: block;
+  border-radius: 5px;
   margin: 5px;
-  & a {
-    //color: #fff;
-    display: inline-block;
+  overflow: hidden;
+  & .cat-dge {
+    overflow: hidden;
+    border-radius: 100px 0px 0px 100px;
   }
-  & .cat-edge a {
-    color: #fff;
+  & .cat-edge-text{
+    color: white;
+    font-weight: 900;
   }
   & .md-button {
     margin: 0;
     width: 100%;
-    &.cat-active {
-      background-color: #eee;
-    }
+  }
+  & .cat-active i {
+    display: inline-block !important;
+    color: #fafafa;
+    position: absolute;
+    right: 10px;
+    line-height: 30px;
   }
   & .cat-middle {
-    background-color: #fff;
-    border: solid #73BCED 1px;
+    background-color: rgba(255,255,255, 0.15);
+    color: white;
     overflow: hidden;
-    border-radius: 0px 100px 100px 0px;
+    //border-radius: 0px 100px 100px 0px;
     & a {
-      color: #777;
-      border-radius: 0px 100px 100px 0px;
+      color: #fff;
+      font-weight: bolder;
+      //border-radius: 0px 100px 100px 0px;
     }
   }
 }
@@ -247,14 +267,14 @@ img {
     margin: 0;
   }
   &:hover {
-    background: #819CAD;
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 
 .badge-notification{
   background: #F17467;
   position: absolute;
-  right: 0px;
+  right: 5px;
   top: 15px;
 }
 
@@ -294,11 +314,17 @@ md-sidenav.md-closed-remove {
     }
   }
 }
-.md-button.btn-border {
+.md-button.text-muted {
+  color: #777 !important;
+}
+.md-button.btn-outline {
   border: solid 1px;
 }
 .md-button.no-text-transform {
   text-transform: none;
+}
+.bold-text{
+  font-weight: 600;
 }
 .md-button.no-shadow {
   box-shadow: none !important;

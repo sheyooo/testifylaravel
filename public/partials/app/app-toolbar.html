@@ -7,10 +7,12 @@
                     </my-icon>
                 </md-button>
                 <div style="height: 35px; width: 30px" layout="column" class="mr10" hide show-gt-xs>
-                    <a ui-sref="web.app.dashboard.home"><img class="" layout-fill src="dist/img/small-logo.png" alt=""></a>
+                    <a layout-fill ui-sref="web.app.dashboard.centered.home">
+                        <img style="border-radius: 1px" layout-fill src="dist/img/small-logo.png" alt="Logo | Home">
+                    </a>
                 </div>
                 <div hide show-gt-sm layout="column">
-                    <a ui-sref="web.app.dashboard.home"><h2>Testify</h2></a>
+                    <a ui-sref="web.app.dashboard.centered.home"><h2>Testify</h2></a>
                     <span show-gt-md class="md-subhead">sharing God's goodness</span>
                 </div>
             </div>
@@ -18,11 +20,11 @@
         <div style="height: 100%" layout="row" flex="70" flex-sm="60" flex-xs="85">
             <span flex-gt-sm="30" flex-lg="55" flex-md="25" flex="0"></span>
 
-            <div layout="row" flex="35" flex-lg="35" flex-md="45" flex-sm="60" flex-xs="60">
+            <div layout="row" flex="35" flex-lg="45" flex-md="45" flex-sm="70" flex-xs="70">
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="center center" style="position: relative;">
                         <div class="btn-parent flat">
-                            <md-button md-no-ink class="no-m" aria-label="Home" ng-click="redirect('web.app.dashboard.home')">
+                            <md-button md-no-ink class="no-m" aria-label="Home" ng-click="redirect('web.app.dashboard.centered.home')">
                                 <my-icon icon="home">
                                 </my-icon>
                             </md-button>
@@ -33,7 +35,18 @@
                             <md-button md-no-ink class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.messages')">
                                 <my-icon icon="email-outline">
                                 </my-icon>
-                                <span ng-if="app.messages.notifications.length" class="badge badge-notification">{{app.messages.notifications.length}}</span>
+                                <span ng-if="app.notifications.messages.length" class="badge badge-notification">{{app.notifications.messages.length}}</span>
+
+                            </md-button>
+                        </div>
+                    </div>
+                    <div flex layout="row" ng-if="user.authenticated" layout-align="center center" style="position: relative;">
+                        <div class="btn-parent flat">
+                            <md-button md-no-ink class="no-m" aria-label="More " ng-click="redirect('web.app.dashboard.centered.notifications')">
+                                <my-icon icon="earth">
+                                </my-icon>
+                                <!-- GENERAL NOTIFICATIONS -->
+                                <span ng-if="app.notifications.general.length" class="badge badge-notification">{{app.notifications.general.length}}</span>
 
                             </md-button>
                         </div>
@@ -48,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div layout="row" flex="35" flex-lg="10" flex-md="30" flex-sm="40" flex-xs="40">
+            <div layout="row" flex="35" flex-lg="10" flex-md="30" flex-sm="30" flex-xs="30">
                 <div layout="row" flex>
                     <div flex layout="row" layout-align="end center" style="position: relative;">
                         <div hide-gt-md class="btn-parent flat">
@@ -63,10 +76,20 @@
                             <md-menu class="no-p">
                                 <md-button md-no-ink aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)">
                                     <my-icon icon="dots-vertical"></my-icon>
+                                    <span ng-if="app.notifications.friend_requests.length" class="badge badge-notification">{{app.notifications.friend_requests.length}}</span>
                                 </md-button>
                                 <md-menu-content width="4">
                                     <md-menu-item ng-show="user.authenticated">
-                                        <md-button ui-sref="web.app.dashboard.user.edit({id: user.username || user.hash_id})">
+                                        <md-button ui-sref="web.app.dashboard.centered.notifications">
+                                            <span>
+                                              Friend Requests
+                                              <span ng-if="app.notifications.friend_requests.length" class="badge badge-notification">{{app.notifications.friend_requests.length}}</span>
+                                            </span>
+
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item ng-show="user.authenticated">
+                                        <md-button ui-sref="web.app.dashboard.centered.user.edit({id: user.username || user.hash_id})">
                                             Preferences
                                         </md-button>
                                     </md-menu-item>

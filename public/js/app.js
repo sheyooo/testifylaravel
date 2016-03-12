@@ -1,5 +1,6 @@
-//"use strict";
-var app = angular.module('testify', ['ngMaterial',
+// "use strict";
+var app = angular.module('testify', [
+  'ngMaterial',
   'chieffancypants.loadingBar',
   'ngAnimate',
   'ngMessages',
@@ -11,7 +12,7 @@ var app = angular.module('testify', ['ngMaterial',
   'ngFileUpload',
   'ngImgCrop',
   'ngTextTruncate',
-  'emojiApp',
+  'ngSanitize',
   'ngCordova'
 ]);
 
@@ -24,6 +25,51 @@ if ( document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://
   app.constant('appBase', "/");
   app.constant('apiBase', "api/v1");
 }
+
+app.config(function($mdThemingProvider) {
+  var primaryPalette = $mdThemingProvider.extendPalette('blue', {
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': ['300'],
+    'contrastLightColors': ['100', '500'],
+    '500': '6AA3C8',
+    '50': '1C3456',
+    '100': '5DADE0',
+    '300': 'FAFAFA',
+    '400': 'F4F4F4'
+  });
+  var accentPalette = $mdThemingProvider.extendPalette('green', {
+
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': ['200', '300'],
+    'contrastLightColors': ['500'],
+    '500': '97B6CA',
+    '50': '1C3456',
+    '100': '5DADE0',
+    '200': 'e74c3c',
+    '300': 'FFFFFF',
+    '400': 'F4F4F4',
+    '600': '27ae60',
+    '700': '77777E'
+  });
+
+  $mdThemingProvider.definePalette('primary', primaryPalette);
+  $mdThemingProvider.definePalette('accent', accentPalette);
+  //console.log($mdThemingProvider.theme('default'));
+  $mdThemingProvider.theme('default')
+    .primaryPalette('primary', {
+      'default': '500',
+      'hue-1': '50',
+      'hue-2': '100',
+      'hue-3': '300'
+    })
+    .accentPalette('accent', {
+      'default': '200',
+      'hue-1': '600',
+      'hue-2': '700'
+    })
+    .warnPalette('red');
+
+});
 
 app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($compileProvider, $logProvider, $animateProvider) {
   $logProvider.debugEnabled(false);
@@ -106,59 +152,6 @@ app.run(['$cordovaSplashscreen', '$cordovaKeyboard', '$cordovaStatusbar', functi
 
 }]);
 
-app.config(function($mdThemingProvider) {
-  var myPaletteMap = $mdThemingProvider.extendPalette('blue', {
-
-    'contrastDefaultColor': 'light',
-    'contrastDarkColors': '200, 300',
-    'contrastLightColors': '500',
-    '500': '97B6CA',
-    '50': '1C3456',
-    '100': '5DADE0',
-    '200': 'e74c3c',
-    '300': 'FFFFFF',
-    '400': 'F4F4F4',
-    '600': '27ae60',
-    '700': '77777E'
-  });
-  $mdThemingProvider.definePalette('palette', myPaletteMap);
-  //console.log(myPaletteMap);
-  $mdThemingProvider.theme('default')
-    .primaryPalette('palette', {
-      'default': '500',
-      'hue-1': '50',
-      'hue-2': '100',
-      'hue-3': '300',
-    })
-    .accentPalette('palette', {
-      'default': '200',
-      'hue-1': '600',
-      'hue-2': '700'
-
-    })
-    .warnPalette('red', {
-
-    });
-
-  $mdThemingProvider.theme('input', 'default')
-    .primaryPalette('grey', {
-
-    })
-    .backgroundPalette('palette', {
-      'default': '500'
-    }).dark();
-
-  $mdThemingProvider.theme('search', 'default')
-    .primaryPalette('yellow', {
-
-    })
-    .backgroundPalette('palette', {
-      'default': '50'
-    }).dark();
-
-  ///$mdIconProvider.defaultFontSet("mdi", "mdi-");
-});
-
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
   appBase) {
   $stateProvider
@@ -191,9 +184,16 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
       abstract: true,
       url: '',
       templateUrl: 'views/web.app.dashboard.html',
-    }).state('web.app.dashboard.home', {
+    }).state('web.app.dashboard.centered', {
+      abstract: true,
+      url: '',
+      templateUrl: 'views/web.app.dashboard.centered.html',
+    }).state('web.app.dashboard.centered.home', {
       url: 'home',
-      templateUrl: 'views/web.app.dashboard.home.html'
+      templateUrl: 'views/web.app.dashboard.centered.home.html'
+    }).state('web.app.dashboard.centered.notifications', {
+      url: 'notifications',
+      templateUrl: 'views/web.app.dashboard.notifications.html'
     }).state('web.app.dashboard.messages', {
       url: 'messages',
       templateUrl: 'views/web.app.dashboard.messages.html'
@@ -214,10 +214,10 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
     }).state('web.app.dashboard.post', {
       url: 'posts/:hash_id',
       templateUrl: 'views/web.app.dashboard.post.html'
-    }).state('web.app.dashboard.posts', {
+    }).state('web.app.dashboard.centered.posts', {
       url: 'posts?cat',
-      templateUrl: 'views/web.app.dashboard.home.html'
-    }).state('web.app.dashboard.user', {
+      templateUrl: 'views/web.app.dashboard.centered.home.html'
+    }).state('web.app.dashboard.centered.user', {
       url: 'user/:id',
       resolve: {
         profile: function($stateParams, Restangular) {
@@ -226,23 +226,23 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
       },
       views: {
         '': {
-          templateUrl: "views/web.app.dashboard.profile.html",
+          templateUrl: "views/web.app.dashboard.centered.profile.html",
           controller: 'ProfileCtrl',
         },
-        '@web.app.dashboard.user': {
+        '@web.app.dashboard.centered.user': {
           templateUrl: 'views/web.app.dashboard.profile.activities.html',
         }
       }
-    }).state('web.app.dashboard.user.activities', {
+    }).state('web.app.dashboard.centered.user.activities', {
       url: '/activities',
       templateUrl: 'views/web.app.dashboard.profile.activities.html',
-    }).state('web.app.dashboard.user.favorites', {
+    }).state('web.app.dashboard.centered.user.favorites', {
       url: '/favorites',
       templateUrl: 'views/web.app.dashboard.profile.favorites.html',
-    }).state('web.app.dashboard.user.taps', {
+    }).state('web.app.dashboard.centered.user.taps', {
       url: '/taps',
       templateUrl: 'views/web.app.dashboard.profile.taps.html',
-    }).state('web.app.dashboard.user.edit', {
+    }).state('web.app.dashboard.centered.user.edit', {
       url: '/edit',
       views: {
         '@web.app.dashboard': {

@@ -33,3 +33,17 @@
 .ng-leave[ui-view] {
     position: absolute;
 }
+
+
+/*.animate-repeat {
+  line-height:30px;
+  list-style:none;
+  box-sizing:border-box;
+}*/
+
+.label-cats-anim.ng-enter {
+    animation: fadeInDown 0.2s;
+}
+.label-cats-anim.ng-leave {
+    animation: fadeOutUp 0.2s;
+}

@@ -1,0 +1,83 @@
+<div style="height: auto">
+    <div layout="column">
+        <md-card ng-cloak>
+            <md-toolbar class="md-primary">
+                <div class="md-toolbar-tools" layout="row">
+                    <span flex>
+                    </span>
+                    <div layout="row" layout-align="end center">
+                        <md-menu class="no-p">
+                            <md-button aria-label="Open Menu" ng-click="openMenu($mdOpenMenu, $event)" class="md-icon-button">
+                                <my-icon md-menu-origin icon="dots-horizontal"></my-icon>
+                            </md-button>
+                            <md-menu-content width="2">
+                                <md-menu-item>
+                                    <md-button ng-click="logout()">
+                                        <my-icon class="text-muted" icon="logout"></my-icon>
+                                        Report
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                </div>
+            </md-toolbar>
+            <md-card-content class="p10">
+                <div layout="row" layout-align="center center ">
+                    <div flex="45" class="square-img-container img-circle img-thumbnail ">
+                        <img class="img-circle" ng-src="{{::user_profile.avatar}} " />
+                    </div>
+                </div>
+                <div class="text-muted pt10">
+                    <p class="md-title">
+                        plan to show username in a subtle way
+                        <my-icon icon="account" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.name}} </p>
+                    <p ng-if="user_profile.email">
+                        <my-icon icon="at" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.email}} </p>
+                    <p ng-if="user_profile.location">
+                        <my-icon icon="map-marker" class="md-primary md-hue-1 mr25 "></my-icon>Location - <b> {{ user_profile.location }}</b></p>
+                    <p ng-if="user_profile.profile.favorite_book">
+                        <my-icon icon="book" class="md-primary md-hue-1 mr25 "></my-icon>Favorite book - <b> {{ user_profile.profile.favorite_book }}</b></p>
+                    <p ng-if="user_profile.profile.favorite_verse">
+                        <my-icon icon="bookmark" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Verse - <b>{{ user_profile.profile.favorite_verse }}</b></p>
+                    <p ng-if="user_profile.profile.favorite_parable">
+                        <my-icon icon="bookmark-outline" class="md-primary md-hue-1 mr25 "></my-icon>Favorite parable - <b>{{ user_profile.profile.favorite_parable }}</b></p>
+                    <p ng-if="user_profile.profile.denomination">
+                        <my-icon icon="church" class="md-primary md-hue-1 mr25 "></my-icon>Denomination - <b>{{ user_profile.profile.denomination }}</b></p>
+                </div>
+            </md-card-content>
+        </md-card>
+        <div class="mb15" layout="row" layout-align="center center">
+
+            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
+                <my-icon icon="check"></my-icon>
+                Accept Request
+            </md-button>
+            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ng-click="sendFriendRequest(user_profile.id)" aria-label="Add {{user_profile.name}} as friend">
+                <my-icon icon="plus"></my-icon>
+                Add Friend
+            </md-button>
+            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
+                <my-icon icon="message-text-outline"></my-icon>
+                Message
+            </md-button>
+
+        </div>
+    </div>
+    <div layout="column" style="position: relative; overflow: auto;">
+        <div layout="column" style="overflow: auto;">
+            <div>
+                <md-card>
+                    <md-card-content class="no-p" layout="row" layout-align-gt-xs="space-around center" layout-xs="column">
+                        <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".activities" ng-click="::loadUserActivities()">Activity</md-button>
+                        <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".favorites" ng-click="::loadUserFavorites()">Favorites</md-button>
+                        <md-button md-no-ink class="md-primary no-m pl10 pr10" style="line-height: 50px; border-radius: 0px;" ui-sref-active="md-raised no-shadow" ui-sref=".taps" ng-click="::loadUserTaps()">Posts tapped into</md-button>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <md-content class='no-bg' ui-view>
+            </md-content>
+        </div>
+    </div>
+
+</div>

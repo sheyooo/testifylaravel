@@ -320,7 +320,7 @@ app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
         saveToken(r.data.token);
         refreshProfile(); //Refresh session data here
         //$scope.refreshProfile();
-        $state.go('web.app.dashboard.home');
+        $state.go('web.app.dashboard.centered.home');
         d.resolve(r.data.token);
       }, function() {
         d.reject();
@@ -337,7 +337,7 @@ app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
         saveToken(r.data.token);
         refreshProfile(); //Refresh session data here
         //$scope.refreshProfile();
-        $state.go('web.app.dashboard.home');
+        $state.go('web.app.dashboard.centered.home');
         d.resolve(r.data.token);
       }, function() {
         d.reject();
@@ -521,6 +521,8 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
   var n_chanell = null;
 
   var m_notif = [];
+  var notifs = [];
+  var f_requests = [];
 
   var getIndexById = function(arr, obj){
     var count = arr.length;
@@ -552,10 +554,7 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
     var n = Pusher.pusher.subscribe('private-notifications-' + TokenService.token().hash_id);
     n_chanell = n;
     n.bind('new_message', function(data) {
-      //console.log("notif_bind");
-      if(checkIfCurrentChat(data)){
-
-      }else{
+      if(!checkIfCurrentChat(data)){
         var idx = getIndexById(m_notif, data);
         if(idx == -1){
           m_notif.push(data);
@@ -564,13 +563,11 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
           }
         }
       }
-
     });
 
     n.bind('pusher:subscription_succeeded', function(status) {
       Restangular.one('me').all('messages').all('unread').getList().then(
         function(r){
-
           var count = r.data.length;
           m_notif.splice(0, r.data.length);//Clear the array first
           for(var i = 0; i < count; i++){
@@ -579,6 +576,34 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
             //if(idx == -1){
               m_notif.push(r.data[i]);//repopulate the array since its from the server
             //}
+          }
+
+          if(!$rootScope.$$phase){
+            $rootScope.$digest();
+          }
+
+        }
+      );
+      Restangular.one('me').all('notifications').getList().then(
+        function(r){
+          var count = r.data.length;
+          notifs.splice(0, r.data.length);//Clear the array first
+          for(var i = 0; i < count; i++){
+              notifs.push(r.data[i]);//repopulate the array since its from the server
+          }
+
+          if(!$rootScope.$$phase){
+            $rootScope.$digest();
+          }
+
+        }
+      );
+      Restangular.one('me').all('friend_requests').getList().then(
+        function(r){
+          var count = r.data.length;
+          f_requests.splice(0, r.data.length);//Clear the array first
+          for(var i = 0; i < count; i++){
+              f_requests.push(r.data[i]);//repopulate the array since its from the server
           }
 
           if(!$rootScope.$$phase){
@@ -614,6 +639,8 @@ app.factory('NotificationsService', function(TokenService, Pusher, $state, $stat
 
   return {
     MessageNotifications: m_notif,
+    Notifications: notifs,
+    FriendRequestNotifications: f_requests,
     clearNotifications: clearNotifications,
     unsubscribe: unsubscribe,
     reInitPusher: initPusher
@@ -637,4 +664,32 @@ app.factory('UtilityService', function(){
     findHighestID: findHighestID,
     findHighestTimestamp: findHighestTimestamp
   };
+});
+
+app.factory('FriendshipService', function(Restangular){
+
+    var acceptRequest = function(userID){
+        Restangular.one('me').all('friend_requests').post({
+            user_id: userID
+        });
+    };
+
+    var deleteRelationship = function(userID){
+        Restangular.one('me').one('friend_requests', userID).remove();
+    };
+
+
+    return {
+        acceptRequest: acceptRequest,
+        deleteRelationship: deleteRelationship
+    };
+});
+
+app.factory('EmojioneService', function(){
+    var emojione = window.emojione;
+    emojione.imagePathPNG = 'bower_components/emojione/assets/png/';
+
+    return {
+        emojione: emojione
+    };
 });

@@ -1,7 +1,7 @@
 app.controller('LandingCtrl', ['Auth', '$state', function(Auth, $state) {
   Auth.refreshProfile().then(function(){
     if (Auth.userProfile.authenticated === true) {
-      $state.go('web.app.dashboard.home');
+      $state.go('web.app.dashboard.centered.home');
     }
   });
 
@@ -29,7 +29,7 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
         );
       }
 
-      if ($state.current.name == "web.app.dashboard.home" || "web.app.dashboard.posts"){
+      if ($state.current.name == "web.app.dashboard.centered.home" || "web.app.dashboard.posts"){
         var loadPosts = function() {
           var param = null;
           $scope.home.posts_loading = true;
@@ -76,7 +76,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
   function($scope, UXService, Facebook, $q, $state, Auth, Me, appBase) {
 
     if (Auth.userProfile.authenticated === true) {
-      $state.go('web.app.dashboard.home');
+      $state.go('web.app.dashboard.centered.home');
     }
 
     $scope.fb_button = "Login with Facebook";
@@ -101,7 +101,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
 
     $scope.loginFB = function() {
       Auth.signinFB().then(function() {
-        $state.go('web.app.dashboard.home');
+        $state.go('web.app.dashboard.centered.home');
       }, function(r) {
         UXService.toast(r.data.error);
       });
@@ -132,7 +132,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
     $scope.submitLogin = function() {
       Auth.signin($scope.loginDetails).then(function(r) {
         //console.log($scope.user);
-        $state.go('web.app.dashboard.home');
+        $state.go('web.app.dashboard.centered.home');
         //Me.callInit();
         //Success Login
       }, function(err) {
@@ -190,7 +190,7 @@ app.controller('SignupCtrl', ['$scope', 'Facebook', 'Auth', '$location',
         Auth.signup($scope.newUser).then(
           function(r) {
 
-            $state.go('web.app.dashboard.home');
+            $state.go('web.app.dashboard.centered.home');
             //console.log(r);
           },
           function(r) {
@@ -223,7 +223,9 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
     };
 
     $scope.loadUserProfile = function() {
-      Restangular.one('users', $stateParams.id).one('profile').get().then(function(r){
+      Restangular.one('users', $stateParams.id).get({
+          profile: true
+      }).then(function(r){
         $scope.user_profile = r.data;
       });
     };
@@ -256,6 +258,11 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
       });
     };
 
+    $scope.sendFriendRequest = function(id){
+      Restangular.one('me').all('friends').post({user_id: id});
+
+    };
+
     var load = function(){
       $scope.loadUserProfile();
 
@@ -277,10 +284,6 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
 
     load();
 
-
-
-
-
   }
 ]);
 
@@ -289,8 +292,7 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
   function(Restangular, $scope, $stateParams, $state, Upload, Auth,
     UXService, apiBase) {
     //console.log(profile);
-    Restangular.one('users', $stateParams.id).one(
-      'profile').get({
+    Restangular.one('me').get({
       'profile': true
     }).then(
       function(r) {
@@ -302,12 +304,12 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
     if (!(Auth.userProfile.hash_id == $stateParams.id || Auth.userProfile.username ==
         $stateParams.id)) {
       console.log($stateParams);
-      $state.go('web.app.dashboard.home');
+      $state.go('web.app.dashboard.centered.home');
     }
 
     $scope.saveAccountInfo = function(obj) {
-      Restangular.one('users', $scope.user.hash_id).one('profile').post(
-        '', obj).then(function(r) {
+      Restangular.one('me').post(
+        'profile', obj).then(function(r) {
         Auth.userProfile.first_name = obj.first_name;
         Auth.userProfile.last_name = obj.last_name;
         Auth.userProfile.username = obj.username;
@@ -318,8 +320,8 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
     };
 
     $scope.saveAboutInfo = function(obj) {
-      Restangular.one('users', $scope.user.hash_id).one('profile').post(
-        '', obj);
+      Restangular.one('me').post(
+        'profile', obj);
       Auth.userProfile.location = obj.location;
       if(Auth.userProfile.profile === null){
         Auth.userProfile.profile = {};
@@ -336,13 +338,10 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
       $scope.uploading = true;
 
       Upload.upload({
-        url: apiBase + '/users/' + Auth.userProfile.hash_id +
-          '/profile/avatar',
+        url: apiBase + '/me/profile/avatar',
         data: {
           file: Upload.dataUrltoBlob(file)
         }
-
-
       }).then(function(r) {
         Auth.userProfile.avatar = r.data.url;
         UXService.toast('Successfully updated your display picture');
@@ -378,7 +377,7 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
     $scope.changePassword = function() {
       if ($scope.password.newPassword &&
         $scope.password.newPassword1 && $scope.password.newPassword === $scope.password.newPassword1) {
-        Restangular.one('users', $scope.user.hash_id).post('password',
+        Restangular.one('me').post('password',
           $scope.password).then(function(resp) {
           if (resp.status == 202) {
             UXService.toast('Successfully changed password');
@@ -432,7 +431,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
   var chat_id = null;//will be set after call to server in restangular promise
 
   if(!$stateParams.user_id){
-    $state.go('web.app.dashboard.home');
+    $state.go('web.app.dashboard.centered.home');
   }
 
   var push_new_message = function(message){
@@ -532,23 +531,39 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
 }]);
 
 app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
-  '$mdToast', 'Me', 'Upload', 'apiBase', '$timeout', '$document', '$q',
+  '$mdToast', 'Me', 'Upload', 'apiBase', '$timeout', '$document', 'EmojioneService', '$q',
   function($scope, UXService, AppService, $mdToast, Me, Upload,
-    apiBase, $timeout, $document, $q) {
+    apiBase, $timeout, $document, EmojioneService, $q) {
     $scope.selectedCategories = [];
     $scope.files = [];
     $scope.newPost = {
       creating: false
     };
 
-    $timeout(function() {
-      angular.element(document.querySelector('.emoji-wysiwyg-editor')).on(
+    $timeout(function () {
+        emojionearea = $('#tComposerInput').emojioneArea({
+          template : "<filters/><editor/><tabs/>",
+          autoHideFilters : true,
+          useSprite : false,
+          placeholder : "Share your testimony...",
+          container : null,
+          hideSource : true,
+
+        });
+        $scope.emojionearea = emojionearea[0].emojioneArea;
+        //console.log($scope.emojionearea);
+    }, 1000);
+
+    $timeout(function () {
+      angular.element(document.querySelector('.emojionearea-editor')).on(
         'focus',
         function() {
           $scope.composingPost = true;
-          $scope.$digest();
+          if(!$scope.$$phase){
+              $scope.$digest();
+          }
         });
-    }, 0);
+    }, 1050);
 
     AppService.getCategories().then(function(cats) {
       $scope.categories = cats.data;
@@ -582,7 +597,6 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
 
       }
     };
-
 
     var isUploadFinished = function() {
       finished = true;
@@ -650,7 +664,8 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
     $scope.composePost = function(ev) {
       //post = "";
       //console.log($scope);
-      post = $scope.post;
+      //post = EmojioneService.emojione.toShort($scope.post);
+      post = EmojioneService.emojione.toShort($scope.emojionearea.getText());
       anonymous = $scope.anonymous;
 
       if (!post) {
@@ -692,7 +707,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
             //console.log(r.data);
           }
 
-          $scope.emojiMessage.rawhtml = "";
+          $scope.emojionearea.setText("");
           $scope.post = "";
           $scope.composingPost = false;
           $scope.files = [];
@@ -726,6 +741,43 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
     };
   }
 ]);
+
+app.controller('NotificationsController', function($scope, Restangular, NotificationsService, FriendshipService){
+    var types = {
+        'App\\Post': 'created a post',
+        'App\\Tap': 'tapped on a post',
+        'App\\Amen': 'said amen to a post',
+        'App\\Favorite': 'favorited a post',
+        'App\\Comment': 'commented on a post',
+    };
+
+  Restangular.one('me').all('friend_requests').getList().then(function(r){
+    $scope.friend_requests = r.data;
+  });
+  Restangular.one('me').all('notifications').getList({
+      "profiles": true
+  }).then(function(r){
+    //$scope.notifications = r.data;
+    $scope.notifications = [];
+
+    notifs = r.data;
+
+    for (var i = 0; i < notifs.length; i++){
+        aNotif = {
+            content: types[notifs[i].action_type],
+            user: notifs[i].user
+        };
+
+        $scope.notifications.push(aNotif);
+    }
+
+
+  });
+
+  $scope.acceptRequest = FriendshipService.acceptRequest;
+  $scope.deleteRelationship = FriendshipService.deleteRelationship;
+
+});
 
 app.controller('UXModalLoginCtrl', ['$scope', '$mdDialog', function($scope,
   $mdDialog) {
