@@ -4,10 +4,10 @@
       <span class="layout-padding"><a class="pl0 pr0" ui-sref="web.app.dashboard.centered.user({id: post.user_ref.username || post.user_ref.hash_id})" style="font-weight: bold;">{{::post.user_ref.name}}</a> {{::interpretation}}</span>
       <md-divider class="mb10"></md-divider>
     </div>
-    <div layout="row" flex class="pt10">
+    <div layout="row" flex class="pt5">
       <div class="square-img-container" style="width: 50px">
         <a ui-sref="web.app.dashboard.centered.user({id: post.user.username || post.user.hash_id})">
-          <img class="img-circle square2" ng-src="{{ post.anonymous ? 'dist/img/favicon.png' : post.user.avatar || 'dist/img/guest.png'}}" alt="{{::post.user.name}}">
+          <img class="square2" ng-src="{{ post.anonymous ? 'dist/img/favicon.png' : post.user.avatar || 'dist/img/guest.png'}}" alt="{{::post.user.name}}">
         </a>
       </div>
       <div flex layout="column" class="ml15">

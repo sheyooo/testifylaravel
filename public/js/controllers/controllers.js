@@ -71,9 +71,9 @@ app.controller('PostsCtrl', ['AppService', 'Me', '$scope', '$state',
   }
 ]);
 
-app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
+app.controller('LoginCtrl', ['$scope', 'UXService', 'FB', '$q', '$state',
   'Auth', 'Me', 'appBase',
-  function($scope, UXService, Facebook, $q, $state, Auth, Me, appBase) {
+  function($scope, UXService, FB, $q, $state, Auth, Me, appBase) {
 
     if (Auth.userProfile.authenticated === true) {
       $state.go('web.app.dashboard.centered.home');
@@ -81,11 +81,11 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
 
     $scope.fb_button = "Login with Facebook";
 
-    Facebook.getLoginStatus(function(r) {
+    FB.getLoginStatus(function(r) {
       //console.log(r);
       if (r.status === 'connected') {
         //console.log(r);
-        Facebook.api('/me', function(r) {
+        FB.api('/me', function(r) {
           $scope.fb_logged_in = true;
           $scope.fb_name = r.name;
           $scope.fb_button = "Continue as " + $scope.fb_name;
@@ -116,7 +116,7 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
     };
 
     var refresh = function() {
-      Facebook.api("/me", {
+      FB.api("/me", {
         fields: 'id,name,email,access_token'
       }).then(
         function(response) {
@@ -143,24 +143,24 @@ app.controller('LoginCtrl', ['$scope', 'UXService', 'Facebook', '$q', '$state',
   }
 ]);
 
-app.controller('SignupCtrl', ['$scope', 'Facebook', 'Auth', '$location',
+app.controller('SignupCtrl', ['$scope', 'FB', 'Auth', '$location',
   '$mdDialog', '$state',
-  function($scope, Facebook, Auth, $location, $mdDialog, $state) {
+  function($scope, FB, Auth, $location, $mdDialog, $state) {
     var refresh;
 
     $scope.newUser = {};
     $scope.signupFb = function() {
-      Facebook.login().then(function() {
+      FB.login().then(function() {
         refresh();
       });
     };
 
     refresh = function() {
-      Facebook.api("/me", {
+      FB.api("/me", {
         fields: 'id,first_name,last_name,email'
       }).then(
         function(response) {
-          Facebook.logout();
+          FB.logout();
           //$scope.welcomeMsg = "Welcome " + response.name;
           //console.log(response);
           //console.log(JSON.stringify(response));

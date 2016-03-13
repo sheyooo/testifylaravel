@@ -133,18 +133,18 @@ app.factory('Pusher', ['TokenService', 'isCordova', 'apiBase', function(TokenSer
   };
 }]);
 
-app.factory('FB', ['isCordova', 'Facebook', '$window', function (isCordova, Facebook, $window) {
+app.factory('FB', function (isCordova, $window, $facebook) {
 
   if(isCordova){
     if($window.facebookConnectPlugin){
       return $window.facebookConnectPlugin;
     }else {
-      return Facebook;
+      return $facebook;
     }
   }else {
-    return Facebook;
+    return $facebook;
   }
-}]);
+});
 
 app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
   function($mdDialog, $mdToast, Auth, $q, $document) {
@@ -225,9 +225,8 @@ app.factory('UXService', ['$mdDialog', '$mdToast', 'Auth', '$q', '$document',
   }
 ]);
 
-app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
-  '$cordovaFacebook', 'Facebook', 'isCordova', 'NotificationsService', 'TokenService', 'Pusher',
-  function($localStorage, Restangular, $q, $state, $cordovaFacebook, Facebook, isCordova, NotificationsService, TokenService, Pusher) {
+app.factory('Auth',
+  function($localStorage, Restangular, $q, $state, FB, isCordova, NotificationsService, TokenService, Pusher) {
     var user = {
       authenticated: false,
       id: null,
@@ -374,27 +373,16 @@ app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
         return d.promise;
       };
 
-      if(isCordova){
-        $cordovaFacebook.login(['public_profile', 'email']).then(function(r) {
-          console.log(r);
-          doFbLogin(r).then(function() {
-            d.resolve();
-          }, function(r) {
-            d.reject(r);
-          });
-        }, function(){
-          d.reject();
+      FB.login(['public_profile', 'email']).then(function(r) {
+        //console.log(r);
+        doFbLogin(r).then(function() {
+          d.resolve();
+        }, function(r) {
+          d.reject(r);
         });
-      }else{
-        Facebook.login(function(r) {
-          //console.log(r);
-          doFbLogin(r).then(function() {
-            d.resolve();
-          }, function(r) {
-            d.reject(r);
-          });
-        });
-      }
+      }, function(){
+        d.reject();
+      });
 
       return d.promise;
     };
@@ -430,7 +418,7 @@ app.factory('Auth', ['$localStorage', 'Restangular', '$q', '$state',
       userProfile: user,
     };
   }
-]);
+);
 
 app.factory('Me', ['Auth', 'Restangular', '$q', 'TokenService', function(Auth, Restangular, $q, TokenService) {
 
@@ -487,7 +475,7 @@ app.factory('CommentService', ['Restangular', '$q', function(Restangular, $q) {
 
 }]);
 
-app.factory('SocialService', ['Facebook', 'Auth', function(Facebook, Auth) {
+app.factory('SocialService', ['FB', 'Auth', function(FB, Auth) {
 
 
   return {

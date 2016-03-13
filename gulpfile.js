@@ -26,7 +26,7 @@ var bower_js_files = [
   "public/bower_components/angular-messages/angular-messages.js",
   "public/bower_components/underscore/underscore.js",
   "public/bower_components/lodash/lodash.js",
-  "public/bower_components/angular-facebook/lib/angular-facebook.js",
+  "public/bower_components/ng-facebook/ngFacebook.js",
   "public/bower_components/angular-animate/angular-animate.js",
   "public/bower_components/restangular/dist/restangular.js",
   "public/bower_components/ngstorage/ngStorage.js",

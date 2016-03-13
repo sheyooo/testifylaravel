@@ -8,7 +8,7 @@ var app = angular.module('testify', [
   'ui.router',
   'ngStorage',
   'restangular',
-  'facebook',
+  'ngFacebook',
   'ngFileUpload',
   'ngImgCrop',
   'ngTextTruncate',
@@ -77,9 +77,9 @@ app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($c
   //$animateProvider.classNameFilter( /\banimated\b/ );
 }]);
 
-app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
+app.config(function( $httpProvider, RestangularProvider, $facebookProvider,
   apiBase) {
-  FacebookProvider.setAppId(180042792329807);
+  $facebookProvider.setAppId(180042792329807);
   RestangularProvider.setBaseUrl(apiBase);
 
   $httpProvider.interceptors.push(['$q', '$location', '$localStorage',
@@ -135,10 +135,19 @@ app.config(function(FacebookProvider, $httpProvider, RestangularProvider,
   ]);
 });
 
-app.run(['$cordovaSplashscreen', '$cordovaKeyboard', '$cordovaStatusbar', function($cordovaSplashscreen, $cordovaKeyboard, $cordovaStatusbar) {
+app.run(function($cordovaSplashscreen, $cordovaKeyboard, $cordovaStatusbar) {
   window.addEventListener('load', function() {
     new FastClick(document.body);
   }, false);
+
+  // Load the facebook SDK asynchronously
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
 
   if(document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1){
     document.addEventListener("deviceready", function () {
@@ -150,7 +159,8 @@ app.run(['$cordovaSplashscreen', '$cordovaKeyboard', '$cordovaStatusbar', functi
     }, false);
   }
 
-}]);
+});
+
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
   appBase) {

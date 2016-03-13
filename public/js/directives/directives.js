@@ -77,7 +77,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
     };
 }]);
 
-app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'Facebook', '$cordovaFacebook', 'appUrl', '$filter', 'EmojioneService', 'isCordova', function(PostService, CommentService, Auth, UXService, Facebook, $cordovaFacebook, appUrl, $filter, EmojioneService, isCordova) {
+app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'FB', '$cordovaFacebook', 'appUrl', '$filter', 'EmojioneService', 'isCordova', function(PostService, CommentService, Auth, UXService, FB, $cordovaFacebook, appUrl, $filter, EmojioneService, isCordova) {
     return {
         restrict: 'A',
         require: "^?testifyPosts",
@@ -353,7 +353,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
 
                   }, function (error) {});
               }else{
-                Facebook.ui(options, function(response) {});
+                FB.ui(options, function(response) {});
               }
 
             };
