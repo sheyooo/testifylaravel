@@ -687,7 +687,10 @@ app.factory('FriendshipService', function(Restangular){
 
 app.factory('EmojioneService', function(){
     var emojione = window.emojione;
-    emojione.imagePathPNG = 'bower_components/emojione/assets/png/';
+
+    //emojione.imagePathPNG = 'bower_components/emojione/assets/png/';
+    emojione.imageType = 'png';
+    emojione.sprites = true;
 
     return {
         emojione: emojione

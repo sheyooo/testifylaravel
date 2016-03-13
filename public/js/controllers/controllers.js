@@ -544,7 +544,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
         emojionearea = $('#tComposerInput').emojioneArea({
           template : "<filters/><editor/><tabs/>",
           autoHideFilters : true,
-          useSprite : false,
+          useSprite : true,
           placeholder : "Share your testimony...",
           container : null,
           hideSource : true,
@@ -552,7 +552,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
         });
         $scope.emojionearea = emojionearea[0].emojioneArea;
         //console.log($scope.emojionearea);
-    }, 1000);
+    }, 01);
 
     $timeout(function () {
       angular.element(document.querySelector('.emojionearea-editor')).on(
@@ -560,7 +560,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
         function() {
           $scope.composingPost = true;
           if(!$scope.$$phase){
-              $scope.$digest();
+              $scope.$apply();
           }
         });
     }, 1050);

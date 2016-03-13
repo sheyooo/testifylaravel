@@ -39,7 +39,7 @@ var bower_js_files = [
   "public/bower_components/ng-file-upload/ng-file-upload.js",
   "public/bower_components/ng-img-crop/compile/minified/ng-img-crop.js",
   "public/bower_components/emojione/lib/js/emojione.min.js",
-  "public/bower_components/emojionearea/js/emojionearea.min.js",
+  "public/bower_components/emojionearea/js/emojionearea.js",
   "public/bower_components/ngCordova/dist/ng-cordova.js"
 ];
 
@@ -57,7 +57,6 @@ var css_files = [
   'public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css',
   'public/bower_components/animate.css/animate.min.css',
   'public/css/ux-animations.css',
-  'public/bower_components/emojione/assets/css/emojione.min.css',
   'public/bower_components/emojionearea/css/emojionearea.min.css'
 ];
 
@@ -157,7 +156,7 @@ gulp.task('js_libs', function() {
   return gulp.src(bower_js_files)
     .pipe(sourcemaps.init())
     .pipe(ngAnnotate())
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(concat('libs.js'))
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/dist/js/'));
