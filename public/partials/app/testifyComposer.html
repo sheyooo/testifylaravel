@@ -1,15 +1,7 @@
 <div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
     <form novalidate>
         <md-card style="overflow: visible">
-            <md-divider></md-divider>
             <div class layout="column">
-                <!-- <div flex layout="row" class="p10">
-                    <div class="square-img-container mr10" style="width: 40px; height: 40px;">
-                        <img class="img-circle" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
-                    </div>
-                    <span class="md-body-1 text-muted" style="font-weight: bolder; line-height: 40px;">{{ user.name }}</span>
-                </div> -->
-
                 <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
                     <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
                         <div layout="column" style="height: 270px; width: 280px; overflow-y: auto" class="pt10">
@@ -30,15 +22,33 @@
                     </md-card-content>
                 </md-card>
             </div>
-            <md-card-content layout="row" class="p15" style="background: #FAFAFA">
+            <md-card-content layout="row" class="p15" style="background: #FAFAFA; border-bottom: solid 1px #efefef;">
                 <style type="text/css">
-                    .emojionearea {
-                        margin-bottom: 20px;
+                    .emojionearea, .emojionearea.focused {
+                        margin-bottom: 5px;
                         box-shadow: none !important;
                         border-radius: 0px;
+                        border: solid #eee 1px;
+                        position: relative;
+                        overflow: visible;
                     }
                     .emojionearea-editor {
-                        min-height: 80px !important;
+                        min-height: 38px !important;
+                        max-height: 500px !important;
+                    }
+                    .emojionearea-editor::before {
+                        font-weight: 500;
+                        color: #ccc;
+                    }
+                    .emojionearea-tabs {
+                        position: absolute;
+                        box-shadow: 0px 2px 2px rgba(0,0,0, 0.2);
+                        z-index: 90;
+                    }
+                    .emojionearea-tab {
+                        border: solid 1px #eee;
+                        border-top: 1px solid #ccc;
+                        border-bottom: none;
                     }
                 </style>
                 <div layout="row" flex="auto">

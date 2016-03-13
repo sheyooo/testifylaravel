@@ -542,7 +542,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
 
     $timeout(function () {
         emojionearea = $('#tComposerInput').emojioneArea({
-          template : "<filters/><editor/><tabs/>",
+          template : "<editor/><filters/><tabs/>",
           autoHideFilters : true,
           useSprite : true,
           placeholder : "Share your testimony...",
