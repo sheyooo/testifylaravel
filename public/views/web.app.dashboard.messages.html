@@ -2,22 +2,22 @@
     <span flex="20" flex-md="10" flex-sm="0"></span>
     <div flex-gt-md="60" flex-md="80" flex="100" class="main content-feeds bg-light-gray" layout-fill layout="column" style="position: relative">
         <div style="height: auto">
-          <div class="" ng-repeat="chat in chats track by chat.id">
+          <div class="" ng-repeat="chat in chats.data track by chat.id">
             <md-card>
               <a ui-sref="web.app.dashboard.message({user_id: chat.otherUser.username || chat.otherUser.hash_id})">
                 <md-card-header class="">
                   <md-card-avatar>
-                      <img ng-src="{{::chat.otherUser.avatar || "dist/img/guest.png"}}" alt="{{::chat.otherUser.name}}">
+                      <img ng-src="{{::chat.otherUser.avatar || 'dist/img/guest.png'}}" alt="{{::chat.otherUser.name}}">
                   </md-card-avatar>
                   <md-card-header-text>
-                    <span class="md-title">{{::chat.otherUser.name}}</span>
-                    <span class="md-subhead">{{::chat.last_message}}</span>
+                    <span class="md-title" style="line-height: 18px">{{::chat.otherUser.name}}</span>
+                    <span class="md-body-2">{{::chat.last_message}}</span>
                   </md-card-header-text>
                 </md-card-header>
               </a>
             </md-card>
           </div>
-          <div ng-if=" !loading && !chats.length" layout="column">
+          <div ng-if=" chats.status && !chats.data.length" layout="column">
               <div layout="row" layout-align="center center">
                   <my-icon class="text-muted" icon="email-open" id="no-posts-iconography"></my-icon>
                   <style type="text/css">

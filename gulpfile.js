@@ -67,6 +67,7 @@ var sass_files = [
 var cordova_www = [
   'public/bower_components/mdi/**/**',
   'public/bower_components/pusher/**/**',
+  'public/bower_components/emojione/assets/sprites/**/**',
   'public/dist/**/**',
   'public/partials/**/**',
   'public/views/**/**',

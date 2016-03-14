@@ -5,7 +5,7 @@
                 <div style="position: relative; height: 85px">
                     <a ui-sref="web.app.dashboard.user({id: user.username || tokHashId})" class="no-p">
                         <div class="img-circle square-img-container absolute-center-horizontal" style="width: 55px">
-                            <img class="img-circle img-thumbnail" style="width: 100%" ng-src="{{ user.avatar || 'dist/img/guest.png'}} ">
+                            <img class="img-circle img-thumbnail" style="width: 100%" ng-src="{{ user.avatar || 'dist/img/guest.png'}} " alt="{{user.name}}">
                         </div>
                     </a>
                 </div>

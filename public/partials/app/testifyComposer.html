@@ -1,6 +1,6 @@
 <div ng-if="user.authenticated" style="position: relative" ng-controller="TComposerCtrl">
     <form novalidate>
-        <md-card style="overflow: visible">
+        <md-card class="no-shadow" style="overflow: visible; border: solid 1px #DDD">
             <div class layout="column">
                 <md-card class="category-modal-anim" ng-show="showSelectCatPopup" style="position: absolute; top: 0px; right: 0px; color: black; width: auto; z-index: 25">
                     <md-card-content class="pl5 pr5 pb5 pt0" layout="column">
@@ -25,15 +25,18 @@
             <md-card-content layout="row" class="p15" style="background: #FAFAFA; border-bottom: solid 1px #efefef;">
                 <style type="text/css">
                     .emojionearea, .emojionearea.focused {
-                        margin-bottom: 5px;
+                        margin-bottom: 0px;
                         box-shadow: none !important;
                         border-radius: 0px;
                         border: solid #eee 1px;
                         position: relative;
                         overflow: visible;
                     }
+                    .emojionearea.focused .emojionearea-editor {
+                        min-height: 80px !important;
+                    }
                     .emojionearea-editor {
-                        min-height: 38px !important;
+                        min-height: 30px !important;
                         max-height: 500px !important;
                     }
                     .emojionearea-editor::before {
@@ -52,7 +55,7 @@
                     }
                 </style>
                 <div layout="row" flex="auto">
-                    <div class="square-img-container mr5" style="width: 40px; height: 40px;">
+                    <div class="square-img-container mr5" style="width: 32px; height: 32px;">
                         <img class="" ng-src="{{ user.avatar || 'dist/img/guest.png'}}">
                     </div>
                 </div>

@@ -1,8 +1,8 @@
 <div layout="column" layout-align="center center">
     <!-- <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="100px"></md-progress-circular> -->
-    <h3 ng-if="loading" style="color: #aaa">Loading posts...</h3>
+    <h3 ng-if="status == 1" style="color: #aaa">Loading posts...</h3>
     <div layout="column" style="width: 100%">
-        <div ng-if=" !loading && !posts.length" layout="column">
+        <div ng-if="status == 0 && !posts.length" layout="column">
             <div layout="row" layout-align="center center">
                 <my-icon class="text-muted" icon="comment-alert-outline" id="no-posts-iconography"></my-icon>
                 <style type="text/css">
@@ -16,9 +16,24 @@
                 No posts
             </h2>
         </div>
+
         <div ng-repeat="post in posts track by post.hash_id ">
-            <md-card testify-post="::post" class="md-warn">
+            <md-card testify-post="::post" class="md-primary">
             </md-card>
         </div>
+    <div ng-if="status == 2" layout="column">
+        <div layout="row" layout-align="center center">
+            <my-icon class="text-muted" icon="cloud-outline-off" id="no-posts-iconography"></my-icon>
+            <style type="text/css">
+            #no-posts-iconography:before {
+                font-size: 100px;
+                color: #ccc;
+            }
+            </style>
+        </div>
+        <h2 class="text-center" style="color: #aaa">
+            Error loading posts
+        </h2>
+    </div>
     </div>
 </div>

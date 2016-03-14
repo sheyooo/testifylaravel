@@ -52,7 +52,7 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
         templateUrl: 'partials/templates/Post/posts.html',
         scope: {
             posts: '=testifyPosts',
-            loading: '=loading'
+            status: '=status'
         },
         controller: function($scope) {
             //console.log($scope.posts);

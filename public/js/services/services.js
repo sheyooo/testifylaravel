@@ -244,32 +244,21 @@ app.factory('Auth',
     Restangular.setFullResponse(true);
 
     var refreshProfile = function() {
-      //console.log(TokenService.token.hash_id);
-      //console.log(TokenService.token().hash_id);
-      //console.log(TokenService.token().exp);
+
       var d = $q.defer();
       if (TokenService.token().hash_id && TokenService.token().exp > Date
         .now() / 1000) {
-        //console.log("truthy");
-        //console.log(getClaimsFromToken().hash_id);
-        //console.log(Date.now() / 1000);
-        //console.log(getClaimsFromToken().exp);
-        //console.log(TokenService.token.hash_id);
 
         Restangular.one('users', TokenService.token().hash_id).get({
           profile: true
         }).then(
           function(r) {
             buildAuthProfile(r.data);
-            Pusher.headerAuthBearerRefresh();//get the fresh token
-            //console.log(Pusher.pusher);
+            Pusher.headerAuthBearerRefresh();
+
             NotificationsService.reInitPusher();
-            //console.log(Pusher.pusher);
 
             d.resolve(true);
-
-            //console.log(getClaimsFromToken().id);
-
           },
           function(r) {
             if (r.status == 404) {
@@ -447,19 +436,104 @@ app.factory('Me', ['Auth', 'Restangular', '$q', 'TokenService', function(Auth, R
   };
 }]);
 
-app.factory('PostService', ['Restangular', '$q', function(Restangular, $q) {
+app.factory('PostService', function(Restangular, UXService, $q, $timeout) {
 
-  var posts = Restangular.all('posts');
+    var pubStreamPosts = {
+      data: [],
+      status: 0
+    };
 
-  var post = function(id) {
-    return Restangular.one('posts', id);
-  };
+    var postsCat = {
+      data: [],
+      status: 0
+    };
 
-  return {
-    post: post
-  };
+    var post = {
+        data: {},
+        status: false
+    };
 
-}]);
+    var loadPosts = (function() {
+        pubStreamPosts.status = 1;
+        Restangular.all('posts').getList().then(function(r) {
+          pubStreamPosts.data = r.data;
+          pubStreamPosts.status = 0;
+        }, function(err) {
+          pubStreamPosts.status = 2;
+          UXService.toast("Something's wrong");
+        });
+    })();
+
+    var loadCategorized = function(category) {
+      var param = null;
+
+      if (category) {
+        load({
+          category: category
+        });
+      } else {
+        load({});
+      }
+
+      function load(param) {
+            postsCat.status = 1;
+
+            Restangular.all('posts').getList(param).then(function(r) {
+                    postsCat.data = r.data;
+                    postsCat.status = 0;
+                }, function(err) {
+                    postsCat.status = 2;
+                    UXService.toast("Something's wrong");
+                });
+        }
+    };
+
+    return {
+        stream: pubStreamPosts,
+        categorized: postsCat,
+        loadCategorized: loadCategorized
+    };
+
+});
+
+app.factory('MessageService', function($rootScope, Auth, Restangular, UXService, $q, $timeout){
+    var messages = {
+        data: []
+    };
+
+    var loadMessages = (function() {
+        Restangular.one('me').all('messages').getList().then(
+          function(r) {
+            var chats = r.data;
+
+            var getOtherUserFromSubs = function(subs){
+              var count  = subs.length;
+
+              for(var i = 0; i < count; i++){
+                if(subs[i].user_id != Auth.userProfile.id){
+                  return subs[i].user;
+                }
+              }
+            };
+
+            var count = r.data.length;
+            for(var i = 0; i < count; i++){
+              chats[i].otherUser = getOtherUserFromSubs(r.data[i].subs);
+            }
+
+            messages.data = r.data;
+
+        },function(err) {
+              $timeout(function(){
+                  loadMessages();
+              }, 10000);
+          });
+    })();
+
+    return {
+        messages: messages
+    };
+});
 
 app.factory('CommentService', ['Restangular', '$q', function(Restangular, $q) {
 

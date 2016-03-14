@@ -78,7 +78,9 @@ class PostsController extends Controller
     {
         //
         $post = new \App\Post();
-        $post->text = htmlspecialchars($request->post);
+        $text = htmlspecialchars(trim($request->post));
+        $text = str_replace("&amp;", "&", $text);
+        $post->text = $text;
         $post->anonymous = htmlspecialchars($request->anonymous);
 
         try {

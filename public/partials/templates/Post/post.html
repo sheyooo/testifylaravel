@@ -11,16 +11,16 @@
         </a>
       </div>
       <div flex layout="column" class="ml15">
-        <span class="md-body-1">
+        <span style="line-height: 20px" class="md-body-1">
                 <a ui-sref="web.app.dashboard.centered.user({id: post.user.username || post.user.hash_id})" style="font-weight: bold">
                   <md-tooltip md-direction="top">{{::post.user.name || 'Anonymous post'}}</md-tooltip>
                   {{ ::post.user.username  || post.user.name || 'Anonymous' }}
                 </a>
         </span>
-        <div>
+        <div style="line-height: 20px">
           <span ng-if="::post.user.location" style="font-size: 10px;" class="label label-default md-caption">{{::post.user.location}}</span>
         </div>
-        <span class="md-caption"><time am-time-ago="::post.created_at"></time> </span>
+        <span style="line-height: 18px" class="md-caption"><time am-time-ago="::post.created_at"></time> </span>
         <div class="mb10" layout="row" layout-wrap>
           <span ng-if="::post.anonymous" style="font-size: 10px;" class="label label-primary md-caption mr5 mb5">Anonymous</span>
           <span ng-repeat="cat in ::post.categories" style="font-size: 10px;" class="label label-primary md-caption mr5 mb5">{{::cat.name}}</span>

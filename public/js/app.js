@@ -81,6 +81,7 @@ app.config(function( $httpProvider, RestangularProvider, $facebookProvider,
   apiBase) {
   $facebookProvider.setAppId(180042792329807);
   RestangularProvider.setBaseUrl(apiBase);
+  RestangularProvider.setFullResponse(true);
 
   $httpProvider.interceptors.push(['$q', '$location', '$localStorage',
     function($q, $location, $localStorage, $rootScope, Auth) {
