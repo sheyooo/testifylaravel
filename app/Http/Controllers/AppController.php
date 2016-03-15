@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class AppController extends Controller
 {
     //
 
-    public function search()
+    public function search(Request $request)
     {
-        return \App\Repo::where('item', 'like', '{$query}%')->where('item', 'like', '#{$query}%')->get()->all();
+        $q = $request->q;
+        $q = explode(" ", $q);
+        $search = new \App\User;
+
+        foreach ($q as $query) {
+            $search = $search->orWhere('first_name', 'like', '%'. $query .'%')
+                            ->orWhere('last_name', 'like', '%'. $query .'%');
+        }
+
+        return $search->get()->take(30)->all();
     }
 
     public static function Login($u, $p)

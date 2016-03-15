@@ -436,7 +436,7 @@ app.factory('Me', ['Auth', 'Restangular', '$q', 'TokenService', function(Auth, R
   };
 }]);
 
-app.factory('PostService', function(Restangular, UXService, $q, $timeout) {
+app.factory('PostService', function(Restangular, UXService, Pusher, $q, $timeout, $rootScope) {
 
     var pubStreamPosts = {
       data: [],
@@ -453,7 +453,7 @@ app.factory('PostService', function(Restangular, UXService, $q, $timeout) {
         status: false
     };
 
-    var loadPosts = (function() {
+    var loadPosts = function() {
         pubStreamPosts.status = 1;
         Restangular.all('posts').getList().then(function(r) {
           pubStreamPosts.data = r.data;
@@ -462,7 +462,23 @@ app.factory('PostService', function(Restangular, UXService, $q, $timeout) {
           pubStreamPosts.status = 2;
           UXService.toast("Something's wrong");
         });
-    })();
+    };
+
+    var smartLoad = function() {
+        if (pubStreamPosts.data.length > 0){
+            after = pubStreamPosts.data[0].id;
+            Restangular.all('posts').getList({
+                after: after
+            }).then(function(r){
+                posts = r.data;
+                for (var i = 0; i < posts.length; i++){
+                    pubStreamPosts.data.unshift(posts[i]);
+                }
+            });
+        }else{
+            loadPosts();
+        }
+    };
 
     var loadCategorized = function(category) {
       var param = null;
@@ -487,6 +503,19 @@ app.factory('PostService', function(Restangular, UXService, $q, $timeout) {
                 });
         }
     };
+
+    smartLoad();
+
+    pStream = Pusher.pusher.subscribe('posts-stream');
+    pStream.bind('new_post', function(post){
+        pubStreamPosts.data.unshift(post);
+        if(! $rootScope.$$phase){
+            $rootScope.$digest();
+        }
+    });
+    pStream.bind('pusher:subscription_succeeded', function (){
+        smartLoad();
+    });
 
     return {
         stream: pubStreamPosts,

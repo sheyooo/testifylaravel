@@ -162,7 +162,6 @@ app.run(function($cordovaSplashscreen, $cordovaKeyboard, $cordovaStatusbar) {
 
 });
 
-
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
   appBase) {
   $stateProvider

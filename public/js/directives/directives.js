@@ -44,7 +44,7 @@ app.directive('appToolbarNoLogin', [function() {
     };
 }]);
 
-app.directive('testifyPosts', ['PostService', function(PostService) {
+app.directive('testifyPosts', ['Restangular', function(Restangular) {
     return {
         restrict: 'A',
         transclude: true,
@@ -55,29 +55,21 @@ app.directive('testifyPosts', ['PostService', function(PostService) {
             status: '=status'
         },
         controller: function($scope) {
-            //console.log($scope.posts);
-
             this.SDeletePost = function(post_id) {
-                PostService.post(post_id).remove().then(function(r) {
+                Restangular.one('posts', post_id).remove().then(function(r) {
                     var i = $scope.posts.map(function(x) {
                             return x.id;
                         })
                         .indexOf(post_id);
-                    //console.log($scope);
-                    //array.splice(removeIndex, 1);
                     $scope.posts.splice(i, 1);
-                    //scope.post = "";
                 });
-
             };
-
             $scope.noPosts = false;
-
         }
     };
 }]);
 
-app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXService', 'FB', '$cordovaFacebook', 'appUrl', '$filter', 'EmojioneService', 'isCordova', function(PostService, CommentService, Auth, UXService, FB, $cordovaFacebook, appUrl, $filter, EmojioneService, isCordova) {
+app.directive('testifyPost', function(Restangular, CommentService, Auth, UXService, FB, $cordovaFacebook, appUrl, $filter, EmojioneService, isCordova) {
     return {
         restrict: 'A',
         require: "^?testifyPosts",
@@ -187,7 +179,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                 //console.log(scope.post.post_id);
                 scope.CommentsUI.loading = true;
                 scope.CommentsUI.retryButton = false;
-                PostService.post(scope.post.id).getList('comments').then(function(r) {
+                Restangular.one('posts', scope.post.id).getList('comments').then(function(r) {
                     //console.log(r);
                     scope.post.comments = r.data;
                     scope.CommentsUI.loading = false;
@@ -203,7 +195,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                 var doCommentPost = function() {
                     //console.log(Date());
                     if (scope.commentBox) {
-                        PostService.post(scope.post.id).post('comments', {
+                        Restangular.one('posts', scope.post.id).post('comments', {
                             text: scope.commentBox
                         }).then(function(r) {
                             scope.post.comments_count++;
@@ -251,7 +243,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     if (scope.post.favorited) {
                         scope.post.favorited = false;
                         scope.post.favorites_count--;
-                        PostService.post(scope.post.id).one('favorites').remove().then(function(r) {
+                        Restangular.one('posts', scope.post.id).one('favorites').remove().then(function(r) {
                             //console.log(r);
                             scope.post.favorited = r.data.status;
                             scope.post.favorites_count = r.data.count;
@@ -259,7 +251,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     } else {
                         scope.post.favorited = true;
                         scope.post.favorites_count++;
-                        PostService.post(scope.post.id).one('favorites').post().then(function(r) {
+                        Restangular.one('posts', scope.post.id).one('favorites').post().then(function(r) {
                             //console.log("created");
                             scope.post.favorited = r.data.status;
                             scope.post.favorites_count = r.data.count;
@@ -283,7 +275,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     if (scope.post.tapped_into) {
                         scope.post.tapped_into = false;
                         scope.post.taps_count--;
-                        PostService.post(scope.post.id).one('taps').remove().then(function(r) {
+                        Restangular.one('posts', scope.post.id).one('taps').remove().then(function(r) {
                             //console.log(r);
                             scope.post.tapped_into = r.data.status;
                             scope.post.taps_count = r.data.count;
@@ -292,7 +284,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
                     } else {
                         scope.post.tapped_into = true;
                         scope.post.taps_count++;
-                        PostService.post(scope.post.id).one('taps').post().then(function(r) {
+                        Restangular.one('posts', scope.post.id).one('taps').post().then(function(r) {
                             //console.log("created");
                             scope.post.tapped_into = r.data.status;
                             scope.post.taps_count = r.data.count;
@@ -321,7 +313,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
 
                     scope.post.amen = true;
                     scope.post.amens_count++;
-                    PostService.post(scope.post.id).one('amens').post().then(function(r) {
+                    Restangular.one('posts', scope.post.id).one('amens').post().then(function(r) {
                         scope.post.amen = r.data.status;
                         scope.post.amens_count = r.data.count;
                         scope.amens_count = $filter('socialCounter')(scope.post.amens_count);
@@ -365,7 +357,7 @@ app.directive('testifyPost', ['PostService', 'CommentService', 'Auth', 'UXServic
             };
         }
     };
-}]);
+});
 
 app.directive('myIcon', ['$timeout', function($timeout) {
     return {

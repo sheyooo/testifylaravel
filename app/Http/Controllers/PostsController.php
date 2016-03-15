@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Vinkla\Pusher\Facades\Pusher;
 
 class PostsController extends Controller
 {
@@ -103,6 +104,8 @@ class PostsController extends Controller
                 $activity->save();
 
                 $post = $this->show($post->id);
+                //To be dispatching to queue all pusher messages
+                Pusher::trigger('posts-stream', 'new_post', $post, $request->socket_id);
 
                 return \Response::make($post, 201);
             } else {

@@ -481,9 +481,8 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
 
 }]);
 
-app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
-    '$mdToast', 'Me', 'Upload', 'apiBase', '$timeout', '$document', 'EmojioneService', '$q',
-    function($scope, UXService, AppService, $mdToast, Me, Upload,
+app.controller('TComposerCtrl',
+    function($scope, UXService, Pusher, AppService, PostService, $mdToast, Me, Upload,
         apiBase, $timeout, $document, EmojioneService, $q) {
         $scope.selectedCategories = [];
         $scope.files = [];
@@ -499,6 +498,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
                 placeholder: "Share your testimony...",
                 container: null,
                 hideSource: true,
+                emojioneVersion: "2.1.1"
 
             });
             $scope.emojionearea = emojionearea[0].emojioneArea;
@@ -649,12 +649,13 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
                     post: o.p,
                     anonymous: o.a,
                     categories: cats,
-                    images: o.i
+                    images: o.i,
+                    socket_id: Pusher.pusher.connection.socket_id
                 }).then(function(r) {
                     $scope.newPost.creating = false;
 
                     if (r.status === 201) {
-                        $scope.home.posts.unshift(r.data);
+                        PostService.stream.data.unshift(r.data);
                         //console.log(r.data);
                     }
 
@@ -690,8 +691,7 @@ app.controller('TComposerCtrl', ['$scope', 'UXService', 'AppService',
 
             }
         };
-    }
-]);
+});
 
 app.controller('NotificationsController', function($scope, Restangular, NotificationsService, FriendshipService) {
     var types = {
