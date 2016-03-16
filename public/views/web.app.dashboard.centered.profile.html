@@ -30,35 +30,47 @@
                 </div>
                 <div class="text-muted pt10">
                     <p class="md-title">
-                        plan to show username in a subtle way
                         <my-icon icon="account" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.name}} </p>
-                    <p ng-if="user_profile.email">
-                        <my-icon icon="at" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.email}} </p>
-                    <p ng-if="user_profile.location">
-                        <my-icon icon="map-marker" class="md-primary md-hue-1 mr25 "></my-icon>Location - <b> {{ user_profile.location }}</b></p>
-                    <p ng-if="user_profile.profile.favorite_book">
+                    <p ng-if="::user_profile.username">
+                        <my-icon icon="at" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.username}} </p>
+                    <p ng-if="::user_profile.email">
+                        <my-icon icon="email" class="md-primary md-hue-1 mr25 "></my-icon>{{::user_profile.email}} </p>
+                    <p ng-if="::user_profile.location">
+                        <my-icon icon="map-marker" class="md-primary md-hue-1 mr25 "></my-icon>Location: <b> {{ user_profile.location }}</b></p>
+                    <p ng-if="::user_profile.profile.favorite_book">
                         <my-icon icon="book" class="md-primary md-hue-1 mr25 "></my-icon>Favorite book - <b> {{ user_profile.profile.favorite_book }}</b></p>
-                    <p ng-if="user_profile.profile.favorite_verse">
-                        <my-icon icon="bookmark" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Verse - <b>{{ user_profile.profile.favorite_verse }}</b></p>
-                    <p ng-if="user_profile.profile.favorite_parable">
-                        <my-icon icon="bookmark-outline" class="md-primary md-hue-1 mr25 "></my-icon>Favorite parable - <b>{{ user_profile.profile.favorite_parable }}</b></p>
-                    <p ng-if="user_profile.profile.denomination">
-                        <my-icon icon="church" class="md-primary md-hue-1 mr25 "></my-icon>Denomination - <b>{{ user_profile.profile.denomination }}</b></p>
+                    <p ng-if="::user_profile.profile.favorite_verse">
+                        <my-icon icon="bookmark" class="md-primary md-hue-1 mr25 "></my-icon>Favorite Verse <b>{{ user_profile.profile.favorite_verse }}</b></p>
+                    <p ng-if="::user_profile.profile.favorite_parable">
+                        <my-icon icon="bookmark-outline" class="md-primary md-hue-1 mr25 "></my-icon>Favorite parable <b>{{ user_profile.profile.favorite_parable }}</b></p>
+                    <p ng-if="::user_profile.profile.denomination">
+                        <my-icon icon="church" class="md-primary md-hue-1 mr25 "></my-icon>Worships at <b>{{ ::user_profile.profile.denomination }}</b></p>
                 </div>
             </md-card-content>
         </md-card>
         <div class="mb15" layout="row" layout-align="center center">
 
-            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
-                <my-icon icon="check"></my-icon>
-                Accept Request
+            <md-button ng-if="user_profile.relationship.status == 2" class="no-text-transform md-raised md-primary" aria-label="You are friends with {{::user_profile.name}}">
+                <my-icon icon="account-check"></my-icon>
+                Friends
             </md-button>
-            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ng-click="sendFriendRequest(user_profile.id)" aria-label="Add {{user_profile.name}} as friend">
-                <my-icon icon="plus"></my-icon>
+            <md-button ng-if="user_profile.relationship.status == 2" class="no-text-transform md-raised md-primary" aria-label="You are friends with {{::user_profile.name}}" ng-click="unfriend()">
+                <my-icon icon="account-remove"></my-icon>
+                Unfriend
+            </md-button>
+            <md-button ng-if="user_profile.relationship.status == 1 && user_profile.relationship.to == me.id " class="no-text-transform md-raised md-primary" ng-click="confirmRequest()" aria-label="Message {{::user_profile.name}}">
+                Confirm
+            </md-button>
+            <md-button ng-if="user_profile.relationship.status == 1 && user_profile.relationship.from == me.id" class="no-text-transform md-raised md-primary" aria-label="You have sent {{::user_profile.name}} a request">
+                <my-icon icon="account-plus"></my-icon>
+                Request sent
+            </md-button>
+            <md-button ng-if="user_profile.id != me.id && ! user_profile.relationship" class="no-text-transform md-raised md-primary" ng-click="sendFriendRequest()" aria-label="Add {{::user_profile.name}} as friend">
+                <my-icon icon="account-plus"></my-icon>
                 Add Friend
             </md-button>
-            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{user_profile.name}}">
-                <my-icon icon="message-text-outline"></my-icon>
+            <md-button ng-if="user_profile.id != me.id && me.id && user_profile.id" class="no-text-transform md-raised no-shadow md-primary" ui-sref="web.app.dashboard.message({user_id: user_profile.username || user_profile.hash_id})" aria-label="Message {{::user_profile.name}}">
+                <my-icon icon="telegram"></my-icon>
                 Message
             </md-button>
 

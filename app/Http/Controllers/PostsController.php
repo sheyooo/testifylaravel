@@ -8,12 +8,19 @@ use \Vinkla\Pusher\Facades\Pusher;
 class PostsController extends Controller
 {
     private static $hashid_salt = 'post';
+    private $user = null;
 
     public function __construct()
     {
         //$this->middleware('jwt.refresh', ['except' => ['index', 'show']]);
 
         $this->middleware('jwt.auth', ['except' => ['index', 'show', 'getComments']]);
+
+        try{
+            $this->user = \JWTAuth::parseToken()->toUser();
+        }catch (\Exception $e){
+            $this->user = null;
+        }
     }
 
     /**
@@ -77,6 +84,10 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+
+        if(is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
+        }
         //
         $post = new \App\Post();
         $text = htmlspecialchars(trim($request->post));
@@ -84,36 +95,37 @@ class PostsController extends Controller
         $post->text = $text;
         $post->anonymous = htmlspecialchars($request->anonymous);
 
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-            if ($user->posts()->save($post)) {
-                $hash = Tools::generateHashID(self::$hashid_salt, $post->id);
-                $post->hash_id = $hash;
-                $post->categories()->sync($request->categories);
-                if ($request->images) {
-                    $post->images()->sync($request->images);
-                }
-                $post->save();
-
-                $action = $post;
-                $activity = new \App\PostActivity();
-                $action->user_id = $user->id;
-                $activity->action()->associate($post);
-                $activity->user()->associate($user);
-                $activity->post()->associate($post);
-                $activity->save();
-
-                $post = $this->show($post->id);
-                //To be dispatching to queue all pusher messages
-                Pusher::trigger('posts-stream', 'new_post', $post, $request->socket_id);
-
-                return \Response::make($post, 201);
-            } else {
-                return \Response::make(['error' => 'Could not create post'], 400);
+        if ($this->user->posts()->save($post)) {
+            $hash = Tools::generateHashID(self::$hashid_salt, $post->id);
+            $post->hash_id = $hash;
+            $post->categories()->sync($request->categories);
+            if ($request->images) {
+                $post->images()->sync($request->images);
             }
-        } catch (Exception $e) {
-            return \Response::make(['status' => 'Unauthorized'], 401);
+            $post->save();
+
+            $action = $post;
+            $activity = new \App\PostActivity();
+            $action->user_id = $this->user->id;
+            $activity->action()->associate($post);
+            $activity->user()->associate($this->user);
+            $activity->post()->associate($post);
+            $activity->save();
+
+            $postSub = new \App\PostSub();
+            $postSub->user()->associate($this->user);
+            $postSub->post()->associate($post);
+            $postSub->save();
+
+            $post = $this->show($post->id);
+            //To be dispatching to queue all pusher messages
+            Pusher::trigger('posts-stream', 'new_post', $post, $request->socket_id);
+
+            return \Response::make($post, 201);
+        } else {
+            return \Response::make(['error' => 'Could not create post'], 400);
         }
+
     }
 
     /**

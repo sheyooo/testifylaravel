@@ -38,7 +38,7 @@ class NotificationsController extends Controller
         $friendIDs = FriendshipController::getFriends($this->user);
 
 
-        $postSubs = \App\PostSubs::where('user_id', $this->user->id)
+        $postSubs = \App\PostSub::where('user_id', $this->user->id)
                                 ->select('post_id')
                                 ->get();
 

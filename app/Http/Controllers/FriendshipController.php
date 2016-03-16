@@ -58,7 +58,7 @@ class FriendshipController extends Controller
                                     $query->where('from', $user->id)
                                           ->orWhere('to', $user->id);
                                 })
-                              ->where('status', 1)
+                              ->where('status', 2)
                               ->get();
         $friendsArray = [];
 

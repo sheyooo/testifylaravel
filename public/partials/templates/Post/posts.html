@@ -22,7 +22,7 @@
             </md-card>
         </div>
     <div ng-if="status == 2" layout="column">
-        <div layout="row" layout-align="center center">
+        <div layout="column" layout-align="center center">
             <my-icon class="text-muted" icon="cloud-outline-off" id="no-posts-iconography"></my-icon>
             <style type="text/css">
             #no-posts-iconography:before {
@@ -30,10 +30,13 @@
                 color: #ccc;
             }
             </style>
+
+            <md-button class="md-raised no-shadow bold-text">Retry button implement it!!</md-button>
         </div>
         <h2 class="text-center" style="color: #aaa">
             Error loading posts
         </h2>
+
     </div>
     </div>
 </div>

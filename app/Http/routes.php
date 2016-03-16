@@ -45,6 +45,7 @@ Route::group(['prefix' => 'api/v1'], function(){
   Route::get('me/friends', 'UsersController@getFriends');
   Route::get('me/friends/activities', 'FriendshipController@getFriendsActivity');
   Route::post('me/friends', 'UsersController@sendFriendRequest');
+  Route::delete('me/friends', 'UsersController@deleteRelationship');
 
   Route::post('me/profile/avatar', 'UsersController@setAvatar');
   Route::post('me/password', 'UsersController@changePassword');

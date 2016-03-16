@@ -175,8 +175,7 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
     function(Restangular, $scope, $stateParams, $state, Auth) {
         //console.log(profile);
         $scope.me = Auth.userProfile;
-        var user_profile = Restangular.one('users', $stateParams.id);
-
+        var user_ref = Restangular.one('users', $stateParams.id);
         $scope.user = {
             profile: {},
             activities: {
@@ -195,7 +194,8 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
 
         $scope.loadUserProfile = function() {
             Restangular.one('users', $stateParams.id).get({
-                profile: true
+                profile: true,
+                relationship: true
             }).then(function(r) {
                 $scope.user_profile = r.data;
             });
@@ -203,7 +203,7 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
 
         $scope.loadUserActivities = function() {
             $scope.user.activities.loading = true;
-            user_profile.all('activities').getList().then(function(r) {
+            user_ref.all('activities').getList().then(function(r) {
                 $scope.user.activities.posts = r.data;
                 $scope.user.activities.loading = false;
             });
@@ -212,7 +212,7 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
         $scope.loadUserFavorites = function() {
             $scope.user.favorites.loading = true;
 
-            user_profile.all('favorites').getList().then(function(r) {
+            user_ref.all('favorites').getList().then(function(r) {
                 $scope.user.favorites.posts = r.data;
                 $scope.user.favorites.loading = false;
 
@@ -222,18 +222,33 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
         $scope.loadUserTaps = function() {
             $scope.user.taps.loading = true;
 
-            user_profile.all('taps').getList().then(function(r) {
+            user_ref.all('taps').getList().then(function(r) {
                 $scope.user.taps.posts = r.data;
                 $scope.user.taps.loading = false;
 
             });
         };
 
-        $scope.sendFriendRequest = function(id) {
+        $scope.sendFriendRequest = function() {
             Restangular.one('me').all('friends').post({
-                user_id: id
+                user_id: $scope.user_profile.id
+            }).then(function(r){
+                $scope.user_profile.relationship = r.data;
             });
+        };
 
+        $scope.confirmRequest = function() {
+            Restangular.one('me').all('friend_requests').post({
+                user_id: $scope.user_profile.id
+            }).then(function (r) {
+                $scope.user_profile.relationship = r.data;
+            });
+        };
+
+        $scope.unfriend = function() {
+            Restangular.one('me').one('friend_requests', $scope.user_profile.id).remove().then(function (r) {
+                $scope.user_profile.relationship = null;
+            });
         };
 
         var load = function() {
@@ -482,7 +497,7 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
 }]);
 
 app.controller('TComposerCtrl',
-    function($scope, UXService, Pusher, AppService, PostService, $mdToast, Me, Upload,
+    function($scope, UXService, Restangular, Pusher, AppService, PostService, $mdToast, Me, Upload,
         apiBase, $timeout, $document, EmojioneService, $q) {
         $scope.selectedCategories = [];
         $scope.files = [];
@@ -645,7 +660,7 @@ app.controller('TComposerCtrl',
                 }
 
 
-                Me.sendPost({
+                Restangular.all('posts').post({
                     post: o.p,
                     anonymous: o.a,
                     categories: cats,
@@ -695,14 +710,16 @@ app.controller('TComposerCtrl',
 
 app.controller('NotificationsController', function($scope, Restangular, NotificationsService, FriendshipService) {
     var types = {
-        'App\\Post': 'created a post',
+        'App\\Post': 'testified',
         'App\\Tap': 'tapped on a post',
         'App\\Amen': 'said amen to a post',
         'App\\Favorite': 'favorited a post',
         'App\\Comment': 'commented on a post',
     };
 
-    Restangular.one('me').all('friend_requests').getList().then(function(r) {
+    Restangular.one('me').all('friend_requests').getList({
+        profile: true
+    }).then(function(r) {
         $scope.friend_requests = r.data;
     });
     Restangular.one('me').all('notifications').getList({

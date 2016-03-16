@@ -1,5 +1,5 @@
 <div class="p5" flex layout="column" layout-fill layout-align="start start" ng-controller="NotificationsController">
-    <div layout="column" ng-if="friend_requests.length > 0" style="width: 100%">
+    <div layout="column" ng-if="friend_requests.length" style="width: 100%">
         <span class="md-subhead bold-text text-muted pt5">Friend Requests</span>
         <md-card flex>
             <div class="" ng-repeat="req in friend_requests">
@@ -8,7 +8,7 @@
                     <div flex="10" flex-xs="20">
                         <div class="square-img-container">
                             <a ui-sref="web.app.dashboard.centered.user({id: req.from_user.username || req.from_user.hash_id})">
-                                <img class="p5 img-circle" ng-src="{{::req.from_user.avatar}}">
+                                <img class="p5" ng-src="{{::req.from_user.avatar || 'dist/img/guest.png'}}">
                             </a>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                             <a class="md-body-2" style="font-weight: bolder; color: #3b5998" ui-sref="web.app.dashboard.centered.user({id: req.from_user.username || req.from_user.hash_id})">{{::req.from_user.name}}</a>
                             <span class="md-body-1">wants to be friends with you</span>
                             <div class="" style="position: relative">
-                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-2 bold-text" style="border: solid 2px" ng-click="acceptRequest(req.from_user.id)">Accept</md-button>
+                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-2 bold-text" style="border: solid 2px" ng-click="acceptRequest(req.from_user.id)">Confirm</md-button>
                                 <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-3 btn-default btn-outline bold-text text-muted" style="border: solid 2px #aaa" ng-click="deleteRelationship(req.from_user.id)">Delete</md-button>
                                 <span class="md-caption text-right bold-text text-muted" style="position: absolute; right: 5px; bottom: 0px">
                                     <time am-time-ago="::req.created_at"></time>
@@ -29,14 +29,14 @@
             </div>
         </md-card>
     </div>
-    <div layout="column" ng-if="notifications.length > 0" style="width: 100%">
+    <div layout="column" ng-if="notifications.length" style="width: 100%">
         <span class="md-subhead bold-text text-muted pt5">Notifications</span>
         <md-card flex>
             <div class="" ng-repeat="notif in notifications">
                 <md-divider></md-divider>
                 <div layout="row" flex layout-fill class="p5">
                     <div flex="10" flex-xs="20">
-                        <div class="square-img-container">
+                        <div class="square-img-container" style="width: 50px; height: 50px">
                             <a ui-sref="web.app.dashboard.centered.user({id: notif.user.username || notif.user.hash_id})">
                                 <img class="p5" ng-src="{{::notif.user.avatar || 'dist/img/guest.png'}}">
                             </a>
@@ -46,7 +46,7 @@
                         <div>
                             <a class="md-body-2" style="font-weight: bolder; color: #3b5998" ui-sref="web.app.dashboard.centered.user({id: notif.user.username || notif.user.hash_id})">{{::notif.user.name}}</a>
                             <span class="md-body-1">{{notif.content}}</span>
-                            <span class="md-caption pull-right text-right bold-text text-muted">
+                            <span class="md-caption text-right bold-text text-muted" style="position: absolute; right: 5px; bottom: 0px">
                                 <time am-time-ago="::notif.created_at"></time>
                             </span>
                         </div>
@@ -56,5 +56,7 @@
         </md-card>
     </div>
 
-
+    <div ng-if="friend_requests.length && notifications.length">
+        No notification
+    </div>
 </div>

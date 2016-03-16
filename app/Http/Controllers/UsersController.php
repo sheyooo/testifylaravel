@@ -101,7 +101,7 @@ class UsersController extends Controller
             $user->load('profile');
         }
 
-        if ( ! is_null($this->user) && $this->user->id != $user->id){
+        if ( ! is_null($this->user) && $this->user->id != $user->id && $request->relationship){
             $relationship = FriendshipController::getRelationship($user, $this->user);
             $user['relationship'] = $relationship;
         }
@@ -269,10 +269,13 @@ class UsersController extends Controller
         $toUser = $this->findUser($request->user_id);
 
         if ($toUser) {
-            $request = new \App\Friend();
-            $request->from = $this->user->id;
-            $request->to = $toUser->id;
-            $request->save();
+            $friendRequest = new \App\Friend();
+            $friendRequest->from = $this->user->id;
+            $friendRequest->to = $toUser->id;
+            $friendRequest->status = 1;
+            $friendRequest->save();
+
+            return \Response::make($friendRequest, 200);
         } else {
             return \Response::make(['status' => 'User not found'], 400);
         }
@@ -479,8 +482,8 @@ class UsersController extends Controller
         $request = Request::capture();
 
         if ($this->user) {
-            $reqs = \App\Friend::where('to', $this->user->id)->where('status', 0);
-            if ($request->profiles == 'true') {
+            $reqs = \App\Friend::where('to', $this->user->id)->where('status', 1);
+            if ($request->profile) {
                 $reqs = $reqs->with('fromUser')->with('toUser');
             }
 
@@ -497,12 +500,14 @@ class UsersController extends Controller
         $request = Request::capture();
 
         if ($request->user_id) {
-          $req = \App\Friend::where('to', $this->user->id)->where('from', $request->user_id)->where('status', 0)->first();
+          $req = \App\Friend::where('to', $this->user->id)
+                            ->where('from', $request->user_id)
+                            ->first();
 
-          $req->status = 1;
+          $req->status = 2;
           $req->save();
 
-          return \Response::make(['status' => 'Succesful'], 200);
+          return \Response::make($req, 200);
         }
     }
 
@@ -518,7 +523,7 @@ class UsersController extends Controller
           $req = FriendshipController::getRelationship($who, $this->user);
           $req->delete();
 
-          return \Response::make(['status' => 'Succesful'], 200);
+          return \Response::make('', 200);
         }
     }
 
