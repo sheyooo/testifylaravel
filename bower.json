@@ -13,7 +13,11 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "1.4.6",
+    "jquery": "2.2.1",
+    "angular": "1.5.0",
+    "angular-sanitize": "1.5.0",
+    "angular-animate": "1.5.0",
+    "angular-aria": "1.5.0",
     "angular-loading-bar": "~0.8.0",
     "angular-material": "1.0.6",
     "bootstrap": "~3.3.5",
@@ -27,7 +31,6 @@
     "angular-ui-router": "~0.2.15",
     "restangular": "~1.5.1",
     "ng-img-crop": "ngImgCrop#~0.3.2",
-    "angular-sanitize": "1.5.0",
     "animate.css": "~3.5.1",
     "lodash": "3",
     "fastclick": "~1.0.6",
@@ -36,8 +39,7 @@
     "emojionearea": "^1.0.4",
     "emojione": "^2.1.1",
     "ng-facebook": "^0.1.6",
-    "angular-animate": "1.5.0",
-    "angular-aria": "1.5.0"
+    "underscore": "^1.8.3"
   },
   "resolutions": {
     "angular": "1.5.0",
