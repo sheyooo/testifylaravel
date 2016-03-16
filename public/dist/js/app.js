@@ -26,51 +26,6 @@ if ( document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://
   app.constant('apiBase', "api/v1");
 }
 
-app.config(["$mdThemingProvider", function($mdThemingProvider) {
-  var primaryPalette = $mdThemingProvider.extendPalette('blue', {
-    'contrastDefaultColor': 'light',
-    'contrastDarkColors': ['300'],
-    'contrastLightColors': ['100', '500'],
-    '500': '6AA3C8',
-    '50': '1C3456',
-    '100': '5DADE0',
-    '300': 'FAFAFA',
-    '400': 'F4F4F4'
-  });
-  var accentPalette = $mdThemingProvider.extendPalette('green', {
-
-    'contrastDefaultColor': 'light',
-    'contrastDarkColors': ['200', '300'],
-    'contrastLightColors': ['500'],
-    '500': '97B6CA',
-    '50': '1C3456',
-    '100': '5DADE0',
-    '200': 'e74c3c',
-    '300': 'FFFFFF',
-    '400': 'F4F4F4',
-    '600': '27ae60',
-    '700': '77777E'
-  });
-
-  $mdThemingProvider.definePalette('primary', primaryPalette);
-  $mdThemingProvider.definePalette('accent', accentPalette);
-  //console.log($mdThemingProvider.theme('default'));
-  $mdThemingProvider.theme('default')
-    .primaryPalette('primary', {
-      'default': '500',
-      'hue-1': '50',
-      'hue-2': '100',
-      'hue-3': '300'
-    })
-    .accentPalette('accent', {
-      'default': '200',
-      'hue-1': '600',
-      'hue-2': '700'
-    })
-    .warnPalette('red');
-
-}]);
-
 app.config(['$compileProvider', '$logProvider', '$animateProvider', function ($compileProvider, $logProvider, $animateProvider) {
   $logProvider.debugEnabled(false);
   $compileProvider.debugInfoEnabled(false);
@@ -272,6 +227,51 @@ app.config(["$stateProvider", "$urlRouterProvider", "$locationProvider", "appBas
       requireBase: false
     });
   }
+
+}]);
+
+app.config(["$mdThemingProvider", function($mdThemingProvider) {
+  var primaryPalette = $mdThemingProvider.extendPalette('blue', {
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': ['300'],
+    'contrastLightColors': ['100', '500'],
+    '500': '6AA3C8',
+    '50': '1C3456',
+    '100': '5DADE0',
+    '300': 'FAFAFA',
+    '400': 'F4F4F4'
+  });
+  var accentPalette = $mdThemingProvider.extendPalette('green', {
+
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': ['200', '300'],
+    'contrastLightColors': ['500'],
+    '500': '97B6CA',
+    '50': '1C3456',
+    '100': '5DADE0',
+    '200': 'e74c3c',
+    '300': 'FFFFFF',
+    '400': 'F4F4F4',
+    '600': '27ae60',
+    '700': '77777E'
+  });
+
+  $mdThemingProvider.definePalette('primary', primaryPalette);
+  $mdThemingProvider.definePalette('accent', accentPalette);
+  //console.log($mdThemingProvider.theme('default'));
+  $mdThemingProvider.theme('default')
+    .primaryPalette('primary', {
+      'default': '500',
+      'hue-1': '50',
+      'hue-2': '100',
+      'hue-3': '300'
+    })
+    .accentPalette('accent', {
+      'default': '200',
+      'hue-1': '600',
+      'hue-2': '700'
+    })
+    .warnPalette('red');
 
 }]);
 

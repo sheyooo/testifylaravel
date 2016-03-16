@@ -18,9 +18,10 @@ var gulp = require('gulp'),
   del = require('del');
 
 var bower_js_files = [
-  "public/bower_components/jquery/dist/jquery.js",
   "public/bower_components/fastclick/lib/fastclick.js",
   "public/bower_components/angular/angular.js",
+  "public/bower_components/jquery/dist/jquery.js",
+  
   "public/bower_components/angular-sanitize/angular-sanitize.js",
   "public/bower_components/angular-ui-router/release/angular-ui-router.js",
   "public/bower_components/angular-messages/angular-messages.js",
@@ -54,6 +55,7 @@ var css_files = [
   'public/bower_components/angular-material/angular-material.min.css',
   'public/plugins/override/angular-loading-bar/loading-bar.css',
   'public/css/main.css',
+  'public/css/theme.css',
   'public/bower_components/ng-img-crop/compile/minified/ng-img-crop.css',
   'public/bower_components/animate.css/animate.min.css',
   'public/css/ux-animations.css',
