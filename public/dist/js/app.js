@@ -592,15 +592,15 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
             profile: {},
             activities: {
                 posts: [],
-                loading: true
+                status: 0
             },
             favorites: {
                 posts: [],
-                loading: true
+                status: 0
             },
             taps: {
                 posts: [],
-                loading: true
+                status: 0
             }
         };
 
@@ -614,29 +614,29 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
         };
 
         $scope.loadUserActivities = function() {
-            $scope.user.activities.loading = true;
+            $scope.user.activities.status = 1;
             user_ref.all('activities').getList().then(function(r) {
                 $scope.user.activities.posts = r.data;
-                $scope.user.activities.loading = false;
+                $scope.user.activities.status = 0;
             });
         };
 
         $scope.loadUserFavorites = function() {
-            $scope.user.favorites.loading = true;
+            $scope.user.favorites.status = 1;
 
             user_ref.all('favorites').getList().then(function(r) {
                 $scope.user.favorites.posts = r.data;
-                $scope.user.favorites.loading = false;
+                $scope.user.favorites.status = 0;
 
             });
         };
 
         $scope.loadUserTaps = function() {
-            $scope.user.taps.loading = true;
+            $scope.user.taps.status = 1;
 
             user_ref.all('taps').getList().then(function(r) {
                 $scope.user.taps.posts = r.data;
-                $scope.user.taps.loading = false;
+                $scope.user.taps.loading = 0;
 
             });
         };
