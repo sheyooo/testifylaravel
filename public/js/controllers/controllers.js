@@ -628,11 +628,17 @@ app.controller('TComposerCtrl',
         };
 
         $scope.composePost = function(ev) {
+            if ($scope.newPost.creating){
+                UXService.toast('Submitting your post already');
+                return ;
+            }
+
             //post = "";
             //console.log($scope);
             //post = EmojioneService.emojione.toShort($scope.post);
-            post = EmojioneService.emojione.toShort($scope.emojionearea.getText());
-            anonymous = $scope.anonymous;
+            //Convert ::toShort on the server
+            var post = $scope.emojionearea.getText();
+            var anonymous = $scope.anonymous;
 
             if (!post) {
                 post = " ";

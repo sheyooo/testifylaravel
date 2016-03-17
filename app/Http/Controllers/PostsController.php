@@ -46,8 +46,8 @@ class PostsController extends Controller
     public function formatPostsIfAnon($posts)
     {
         $posts = $posts->each(function ($post, $key) {
-       $post = $this->formatPostIfAnon($post);
-      });
+            $post = $this->formatPostIfAnon($post);
+        });
 
         return $posts;
     }
@@ -89,8 +89,11 @@ class PostsController extends Controller
             return \Response::make(['error' => 'Unauthorized'], 401);
         }
         //
+        $emojiClient = new \Emojione\Client(new \Emojione\Ruleset());
+
         $post = new \App\Post();
         $text = htmlspecialchars(trim($request->post));
+        $text = $emojiClient->toShort($text);
         $text = str_replace("&amp;", "&", $text);
         $post->text = $text;
         $post->anonymous = htmlspecialchars($request->anonymous);
@@ -104,13 +107,15 @@ class PostsController extends Controller
             }
             $post->save();
 
-            $action = $post;
-            $activity = new \App\PostActivity();
-            $action->user_id = $this->user->id;
-            $activity->action()->associate($post);
-            $activity->user()->associate($this->user);
-            $activity->post()->associate($post);
-            $activity->save();
+            if (! $post->anonymous){
+                $action = $post;
+                $activity = new \App\PostActivity();
+                $action->user_id = $this->user->id;
+                $activity->action()->associate($post);
+                $activity->user()->associate($this->user);
+                $activity->post()->associate($post);
+                $activity->save();
+            }
 
             $postSub = new \App\PostSub();
             $postSub->user()->associate($this->user);
@@ -211,7 +216,7 @@ class PostsController extends Controller
         if (is_null($this->user)){
             return \Response::make(['error' => 'Unauthorized'], 401);
         }
-        
+
         $comment = new \App\Comment();
         $activity = new \App\PostActivity();
         $comment->text = htmlspecialchars($request->text);

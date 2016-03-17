@@ -133,7 +133,7 @@
             <div flex="10" flex-xs="20">
               <div class="square-img-container">
                 <a ui-sref="web.app.dashboard.centered.user({id: comment.user.username || comment.user.hash_id})">
-                  <img class="p5" ng-src="{{::comment.user.avatar}}">
+                  <img class="p5" ng-src="{{::comment.user.avatar || 'dist/img/guest.png'}}">
                 </a>
               </div>
             </div>

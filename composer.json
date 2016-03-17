@@ -15,7 +15,8 @@
         "aws/aws-sdk-php": "^3.11",
         "vinkla/pusher": "^2.2",
         "pusher/pusher-php-server": "^2.2",
-        "davibennun/laravel-push-notification": "dev-laravel5"
+        "davibennun/laravel-push-notification": "dev-laravel5",
+        "emojione/emojione": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

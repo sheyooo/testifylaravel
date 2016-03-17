@@ -56,7 +56,18 @@
         </md-card>
     </div>
 
-    <div ng-if="friend_requests.length && notifications.length">
-        No notification
+    <div ng-if="! friend_requests.length && ! notifications.length" layout="column" style="width: 100%">
+        <div layout="row" layout-align="center center">
+            <my-icon class="text-muted" icon="bell-off" id="no-posts-iconography"></my-icon>
+            <style type="text/css">
+            #no-posts-iconography:before {
+                font-size: 100px;
+                color: #ccc;
+            }
+            </style>
+        </div>
+        <h2 class="text-center" style="color: #aaa">
+            No Notification
+        </h2>
     </div>
 </div>

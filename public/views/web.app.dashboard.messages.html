@@ -17,7 +17,7 @@
               </a>
             </md-card>
           </div>
-          <div ng-if=" chats.status && !chats.data.length" layout="column">
+          <div ng-if=" chats.status == 0 && !chats.data.length" layout="column">
               <div layout="row" layout-align="center center">
                   <my-icon class="text-muted" icon="email-open" id="no-posts-iconography"></my-icon>
                   <style type="text/css">

@@ -206,58 +206,58 @@ class UsersController extends Controller
 
     public function getActivities(Request $request, $userID)
     {
-        try {
-            $jwtUser = \JWTAuth::parseToken()->toUser();
-        } catch (\Exception $exception) {
-            $jwtUser = null;
-        };
-
-        try {
+        try{
             $user = $this->findUser($userID);
-            $posts = \App\Post::whereHas('postActivities', function ($query) use ($user) {
-              return $query->where('user_id', $user->id);
-                            //->where('action_type', '!=', 'App\\Post');
-            });
+        }catch(\Exception $exception){
+            return \Response::make(['error' => 'User not found'], 404);
+        }
 
-            $posts = $posts->orWhereHas('user', function ($query) use ($user) {
-          return $query->where('user_id', $user->id);
-        })->where([
-          ['user_id', $user->id],
+
+        $posts = \App\Post::whereHas('postActivities', function ($query) use ($user) {
+            return $query->where('user_id', $user->id);
+        });
+        $posts = $posts->orWhere([
+          ['user_id', $user->id]
         ]);
 
-            if ($jwtUser) {
-                if ($jwtUser->id == $user->id) {
-                    //Do nothing so anonymous posts of the jwtUser will be sent
-                } else {
-                    $posts = $posts->where('anonymous', '0');
-                }
+        if (! (! is_null($this->user) && $this->user->id === $user->id)){
+            $posts = $posts->where([
+              ['anonymous', 0]
+            ]);
+        }
+
+
+        if (!is_null($this->user)) {
+            if ($this->user->id == $user->id) {
+                //Do nothing so anonymous posts of the jwtUser will be sent
             } else {
                 $posts = $posts->where('anonymous', '0');
             }
-
-            $posts = $posts->orderBy('created_at', 'desc');
-            $posts = Tools::paginateByID($request, $posts);
-            $posts = $posts->get();
-
-            $posts = $posts->each(function ($post, $key) use ($user) {
-              $userRef = [
-                'name' => $user->name,
-                'hash_id' => $user->hash_id,
-              ];
-              $post['user_ref'] = $userRef;
-              $post['user_ref_activities'] = $post->postActivities()->whereHas('user', function ($query) use ($user) {
-                  return $query->where('user_id', $user->id);
-              })->get();
-
-            });
-
-            $postsCtrl = new PostsController();
-            $posts = $postsCtrl->formatPostsIfAnon($posts);
-
-            return $posts;
-        } catch (Exception $exception) {
-            return \Response::make(['error' => 'User not found'], 404);
+        } else {
+            $posts = $posts->where('anonymous', '0');
         }
+
+        $posts = $posts->orderBy('created_at', 'desc');
+        $posts = Tools::paginateByID($request, $posts);
+        $posts = $posts->get();
+
+        $posts = $posts->each(function ($post, $key) use ($user) {
+          $userRef = [
+            'name' => $user->name,
+            'hash_id' => $user->hash_id,
+          ];
+          $post['user_ref'] = $userRef;
+          $post['user_ref_activities'] = $post->postActivities()->whereHas('user', function ($query) use ($user) {
+              return $query->where('user_id', $user->id);
+          })->get();
+
+        });
+
+        $postsCtrl = new PostsController();
+        $posts = $postsCtrl->formatPostsIfAnon($posts);
+
+        return $posts;
+
     }
 
     public function sendFriendRequest(Request $request)

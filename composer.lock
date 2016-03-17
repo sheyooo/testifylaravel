@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5f4f39fcb0613ebd1b5e53d19e2ad91c",
-    "content-hash": "3722e0b7e67c74310ccd790312a24652",
+    "hash": "6afa592149eb27d0b5d7fae43956c5bb",
+    "content-hash": "b14653b5c3bbd28f3967e25e4d00e6f2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -401,6 +401,50 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "emojione/emojione",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ranks/emojione.git",
+                "reference": "6a17f05781837b5379a4c02e81c674c47b199cce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ranks/emojione/zipball/6a17f05781837b5379a4c02e81c674c47b199cce",
+                "reference": "6a17f05781837b5379a4c02e81c674c47b199cce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6 || ~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Emojione\\": "lib/php/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "(CC-BY-4.0 and MIT)"
+            ],
+            "description": "Emoji One is a complete set of emojis designed for the web. It includes libraries to easily convert unicode characters to shortnames (:smile:) and shortnames to our custom emoji images. PNG and SVG formats provided for the emoji images.",
+            "homepage": "http://www.emojione.com",
+            "keywords": [
+                "Emoji One",
+                "emoji",
+                "emojione",
+                "emojis",
+                "emoticons",
+                "smileys",
+                "smilies",
+                "unicode"
+            ],
+            "time": "2016-03-15 07:00:03"
         },
         {
             "name": "facebook/php-sdk-v4",
