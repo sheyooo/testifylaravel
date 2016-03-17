@@ -224,7 +224,7 @@ app.controller('ProfileCtrl', ['Restangular', '$scope', '$stateParams',
 
             user_ref.all('taps').getList().then(function(r) {
                 $scope.user.taps.posts = r.data;
-                $scope.user.taps.loading = 0;
+                $scope.user.taps.status = 0;
 
             });
         };
