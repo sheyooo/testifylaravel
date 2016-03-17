@@ -48,7 +48,7 @@
                 </div>
             </md-card-content>
         </md-card>
-        <div class="mb15" layout="row" layout-align="center center">
+        <div class="mb15" ng-if="me.id || me.id == user_profile.id" layout="row" layout-align="center center">
 
             <md-button ng-if="user_profile.relationship.status == 2" class="no-text-transform md-raised md-primary" aria-label="You are friends with {{::user_profile.name}}">
                 <my-icon icon="account-check"></my-icon>
