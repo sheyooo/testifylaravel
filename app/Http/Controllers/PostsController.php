@@ -208,23 +208,28 @@ class PostsController extends Controller
 
     public function storeComment($id, Request $request)
     {
-        try {
-            $user = \JWTAuth::parseToken()->toUser();
-            $comment = new \App\Comment();
-            $activity = new \App\PostActivity();
-            $comment->text = htmlspecialchars($request->text);
-            $post = \App\Post::find($id);
-            $post->comments()->save($comment->user()->associate($user));
-            //$comment->user;
-            $activity->action()->associate($comment);
-            $activity->user()->associate($user);
-            $activity->post()->associate($post);
-            $activity->save();
-
-            return $comment;
-        } catch (\Exception $e) {
-            return \Response::make(['error' => 'Unable to post comment'], 400);
+        if (is_null($this->user)){
+            return \Response::make(['error' => 'Unauthorized'], 401);
         }
+        
+        $comment = new \App\Comment();
+        $activity = new \App\PostActivity();
+        $comment->text = htmlspecialchars($request->text);
+        $post = \App\Post::find($id);
+        $post->comments()->save($comment->user()->associate($this->user));
+        //$comment->user;
+        $activity->action()->associate($comment);
+        $activity->user()->associate($this->user);
+        $activity->post()->associate($post);
+        $activity->save();
+
+        $postSub = new \App\PostSub();
+        $postSub->user()->associate($this->user);
+        $postSub->post()->associate($post);
+        $postSub->save();
+
+        return $comment;
+
     }
 
     public static function transformHashID($hash)
