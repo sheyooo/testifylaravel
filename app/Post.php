@@ -13,9 +13,9 @@ class Post extends Model
 
     protected $appends = ['favorited', 'tapped_into', 'amen', 'prayer', 'amens_count', 'favorites_count', 'taps_count', 'comments_count'];
 
-    public function getTextAttribute(){
+    public function getTextAttribute($text){
       $emojiClient = new \Emojione\Client(new \Emojione\Ruleset());  
-      return $emojiClient->shortnameToUnicode($this->text);
+      return $emojiClient->shortnameToUnicode($text);
     }
 
     public function getFavoritedAttribute(){
