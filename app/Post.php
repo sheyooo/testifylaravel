@@ -13,6 +13,11 @@ class Post extends Model
 
     protected $appends = ['favorited', 'tapped_into', 'amen', 'prayer', 'amens_count', 'favorites_count', 'taps_count', 'comments_count'];
 
+    public function getTextAttribute(){
+      $emojiClient = new \Emojione\Client(new \Emojione\Ruleset());  
+      return $emojiClient->shortnameToUnicode($this->text);
+    }
+
     public function getFavoritedAttribute(){
      try{
       $user = \JWTAuth::parseToken()->toUser();
@@ -111,7 +116,4 @@ class Post extends Model
     public function postActivity(){
       return $this->morphOne('\App\PostActivity', 'action');
     }
-
-
-
 }
