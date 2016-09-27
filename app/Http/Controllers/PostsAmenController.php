@@ -15,19 +15,24 @@ class PostsAmenController extends Controller
   */
  public function store($id, Request $request)
  {
-     //
-     $post = \App\Post::findorFail($id);
-     $action = new \App\Amen();
-     $activity = new \App\PostActivity();
-     $user = \JWTAuth::parseToken()->toUser();
-     $action->user_id = $user->id;
-     $action = $post->amens()->save($action);
-     $activity->action()->associate($action);
-     $activity->user()->associate($user);
-     $activity->post()->associate($post);
-     $activity->save();
+    //
+    $post = \App\Post::findorFail($id);
+    $action = new \App\Amen();
+    $activity = new \App\PostActivity();
+    $user = \JWTAuth::parseToken()->toUser();
+    $action->user_id = $user->id;
+     
+    try {
+      $action = $post->amens()->save($action);
+      $activity->action()->associate($action);
+      $activity->user()->associate($user);
+      $activity->post()->associate($post);
+      $activity->save();
+    } catch(\Exception $e) {
 
-     return \Response::make(['status' => true, 'count' => $post->amens()->count()]);
+    }
+
+    return \Response::make(['status' => true, 'count' => $post->amens()->count()]);
  }
 
  /**
