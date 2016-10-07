@@ -27,13 +27,13 @@ class Tools extends Controller
         }
 
         if ($request->limit) {
-            if ($request->limit <= 15 && $request->limit >= 0) {
+            if ($request->limit <= 10 && $request->limit >= 0) {
                 $data = $data->take($request->limit);
             } else {
-                $data = $data->take(15);
+                $data = $data->take(10);
             }
         } else {
-            $data = $data->take(15);
+            $data = $data->take(10);
         }
 
         return $data;
