@@ -214,7 +214,7 @@ class UsersController extends Controller
 
         $posts = \App\Post::whereHas('postActivities', function ($query) use ($user) {
             return $query->where('user_id', $user->id)
-                        >groupBy('action_type');
+                        ->groupBy('action_type');
         });
         $posts = $posts->orWhere([
           ['user_id', $user->id]
