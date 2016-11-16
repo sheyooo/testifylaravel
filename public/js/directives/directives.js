@@ -126,13 +126,11 @@ app.directive('testifyPost', function(Restangular, CommentService, Auth, UXServi
                         for (action in ref_activities) {
                             i++;
                             a_t = ref_activities[action].action_type;
-                            if (i > 3) {
-                              return;
-                            } else if (i == l - (l - 1)) {
+                            if (i == l - (l - 1)) {
                                 interpretation += ' ' + actions[a_t][0];
                             } else if (i <= l - 1) {
                                 interpretation += ', ' + actions[a_t][0];
-                            } else if (l >= i) {
+                            } else if (l >= i || i > 3) {
                                 interpretation += ' and ' + actions[a_t][0] + ' ' + actions[a_t][1];
                             }
                         }
