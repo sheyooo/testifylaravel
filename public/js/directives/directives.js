@@ -1,4 +1,7 @@
-app.directive('leftSidenav', [function() {
+(function(){
+    'use strict';
+
+    app.directive('leftSidenav', [function() {
 
     return {
         restrict: 'A',
@@ -129,6 +132,9 @@ app.directive('testifyPost', function(Restangular, CommentService, Auth, UXServi
                                 interpretation += ', ' + actions[a_t][0];
                             } else if (l >= i) {
                                 interpretation += ' and ' + actions[a_t][0] + ' ' + actions[a_t][1];
+                            }
+                            if (i > 3) {
+                              break;
                             }
                         }
                     }
@@ -384,3 +390,4 @@ app.directive('testifyComposer', function($timeout) {
         //controller: 'TComposerCtrl'
     };
 });
+})();

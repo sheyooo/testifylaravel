@@ -4,8 +4,6 @@ app.controller('LandingCtrl', ['Auth', '$state', function(Auth, $state) {
             $state.go('web.app.dashboard.centered.home');
         }
     });
-
-
 }]);
 
 app.controller('PostsCtrl',
@@ -492,8 +490,6 @@ app.controller('MessageCtrl', ['$scope', '$rootScope', 'messagingUser', 'Restang
         Pusher.pusher.unsubscribe(chatChannel);
     });
 
-
-
 }]);
 
 app.controller('TComposerCtrl',
@@ -744,8 +740,6 @@ app.controller('NotificationsController', function($scope, Restangular, Notifica
 
             $scope.notifications.push(aNotif);
         }
-
-
     });
 
     $scope.acceptRequest = FriendshipService.acceptRequest;
