@@ -742,8 +742,16 @@ app.controller('NotificationsController', function($scope, Restangular, Notifica
         }
     });
 
-    $scope.acceptRequest = FriendshipService.acceptRequest;
-    $scope.deleteRelationship = FriendshipService.deleteRelationship;
+    $scope.acceptRequest = function(userId, friendReqId, index) {
+        FriendshipService.acceptRequest(userId).then(function(res) {
+            $scope.friend_requests.splice(index, 1);
+        });
+    };
+    $scope.deleteRelationship = function(userId, friendReqId, index) {
+        FriendshipService.deleteRelationship(userId).then(function(res) {
+            $scope.friend_requests.splice(index, 1);
+        });
+    };
 
 });
 

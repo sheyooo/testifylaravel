@@ -17,8 +17,8 @@
                             <a class="md-body-2" style="font-weight: bolder; color: #3b5998" ui-sref="web.app.dashboard.centered.user({id: req.from_user.username || req.from_user.hash_id})">{{::req.from_user.name}}</a>
                             <span class="md-body-1">wants to be friends with you</span>
                             <div class="" style="position: relative">
-                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-2 bold-text" style="border: solid 2px" ng-click="acceptRequest(req.from_user.id)">Confirm</md-button>
-                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-3 btn-default btn-outline bold-text text-muted" style="border: solid 2px #aaa" ng-click="deleteRelationship(req.from_user.id)">Delete</md-button>
+                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-2 bold-text" style="border: solid 2px" ng-click="acceptRequest(req.from_user.id, req.id, $index)">Confirm</md-button>
+                                <md-button class="md-raised no-text-transform no-shadow md-primary md-hue-3 btn-default btn-outline bold-text text-muted" style="border: solid 2px #aaa" ng-click="deleteRelationship(req.from_user.id, req.id, $index)">Delete</md-button>
                                 <span class="md-caption text-right bold-text text-muted" style="position: absolute; right: 5px; bottom: 0px">
                                     <time am-time-ago="::req.created_at"></time>
                                 </span>

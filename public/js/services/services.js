@@ -781,13 +781,13 @@ app.factory('UtilityService', function() {
 app.factory('FriendshipService', function(Restangular) {
 
     var acceptRequest = function(userID) {
-        Restangular.one('me').all('friend_requests').post({
+        return Restangular.one('me').all('friend_requests').post({
             user_id: userID
         });
     };
 
     var deleteRelationship = function(userID) {
-        Restangular.one('me').one('friend_requests', userID).remove();
+        return Restangular.one('me').one('friend_requests', userID).remove();
     };
 
 
