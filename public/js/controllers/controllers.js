@@ -717,7 +717,7 @@ app.controller('TComposerCtrl',
 
 app.controller('NotificationsController', function($scope, Restangular, NotificationsService, FriendshipService) {
     var types = {
-        'App\\Post': 'testified',
+        'App\\Post': 'posted a testimony',
         'App\\Tap': 'tapped on a post',
         'App\\Amen': 'said amen to a post',
         'App\\Favorite': 'favorited a post',
