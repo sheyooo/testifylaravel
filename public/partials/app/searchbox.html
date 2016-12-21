@@ -2,7 +2,7 @@
     <div layout="row" layout-align="end center" flex>
         <md-autocomplete placeholder="Search" flex style="color: #000;" md-min-length="2" md-delay="1000" md-selected-item="selectedItem" md-search-text="query" md-items="person in searchRepo(query)" md-item-text="person.name">
             <md-item-template>
-                <span layout="row" class="item-title">
+                <span layout="row" class="item-title" ui-sref="web.app.dashboard.centered.user({id: person.username || person.hash_id})">
                     <div class="square-img-container p5 mr5" style="width: 48px; height: 48px;">
                         <img ng-src="{{person.avatar || 'dist/img/guest.png'}}" alt="{{person.name}}" />
                     </div>

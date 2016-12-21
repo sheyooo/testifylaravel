@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    app.directive('leftSidenav', [function() {
+app.directive('leftSidenav', [function() {
 
     return {
         restrict: 'A',
