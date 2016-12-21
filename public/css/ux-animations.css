@@ -14,7 +14,7 @@
 }
 
 .category-modal-anim.ng-hide-remove {
-    animation: flipInX 0.5s;
+    animation: fadeIn 0.3s;
 }
 
 .category-modal-anim.ng-hide-add {

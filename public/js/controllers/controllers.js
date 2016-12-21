@@ -278,6 +278,7 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
     function(Restangular, $scope, $stateParams, $state, Upload, Auth,
         UXService, apiBase) {
         //console.log(profile);
+        $scope.allowMessaging = true;
         Restangular.one('me').get({
             'profile': true
         }).then(
@@ -293,6 +294,11 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
             $state.go('web.app.dashboard.centered.home');
         }
 
+        $scope.onMessagingChange = function(state) {
+            console.log(state);
+            // Setup rest call to disable or enable...
+        };
+
         $scope.saveAccountInfo = function(obj) {
             Restangular.one('me').post(
                 'profile', obj).then(function(r) {
@@ -302,7 +308,6 @@ app.controller('ProfileEditCtrl', ['Restangular', '$scope', '$stateParams',
 
                 $scope.section_account = false;
             });
-
         };
 
         $scope.saveAboutInfo = function(obj) {

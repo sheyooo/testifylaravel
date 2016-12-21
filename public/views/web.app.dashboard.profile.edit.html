@@ -121,8 +121,8 @@
           </div>
         </md-toolbar>
         <md-card-content>
-          <label>Messaging:</label>
-          <md-switch ng-model="messaging" aria-label="Toggle messaging">
+          <label>Messaging</label>
+          <md-switch class="md-hue-1" ng-model="allowMessaging" ng-change="onMessagingChange(allowMessaging)" aria-label="Toggle messaging">
             Turn on messaging
           </md-switch>
         </md-card-content>
